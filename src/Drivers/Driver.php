@@ -2,6 +2,8 @@
 
 namespace Spatie\SiteSearch\Drivers;
 
+use Spatie\SiteSearch\SearchResults\SearchResults;
+
 interface Driver
 {
     public function update(array $properties): self;
@@ -9,4 +11,6 @@ interface Driver
     public function delete(): self;
 
     public function create(): self;
+
+    public function search(string $query): SearchResults;
 }

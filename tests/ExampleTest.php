@@ -14,7 +14,7 @@ it('can test', function () {
     $search = new MeiliSearchDriver($client, 'my-index');
 
     $results = $search
-       ->update()
+      //->update()
         ->search('bla');
 
     dd($results);
@@ -55,6 +55,18 @@ it('can crawl a site', function () {
     $siteSearch = new SiteSearch($driver, $profile);
 
     $siteSearch->crawl('https://spatie.be');
+});
+
+it('can search', function() {
+    $client = new Client('http://127.0.0.1:7700');
+
+    $driver = new MeiliSearchDriver($client, 'my-index');
+
+    $profile = new DefaultSearchProfile();
+
+    $siteSearch = new SiteSearch($driver, $profile);
+
+    dd($siteSearch->search('willem'));
 });
 
 

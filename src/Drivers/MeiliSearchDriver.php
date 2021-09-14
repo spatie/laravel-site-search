@@ -5,6 +5,8 @@ namespace Spatie\SiteSearch\Drivers;
 use Exception;
 use MeiliSearch\Client as MeiliSearchClient;
 use MeiliSearch\Endpoints\Indexes;
+use Spatie\SiteSearch\SearchResults\Hit;
+use Spatie\SiteSearch\SearchResults\SearchResults;
 
 class MeiliSearchDriver implements Driver
 {
@@ -26,9 +28,22 @@ class MeiliSearchDriver implements Driver
         return $this->meilisearch->index($this->indexName);
     }
 
-    public function search(string $query): mixed
+    public function search(string $query): SearchResults
     {
-        return $this->index()->rawSearch($query);
+        $rawResults = $this->index()->rawSearch($query);
+
+        $hits = array_map(function(array $hitProperties) {
+            return new Hit(
+                $hitProperties['id'],
+                $hitProperties['title'],
+                $hitProperties['url'],
+                $hitProperties['text'],
+                $hitProperties['date_modified_timestamp'],
+                $hitProperties['extra'] ?? [],
+            );
+        }, $rawResults['hits']);
+
+        return new SearchResults($hits, $rawResults['processingTimeMs']);
     }
 
     public function create(): self

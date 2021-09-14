@@ -31,6 +31,9 @@ class SearchProfileCrawlObserver extends CrawlObserver
 
         $title = $indexer->title();
         $dateModified = $indexer->dateModified();
+        $entries = $indexer->entries();
+
+        ray(count($entries) . ' entries found')->blue();
 
         foreach ($indexer->entries() as $entry) {
             $this->driver->update([

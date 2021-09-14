@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class SiteSearchCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-site-search';
 
     public $description = 'My command';
 

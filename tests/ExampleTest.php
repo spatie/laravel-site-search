@@ -57,7 +57,7 @@ it('can crawl a site', function () {
     $siteSearch->crawl('https://spatie.be');
 });
 
-it('can search', function() {
+it('can search', function () {
     $client = new Client('http://127.0.0.1:7700');
 
     $driver = new MeiliSearchDriver($client, 'my-index');

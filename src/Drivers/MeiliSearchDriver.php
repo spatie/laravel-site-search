@@ -32,7 +32,7 @@ class MeiliSearchDriver implements Driver
     {
         $rawResults = $this->index()->rawSearch($query);
 
-        $hits = array_map(function(array $hitProperties) {
+        $hits = array_map(function (array $hitProperties) {
             return new Hit(
                 $hitProperties['id'],
                 $hitProperties['title'],

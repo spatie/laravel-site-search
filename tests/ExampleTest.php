@@ -47,9 +47,15 @@ it('can crawl a site', function() {
 
     $driver = new MeiliSearchDriver($client, 'my-index');
 
+    $driver->delete();
+
+    $driver->create();
+
     $profile = new DefaultSearchProfile();
 
     $siteSearch = new SiteSearch($driver, $profile);
 
     $siteSearch->crawl('https://spatie.be');
 });
+
+

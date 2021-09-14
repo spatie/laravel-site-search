@@ -15,6 +15,10 @@ class DefaultSearchProfile implements SearchProfile
 
     public function shouldIndex(UriInterface $url): bool
     {
+        if (str_starts_with($url->getPath(), '/docs')) {
+            return false;
+        }
+
         return true;
     }
 

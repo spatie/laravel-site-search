@@ -2,6 +2,7 @@
 
 namespace Spatie\SiteSearch\Drivers;
 
+use Exception;
 use MeiliSearch\Client as MeiliSearchClient;
 use MeiliSearch\Endpoints\Indexes;
 
@@ -29,5 +30,24 @@ class MeiliSearchDriver implements Driver
     public function search(string $query): mixed
     {
         return $this->index()->rawSearch($query);
+    }
+
+    public function create(): self
+    {
+        $this->meilisearch->createIndex($this->indexName);
+
+        return $this;
+    }
+
+    public function delete(): self
+    {
+       try {
+           $this->index()->delete();
+       } catch (Exception $exception)
+       {}
+
+
+
+        return $this;
     }
 }

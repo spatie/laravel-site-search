@@ -3,6 +3,7 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -22,12 +23,21 @@ class DefaultIndexer
 
     public function title(): ?string
     {
-        return $this->domCrawler->filter('title')->first()->text();
+        try {
+            return $this->domCrawler->filter('title')->first()->text();
+        } catch (Exception) {
+            return null;
+        }
+
     }
 
     public function entries(): array
     {
-        $content = $this->domCrawler->filter('body')->first()->html();
+        try {
+            $content = $this->domCrawler->filter('body')->first()->html();
+        } catch (Exception) {
+            return [];
+        }
 
         $content = strip_tags($content);
 
@@ -35,7 +45,17 @@ class DefaultIndexer
 
         $entries = array_filter($entries);
 
-        $entries = array_filter($entries, fn(string $entry) => strlen($entry) > 3);
+        $entries = array_filter($entries, function (string $entry) {
+            if (str_starts_with($entry, '/')) {
+                return false;
+            }
+
+            if (str_starts_with($entry, '.')) {
+                return false;
+            }
+
+            return strlen($entry) > 3;
+        });
 
         return array_filter($entries);
     }

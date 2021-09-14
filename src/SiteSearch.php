@@ -18,16 +18,15 @@ class SiteSearch
 
     }
 
-    public function crawl(string $url): self
+    public function crawl(string $baseUrl): self
     {
-        $profile = new SiteSearchCrawlProfile($this->profile);
+        $profile = new SiteSearchCrawlProfile($this->profile, $baseUrl);
         $observer = new SearchProfileCrawlObserver($this->profile, $this->driver);
 
         Crawler::create()
             ->setCrawlProfile($profile)
             ->setCrawlObserver($observer)
-            ->startCrawling($url);
-
+            ->startCrawling($baseUrl);
 
         return $this;
     }

@@ -30,14 +30,19 @@ class MeiliSearchDriver implements Driver
 
     public function search(string $query): SearchResults
     {
-        $rawResults = $this->index()->rawSearch($query);
-
+        $rawResults = $this->index()->rawSearch($query, [
+            'attributesToHighlight' => ['entry', 'description'],
+        ]);
+ray($rawResults);
         $hits = array_map(function(array $hitProperties) {
             return new Hit(
                 $hitProperties['id'],
                 $hitProperties['title'],
+                $hitProperties['description'] ?? '',
+                $hitProperties['_formatted']['description'] ?? '',
                 $hitProperties['url'],
-                $hitProperties['text'],
+                $hitProperties['entry'],
+                $hitProperties['_formatted']['entry'] ?? '',
                 $hitProperties['date_modified_timestamp'],
                 $hitProperties['extra'] ?? [],
             );
@@ -46,9 +51,13 @@ class MeiliSearchDriver implements Driver
         return new SearchResults($hits, $rawResults['processingTimeMs']);
     }
 
-    public function create(): self
+    public function createIndex(): self
     {
         $this->meilisearch->createIndex($this->indexName);
+
+        $this->index()->updateSettings([
+            'distinctAttribute' => 'url',
+        ]);
 
         return $this;
     }

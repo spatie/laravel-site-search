@@ -30,6 +30,17 @@ class DefaultIndexer
         }
     }
 
+    public function description(): ?string
+    {
+        try {
+            $description =  $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content');
+        } catch (Exception) {
+            return null;
+        }
+
+        return preg_replace('/\s+/', ' ', $description);
+    }
+
     public function entries(): array
     {
         try {
@@ -45,6 +56,10 @@ class DefaultIndexer
         $entries = array_filter($entries);
 
         $entries = array_filter($entries, function (string $entry) {
+            if (str_starts_with($entry, '{"')) {
+                return false;
+            }
+
             if (str_starts_with($entry, '/')) {
                 return false;
             }

@@ -30,17 +30,17 @@ class SearchProfileCrawlObserver extends CrawlObserver
 
         $title = $indexer->title();
         $dateModified = $indexer->dateModified();
+        $description = $indexer->description();
         $entries = $indexer->entries();
-
-        ray(count($entries) . ' entries found')->blue();
 
         foreach ($indexer->entries() as $entry) {
             $this->driver->update([
                 'id' => Str::uuid(),
+                'entry' => $entry,
                 'title' => $title,
                 'url' => (string)$url,
+                'description' => $description,
                 'date_modified_timestamp' => $dateModified->getTimestamp(),
-                'text' => $entry,
             ]);
         }
     }

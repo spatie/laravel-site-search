@@ -10,7 +10,7 @@ interface Driver
 
     public function delete(): self;
 
-    public function create(): self;
+    public function createIndex(): self;
 
     public function search(string $query): SearchResults;
 }

@@ -7,6 +7,7 @@ use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
 use Spatie\SiteSearch\Profiles\DefaultSearchProfile;
 use Spatie\SiteSearch\SiteSearch;
+use function Pest\Laravel\artisan;
 
 it('can test', function () {
     $client = new Client('http://127.0.0.1:7700');
@@ -38,7 +39,11 @@ it('has an indexer', function () {
         new Response(body: $body),
     );
 
-    dd($indexer->title(), $indexer->entries());
+    dd($indexer->title(), $indexer->entries(), $indexer->description());
+});
+
+it('can create an index', function() {
+   artisan(\Spatie\SiteSearch\Commands\CreateIndexCommand::class)->assertExitCode(0);
 });
 
 it('can crawl a site', function () {
@@ -48,7 +53,7 @@ it('can crawl a site', function () {
 
     $driver->delete();
 
-    $driver->create();
+    $driver->createIndex();
 
     $profile = new DefaultSearchProfile();
 

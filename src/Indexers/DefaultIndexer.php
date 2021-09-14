@@ -14,7 +14,8 @@ class DefaultIndexer
 
     public function __construct(
         protected UriInterface $url,
-        protected ResponseInterface $response)
+        protected ResponseInterface $response
+    )
     {
         $html = (string)$this->response->getBody();
 
@@ -41,7 +42,7 @@ class DefaultIndexer
 
         $content = strip_tags($content);
 
-        $entries =  array_map('trim', explode(PHP_EOL, $content));
+        $entries = array_map('trim', explode(PHP_EOL, $content));
 
         $entries = array_filter($entries);
 

@@ -13,9 +13,7 @@ class SiteSearch
     public function __construct(
         protected Driver $driver,
         protected SearchProfile $profile,
-    )
-    {
-
+    ) {
     }
 
     public function crawl(string $baseUrl): self

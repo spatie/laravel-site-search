@@ -33,7 +33,7 @@ class DefaultIndexer
     public function description(): ?string
     {
         try {
-            $description =  $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content');
+            $description = $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content');
         } catch (Exception) {
             return null;
         }

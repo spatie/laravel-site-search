@@ -55,10 +55,10 @@ class MeiliSearchDriver implements Driver
 
     public function delete(): self
     {
-       try {
-           $this->index()->delete();
-       } catch (Exception $exception)
-       {}
+        try {
+            $this->index()->delete();
+        } catch (Exception $exception) {
+        }
 
 
 

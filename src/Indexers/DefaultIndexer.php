@@ -15,8 +15,7 @@ class DefaultIndexer
     public function __construct(
         protected UriInterface $url,
         protected ResponseInterface $response
-    )
-    {
+    ) {
         $html = (string)$this->response->getBody();
 
         $this->domCrawler = new Crawler($html);
@@ -29,7 +28,6 @@ class DefaultIndexer
         } catch (Exception) {
             return null;
         }
-
     }
 
     public function entries(): array

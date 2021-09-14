@@ -68,5 +68,3 @@ it('can search', function() {
 
     dd($siteSearch->search('willem'));
 });
-
-

@@ -3,7 +3,6 @@
 namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\SiteSearch\SiteSearch;
 
 class SiteSearchCommand extends Command
 {
@@ -13,6 +12,5 @@ class SiteSearchCommand extends Command
 
     public function handle()
     {
-
     }
 }

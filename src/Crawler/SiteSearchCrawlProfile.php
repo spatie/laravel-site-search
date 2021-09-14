@@ -10,7 +10,8 @@ class SiteSearchCrawlProfile extends CrawlProfile
 {
     public function __construct(
         protected SearchProfile $profile
-    ) {}
+    ) {
+    }
 
     public function shouldCrawl(UriInterface $url): bool
     {

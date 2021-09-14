@@ -13,7 +13,8 @@ class DefaultIndexer
 
     public function __construct(
         protected UriInterface $url,
-        protected ResponseInterface $response)
+        protected ResponseInterface $response
+    )
     {
         $html = (string)$this->response->getBody();
 
@@ -31,11 +32,11 @@ class DefaultIndexer
 
         $content = strip_tags($content);
 
-        $entries =  array_map('trim', explode(PHP_EOL, $content));
+        $entries = array_map('trim', explode(PHP_EOL, $content));
 
         $entries = array_filter($entries);
 
-        $entries = array_filter($entries, fn(string $entry) => strlen($entry) > 3);
+        $entries = array_filter($entries, fn (string $entry) => strlen($entry) > 3);
 
         return array_filter($entries);
     }

@@ -12,10 +12,10 @@ use Spatie\SiteSearch\Profiles\SearchProfile;
 
 class SearchProfileCrawlObserver extends CrawlObserver
 {
-
     public function __construct(
         protected SearchProfile $searchProfile,
-        protected Driver        $driver)
+        protected Driver        $driver
+    )
     {
     }
 
@@ -25,7 +25,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
 
         $indexer = $this->searchProfile->useIndexer($url, $response);
 
-        if (!$indexer) {
+        if (! $indexer) {
             return;
         }
 

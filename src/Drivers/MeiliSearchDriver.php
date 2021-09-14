@@ -10,8 +10,7 @@ class MeiliSearchDriver implements Driver
     public function __construct(
         protected MeiliSearchClient $meilisearch,
         protected string            $indexName
-    )
-    {
+    ) {
     }
 
     public function update(array $properties): self

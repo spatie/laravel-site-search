@@ -56,5 +56,3 @@ it('can crawl a site', function () {
 
     $siteSearch->crawl('https://spatie.be');
 });
-
-

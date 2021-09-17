@@ -34,7 +34,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
         $description = $indexer->description();
 
         $documents = collect($indexer->entries())
-            ->map(function(string $entry) use ($dateModified, $url, $h1, $description, $pageTitle) {
+            ->map(function (string $entry) use ($dateModified, $url, $h1, $description, $pageTitle) {
                 return [
                     'id' => (string)Str::uuid(),
                     'entry' => $entry,

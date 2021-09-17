@@ -23,11 +23,11 @@ class MeiliSearchDriver implements Driver
         return $this;
     }
 
-    public function  updateMany(array $documents): self
+    public function updateMany(array $documents): self
     {
         $chunks = array_chunk($documents, 1000);
 
-        foreach($chunks as $documents) {
+        foreach ($chunks as $documents) {
             $this->index()->addDocuments($documents);
         }
 

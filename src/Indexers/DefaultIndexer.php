@@ -22,24 +22,24 @@ class DefaultIndexer
 
     public function pageTitle(): ?string
     {
-        return attempt(fn() => $this->domCrawler->filter('title')->first()->text());
+        return attempt(fn () => $this->domCrawler->filter('title')->first()->text());
     }
 
     public function h1(): ?string
     {
-        return attempt(fn() => $this->domCrawler->filter('h1')->first()->text());
+        return attempt(fn () => $this->domCrawler->filter('h1')->first()->text());
     }
 
     public function description(): ?string
     {
-            $description = attempt(fn() => $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content'));
+        $description = attempt(fn () => $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content'));
 
         return preg_replace('/\s+/', ' ', $description);
     }
 
     public function entries(): array
     {
-        $content = attempt(fn() => $this->domCrawler->filter('body')->first()->html());
+        $content = attempt(fn () => $this->domCrawler->filter('body')->first()->html());
 
         if (is_null($content)) {
             return [];

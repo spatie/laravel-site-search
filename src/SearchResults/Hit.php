@@ -40,7 +40,7 @@ class Hit
 
     public function snippet(): ?string
     {
-        $propertyName =  $this->getSnippetProperty();
+        $propertyName = $this->getSnippetProperty();
 
         return $this->$propertyName;
     }
@@ -64,8 +64,8 @@ class Hit
             'description' => $this->description,
             'h1' => $this->h1,
         ])
-            ->filter(fn(?string $value) => strlen($value) > 0)
-            ->sortBy(fn(?string $value) => strlen($value))
+            ->filter(fn (?string $value) => strlen($value) > 0)
+            ->sortBy(fn (?string $value) => strlen($value))
             ->reverse()
             ->keys()
             ->first();

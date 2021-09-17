@@ -3,13 +3,22 @@
 namespace Spatie\SiteSearch\Drivers;
 
 use Exception;
+use MeiliSearch\Client;
 use MeiliSearch\Client as MeiliSearchClient;
 use MeiliSearch\Endpoints\Indexes;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
+use Spatie\SiteSearch\Support\SiteConfig;
 
 class MeiliSearchDriver implements Driver
 {
+    public static function make(SiteConfig $siteConfig): self
+    {
+        $client = new Client('http://127.0.0.1:7700');
+
+        return new self($client, $siteConfig->indexName());
+    }
+
     public function __construct(
         protected MeiliSearchClient $meilisearch,
         protected string            $indexName

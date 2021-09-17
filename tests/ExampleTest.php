@@ -3,6 +3,7 @@
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use MeiliSearch\Client;
+use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use function Pest\Laravel\artisan;
 use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
@@ -46,20 +47,8 @@ it('can create an index', function () {
     artisan(\Spatie\SiteSearch\Commands\CreateIndexCommand::class)->assertExitCode(0);
 });
 
-it('can crawl a site', function () {
-    $client = new Client('http://127.0.0.1:7700');
-
-    $driver = new MeiliSearchDriver($client, 'my-index');
-
-    $driver->delete();
-
-    $driver->createIndex();
-
-    $profile = new DefaultSearchProfile();
-
-    $siteSearch = new SiteSearch($driver, $profile);
-
-    $siteSearch->crawl('https://stitcher.io');
+it('can index a site', function () {
+    (new CrawlSiteJob('default'))->handle();
 });
 
 it('can search', function () {

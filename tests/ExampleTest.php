@@ -3,10 +3,10 @@
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use MeiliSearch\Client;
-use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use function Pest\Laravel\artisan;
 use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
+use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Profiles\DefaultSearchProfile;
 use Spatie\SiteSearch\SiteSearch;
 

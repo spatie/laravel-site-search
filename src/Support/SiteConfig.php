@@ -21,7 +21,6 @@ class SiteConfig
 
     public function __construct(protected array $siteConfig)
     {
-
     }
 
     public function url(): string
@@ -33,7 +32,7 @@ class SiteConfig
     {
         $profileClass = $this->siteConfig['profile'];
 
-        return new $profileClass;
+        return new $profileClass();
     }
 
     public function indexName(): string

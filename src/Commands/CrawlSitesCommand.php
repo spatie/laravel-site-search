@@ -14,7 +14,7 @@ class CrawlSitesCommand extends Command
     {
         collect(config('site-search.sites'))
             ->keys()
-            ->each(function(string $siteConfigName) {
+            ->each(function (string $siteConfigName) {
                 $siteConfig = SiteConfig::make($siteConfigName);
 
                 $this->comment("Dispatching job to crawl `{$siteConfig->url()}`");

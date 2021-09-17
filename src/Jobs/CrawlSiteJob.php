@@ -10,7 +10,8 @@ class CrawlSiteJob implements ShouldQueue
 {
     public function __construct(
         public string $siteConfigName
-    ) {}
+    ) {
+    }
 
     public function handle()
     {

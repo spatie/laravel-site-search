@@ -37,7 +37,9 @@ ray($rawResults);
         $hits = array_map(function(array $hitProperties) {
             return new Hit(
                 $hitProperties['id'],
-                $hitProperties['title'],
+                $hitProperties['pageTitle'],
+                $hitProperties['h1'],
+                $hitProperties['_formatted']['h1'] ?? '',
                 $hitProperties['description'] ?? '',
                 $hitProperties['_formatted']['description'] ?? '',
                 $hitProperties['url'],
@@ -66,7 +68,7 @@ ray($rawResults);
     {
         try {
             $this->index()->delete();
-        } catch (Exception $exception) {
+        } catch (Exception) {
         }
 
 

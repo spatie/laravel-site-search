@@ -28,16 +28,17 @@ class SearchProfileCrawlObserver extends CrawlObserver
             return;
         }
 
-        $title = $indexer->title();
+        $pageTitle = $indexer->pageTitle();
+        $h1 = $indexer->h1();
         $dateModified = $indexer->dateModified();
         $description = $indexer->description();
-        $entries = $indexer->entries();
 
         foreach ($indexer->entries() as $entry) {
             $this->driver->update([
                 'id' => Str::uuid(),
                 'entry' => $entry,
-                'title' => $title,
+                'pageTitle' => $pageTitle,
+                'h1' => $h1,
                 'url' => (string)$url,
                 'description' => $description,
                 'date_modified_timestamp' => $dateModified->getTimestamp(),
@@ -47,6 +48,5 @@ class SearchProfileCrawlObserver extends CrawlObserver
 
     public function crawlFailed(UriInterface $url, RequestException $requestException, ?UriInterface $foundOnUrl = null): void
     {
-        ray('crawl failed for ' . $url)->red();
     }
 }

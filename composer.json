@@ -34,6 +34,9 @@
         "vimeo/psalm": "^4.8"
     },
     "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
         "psr-4": {
             "Spatie\\SiteSearch\\": "src",
             "Spatie\\SiteSearch\\Database\\Factories\\": "database/factories"

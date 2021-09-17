@@ -14,7 +14,9 @@ class Hit
 
     public function __construct(
         public string $id,
-        public string $title,
+        public string $pageTitle,
+        public string $h1,
+        public string $highlightedH1,
         public string $description,
         public string $highlightedDescription,
         public string $url,
@@ -31,30 +33,43 @@ class Hit
         return $this->extra[$name] ?? null;
     }
 
+    public function title()
+    {
+        return $this->pageTitle ?? $this->h1;
+    }
+
     public function snippet(): ?string
     {
-        return $this->shouldUseDescription()
-            ? $this->description
-            : $this->entry;
+        $propertyName =  $this->getSnippetProperty();
+
+        return $this->$propertyName;
     }
 
     public function highlightedSnippet(): ?string
     {
-        return $this->shouldUseDescription()
-            ? $this->highlightedDescription
-            : $this->highlightedEntry;
+        $propertyName = $this->getSnippetProperty();
+
+        ray($propertyName);
+        $propertyName = ucfirst($propertyName);
+        ray($propertyName)->blue();
+        $propertyName = 'highlighted' . $propertyName;
+
+        return $this->$propertyName;
     }
 
-    protected function shouldUseDescription(): bool
+    protected function getSnippetProperty(): string
     {
-        if (strlen($this->description) === 0) {
-            return false;
-        }
+        $propertyName = collect([
+            'entry' => $this->entry,
+            'description' => $this->description,
+            'h1' => $this->h1,
+        ])
+            ->filter(fn(?string $value) => strlen($value) > 0)
+            ->sortBy(fn(?string $value) => strlen($value))
+            ->reverse()
+            ->keys()
+            ->first();
 
-        if (strlen($this->entry) > 30) {
-            return false;
-        }
-
-        return true;
+        return $propertyName ?? 'entry';
     }
 }

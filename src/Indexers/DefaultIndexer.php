@@ -3,7 +3,6 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -21,31 +20,28 @@ class DefaultIndexer
         $this->domCrawler = new Crawler($html);
     }
 
-    public function title(): ?string
+    public function pageTitle(): ?string
     {
-        try {
-            return $this->domCrawler->filter('title')->first()->text();
-        } catch (Exception) {
-            return null;
-        }
+        return attempt(fn() => $this->domCrawler->filter('title')->first()->text());
+    }
+
+    public function h1(): ?string
+    {
+        return attempt(fn() => $this->domCrawler->filter('h1')->first()->text());
     }
 
     public function description(): ?string
     {
-        try {
-            $description =  $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content');
-        } catch (Exception) {
-            return null;
-        }
+            $description = attempt(fn() => $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content'));
 
         return preg_replace('/\s+/', ' ', $description);
     }
 
     public function entries(): array
     {
-        try {
-            $content = $this->domCrawler->filter('body')->first()->html();
-        } catch (Exception) {
+        $content = attempt(fn() => $this->domCrawler->filter('body')->first()->html());
+
+        if (is_null($content)) {
             return [];
         }
 

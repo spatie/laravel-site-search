@@ -39,7 +39,7 @@ it('has an indexer', function () {
         new Response(body: $body),
     );
 
-    dd($indexer->title(), $indexer->entries(), $indexer->description());
+    dd($indexer->pageTitle(), $indexer->entries(), $indexer->description());
 });
 
 it('can create an index', function() {
@@ -59,7 +59,7 @@ it('can crawl a site', function () {
 
     $siteSearch = new SiteSearch($driver, $profile);
 
-    $siteSearch->crawl('https://spatie.be');
+    $siteSearch->crawl('https://stitcher.io');
 });
 
 it('can search', function () {

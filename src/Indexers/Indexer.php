@@ -6,7 +6,9 @@ use Carbon\CarbonInterface;
 
 interface Indexer
 {
-    public function title(): ?string;
+    public function pageTitle(): ?string;
+
+    public function h1(): ?string;
 
     public function entries(): array;
 

@@ -3,11 +3,11 @@
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use MeiliSearch\Client;
+use function Pest\Laravel\artisan;
 use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
 use Spatie\SiteSearch\Profiles\DefaultSearchProfile;
 use Spatie\SiteSearch\SiteSearch;
-use function Pest\Laravel\artisan;
 
 it('can test', function () {
     $client = new Client('http://127.0.0.1:7700');
@@ -42,8 +42,8 @@ it('has an indexer', function () {
     dd($indexer->pageTitle(), $indexer->entries(), $indexer->description());
 });
 
-it('can create an index', function() {
-   artisan(\Spatie\SiteSearch\Commands\CreateIndexCommand::class)->assertExitCode(0);
+it('can create an index', function () {
+    artisan(\Spatie\SiteSearch\Commands\CreateIndexCommand::class)->assertExitCode(0);
 });
 
 it('can crawl a site', function () {

@@ -16,9 +16,20 @@ class MeiliSearchDriver implements Driver
     ) {
     }
 
-    public function update(array $properties): self
+    public function update(array $documentProperties): self
     {
-        $this->index()->addDocuments([$properties]);
+        $this->index()->addDocuments([$documentProperties]);
+
+        return $this;
+    }
+
+    public function  updateMany(array $documents): self
+    {
+        $chunks = array_chunk($documents, 1000);
+
+        foreach($chunks as $documents) {
+            $this->index()->addDocuments($documents);
+        }
 
         return $this;
     }
@@ -37,8 +48,8 @@ class MeiliSearchDriver implements Driver
         $hits = array_map(function (array $hitProperties) {
             return new Hit(
                 $hitProperties['id'],
-                $hitProperties['pageTitle'],
-                $hitProperties['h1'],
+                $hitProperties['pageTitle'] ?? '',
+                $hitProperties['h1'] ?? '',
                 $hitProperties['_formatted']['h1'] ?? '',
                 $hitProperties['description'] ?? '',
                 $hitProperties['_formatted']['description'] ?? '',

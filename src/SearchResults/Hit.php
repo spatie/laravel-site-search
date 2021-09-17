@@ -49,9 +49,7 @@ class Hit
     {
         $propertyName = $this->getSnippetProperty();
 
-        ray($propertyName);
         $propertyName = ucfirst($propertyName);
-        ray($propertyName)->blue();
         $propertyName = 'highlighted' . $propertyName;
 
         return $this->$propertyName;

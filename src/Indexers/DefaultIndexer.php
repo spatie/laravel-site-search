@@ -15,6 +15,7 @@ class DefaultIndexer
         protected UriInterface $url,
         protected ResponseInterface $response
     ) {
+        ray('indexing: '. $this->url);
         $html = (string)$this->response->getBody();
 
         $this->domCrawler = new Crawler($html);
@@ -27,7 +28,7 @@ class DefaultIndexer
 
     public function h1(): ?string
     {
-        return attempt(fn() => $this->domCrawler->filter('h1')->first()->text());
+        return attempt(fn() => strip_tags($this->domCrawler->filter('h1')->first()->text()));
     }
 
     public function description(): ?string

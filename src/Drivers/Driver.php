@@ -6,7 +6,9 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 
 interface Driver
 {
-    public function update(array $properties): self;
+    public function update(array $documentProperties): self;
+
+    public function updateMany(array $documents): self;
 
     public function delete(): self;
 

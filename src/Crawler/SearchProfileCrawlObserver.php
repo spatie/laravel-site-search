@@ -33,17 +33,21 @@ class SearchProfileCrawlObserver extends CrawlObserver
         $dateModified = $indexer->dateModified();
         $description = $indexer->description();
 
-        foreach ($indexer->entries() as $entry) {
-            $this->driver->update([
-                'id' => Str::uuid(),
-                'entry' => $entry,
-                'pageTitle' => $pageTitle,
-                'h1' => $h1,
-                'url' => (string)$url,
-                'description' => $description,
-                'date_modified_timestamp' => $dateModified->getTimestamp(),
-            ]);
-        }
+        $documents = collect($indexer->entries())
+            ->map(function(string $entry) use ($dateModified, $url, $h1, $description, $pageTitle) {
+                return [
+                    'id' => (string)Str::uuid(),
+                    'entry' => $entry,
+                    'pageTitle' => $pageTitle,
+                    'description' => $description,
+                    'h1' => $h1,
+                    'url' => (string)$url,
+                    'date_modified_timestamp' => $dateModified->getTimestamp(),
+                ];
+            })
+            ->toArray();
+
+        $this->driver->updateMany($documents);
     }
 
     public function crawlFailed(UriInterface $url, RequestException $requestException, ?UriInterface $foundOnUrl = null): void

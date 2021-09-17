@@ -44,7 +44,7 @@ class MeiliSearchDriver implements Driver
         $rawResults = $this->index()->rawSearch($query, [
             'attributesToHighlight' => ['entry', 'description'],
         ]);
-        ray($rawResults);
+
         $hits = array_map(function (array $hitProperties) {
             return new Hit(
                 $hitProperties['id'],

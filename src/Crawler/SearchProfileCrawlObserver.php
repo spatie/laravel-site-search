@@ -23,8 +23,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
         UriInterface $url,
         ResponseInterface $response,
         ?UriInterface $foundOnUrl = null
-    ): void
-    {
+    ): void {
         $indexer = $this->searchProfile->useIndexer($url, $response);
 
         if (! $indexer) {
@@ -57,7 +56,6 @@ class SearchProfileCrawlObserver extends CrawlObserver
         UriInterface $url,
         RequestException $requestException,
         ?UriInterface $foundOnUrl = null
-    ): void
-    {
+    ): void {
     }
 }

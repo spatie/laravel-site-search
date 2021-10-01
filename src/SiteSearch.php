@@ -12,13 +12,30 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 
 class SiteSearch
 {
-    public static function make(SiteSearchIndex $siteSearchIndex)
+    public static function index(string $indexName): self
+    {
+        $siteSearchIndex = SiteSearchIndex::firstWhere('name', $indexName);
+
+        return self::make($siteSearchIndex);
+    }
+
+    public function query(string $query): SearchResults
+    {
+        /** @var SiteSearchIndex $siteSearchIndex */
+        $siteSearchIndex = SiteSearchIndex::first();
+
+        $siteSearch = static::make($siteSearchIndex);
+
+        return $siteSearch->search($query);
+    }
+
+    public static function make(SiteSearchIndex $siteSearchIndex): self
     {
         $driver = $siteSearchIndex->getDriver();
 
         $profile = $siteSearchIndex->getProfile();
 
-        return new static($driver, $profile);
+        return new static($siteSearchIndex->index_name, $driver, $profile);
     }
 
     public function __construct(
@@ -31,7 +48,12 @@ class SiteSearch
     public function crawl(string $baseUrl): self
     {
         $profile = new SiteSearchCrawlProfile($this->profile, $baseUrl);
-        $observer = new SearchProfileCrawlObserver($this->indexName, $this->profile, $this->driver);
+
+        $observer = new SearchProfileCrawlObserver(
+            $this->indexName,
+            $this->profile,
+            $this->driver
+        );
 
         Crawler::create()
             ->setCrawlProfile($profile)

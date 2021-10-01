@@ -5,7 +5,6 @@ namespace Spatie\SiteSearch;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\SiteSearch\Commands\CrawlSitesCommand;
-use Spatie\SiteSearch\Commands\CreateIndexCommand;
 
 class SiteSearchServiceProvider extends PackageServiceProvider
 {
@@ -16,8 +15,7 @@ class SiteSearchServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasCommands([
-                CreateIndexCommand::class,
                 CrawlSitesCommand::class,
-                ]);
+            ]);
     }
 }

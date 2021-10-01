@@ -6,6 +6,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Spatie\SiteSearch\Events\IndexingEndedEvent;
+use Spatie\SiteSearch\Events\IndexingStartedEvent;
 use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\SiteSearch;
 
@@ -22,6 +24,8 @@ class CrawlSiteJob implements ShouldQueue
 
     public function handle()
     {
+        event(new IndexingStartedEvent($this->siteSearchIndex));
+
         $newIndexName = $this->createNewIndex();
 
         $this->startCrawler();
@@ -31,6 +35,8 @@ class CrawlSiteJob implements ShouldQueue
         if ($oldIndexName) {
             $this->deleteOldIndex($oldIndexName);
         }
+
+        event(new IndexingEndedEvent($this->siteSearchIndex));
     }
 
     protected function createNewIndex(): string
@@ -47,7 +53,11 @@ class CrawlSiteJob implements ShouldQueue
         $driver = $this->siteSearchIndex->getDriver();
         $profile = $this->siteSearchIndex->getProfile();
 
-        $siteSearch = new SiteSearch($this->siteSearchIndex->pending_index_name, $driver, $profile);
+        $siteSearch = new SiteSearch(
+            $this->siteSearchIndex->pending_index_name,
+            $driver,
+            $profile
+        );
 
         $siteSearch->crawl($this->siteSearchIndex->crawl_url);
 

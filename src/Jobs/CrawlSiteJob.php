@@ -8,7 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\SiteSearch;
-use Spatie\SiteSearch\Support\SiteConfig;
 
 class CrawlSiteJob implements ShouldQueue
 {
@@ -62,7 +61,7 @@ class CrawlSiteJob implements ShouldQueue
         $this->siteSearchIndex->update(['index_name' => $newIndexName]);
 
         return $oldIndexName;
-}
+    }
 
     protected function deleteOldIndex(string $oldIndexName): self
     {

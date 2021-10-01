@@ -6,24 +6,23 @@ use Spatie\Crawler\Crawler;
 use Spatie\SiteSearch\Crawler\SearchProfileCrawlObserver;
 use Spatie\SiteSearch\Crawler\SiteSearchCrawlProfile;
 use Spatie\SiteSearch\Drivers\Driver;
+use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\Profiles\SearchProfile;
 use Spatie\SiteSearch\SearchResults\SearchResults;
-use Spatie\SiteSearch\Support\SiteConfig;
 
 class SiteSearch
 {
-    public static function make(string $siteConfigName)
+    public static function make(SiteSearchIndex $siteSearchIndex)
     {
-        $siteConfig = SiteConfig::make($siteConfigName);
+        $driver = $siteSearchIndex->getDriver();
 
-        $driver = $siteConfig->makeDriver();
-
-        $profile = $siteConfig->makeProfile();
+        $profile = $siteSearchIndex->getProfile();
 
         return new static($driver, $profile);
     }
 
     public function __construct(
+        protected string $indexName,
         protected Driver $driver,
         protected SearchProfile $profile,
     ) {
@@ -32,7 +31,7 @@ class SiteSearch
     public function crawl(string $baseUrl): self
     {
         $profile = new SiteSearchCrawlProfile($this->profile, $baseUrl);
-        $observer = new SearchProfileCrawlObserver($this->profile, $this->driver);
+        $observer = new SearchProfileCrawlObserver($this->indexName, $this->profile, $this->driver);
 
         Crawler::create()
             ->setCrawlProfile($profile)
@@ -44,6 +43,6 @@ class SiteSearch
 
     public function search(string $query): SearchResults
     {
-        return $this->driver->search($query);
+        return $this->driver->search($this->indexName, $query);
     }
 }

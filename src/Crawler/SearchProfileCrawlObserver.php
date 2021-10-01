@@ -13,15 +13,18 @@ use Spatie\SiteSearch\Profiles\SearchProfile;
 class SearchProfileCrawlObserver extends CrawlObserver
 {
     public function __construct(
+        protected string $indexName,
         protected SearchProfile $searchProfile,
-        protected Driver        $driver
+        protected Driver $driver
     ) {
     }
 
-    public function crawled(UriInterface $url, ResponseInterface $response, ?UriInterface $foundOnUrl = null): void
+    public function crawled(
+        UriInterface $url,
+        ResponseInterface $response,
+        ?UriInterface $foundOnUrl = null
+    ): void
     {
-        ray('Adding to index: ' . $url)->green();
-
         $indexer = $this->searchProfile->useIndexer($url, $response);
 
         if (! $indexer) {
@@ -47,10 +50,14 @@ class SearchProfileCrawlObserver extends CrawlObserver
             })
             ->toArray();
 
-        $this->driver->updateMany($documents);
+        $this->driver->updateManyDocuments($this->indexName, $documents);
     }
 
-    public function crawlFailed(UriInterface $url, RequestException $requestException, ?UriInterface $foundOnUrl = null): void
+    public function crawlFailed(
+        UriInterface $url,
+        RequestException $requestException,
+        ?UriInterface $foundOnUrl = null
+    ): void
     {
     }
 }

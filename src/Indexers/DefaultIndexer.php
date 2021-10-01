@@ -15,7 +15,6 @@ class DefaultIndexer
         protected UriInterface $url,
         protected ResponseInterface $response
     ) {
-        ray('indexing: '. $this->url);
         $html = (string)$this->response->getBody();
 
         $this->domCrawler = new Crawler($html);

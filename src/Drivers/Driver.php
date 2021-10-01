@@ -2,20 +2,20 @@
 
 namespace Spatie\SiteSearch\Drivers;
 
+use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\SearchResults\SearchResults;
-use Spatie\SiteSearch\Support\SiteConfig;
 
 interface Driver
 {
-    public static function make(SiteConfig $siteConfig): self;
+    public static function make(SiteSearchIndex $siteSearchIndex): self;
 
-    public function update(array $documentProperties): self;
+    public function createIndex(string $indexName): self;
 
-    public function updateMany(array $documents): self;
+    public function updateDocument(string $indexName, array $documentProperties): self;
 
-    public function delete(): self;
+    public function updateManyDocuments(string $indexName, array $documents): self;
 
-    public function createIndex(): self;
+    public function deleteIndex(string $indexName): self;
 
-    public function search(string $query): SearchResults;
+    public function search(string $indexName, string $query): SearchResults;
 }

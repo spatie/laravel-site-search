@@ -6,51 +6,66 @@ use Exception;
 use MeiliSearch\Client;
 use MeiliSearch\Client as MeiliSearchClient;
 use MeiliSearch\Endpoints\Indexes;
+use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
-use Spatie\SiteSearch\Support\SiteConfig;
 
 class MeiliSearchDriver implements Driver
 {
-    public static function make(SiteConfig $siteConfig): self
+    public static function make(SiteSearchIndex $siteSearchIndex): self
     {
         $client = new Client('http://127.0.0.1:7700');
 
-        return new self($client, $siteConfig->indexName());
+        return new self($client);
     }
 
     public function __construct(
         protected MeiliSearchClient $meilisearch,
-        protected string            $indexName
     ) {
     }
 
-    public function update(array $documentProperties): self
+    public function createIndex(string $indexName): self
     {
-        $this->index()->addDocuments([$documentProperties]);
+        $this->meilisearch->createIndex($indexName);
+
+        $this->index($indexName)->updateSettings([
+            'distinctAttribute' => 'url',
+        ]);
 
         return $this;
     }
 
-    public function updateMany(array $documents): self
+    public function updateDocument(string $indexName, array $documentProperties): self
+    {
+        $this->index($indexName)->addDocuments([$documentProperties]);
+
+        return $this;
+    }
+
+    public function updateManyDocuments(string $indexName, array $documents): self
     {
         $chunks = array_chunk($documents, 1000);
 
         foreach ($chunks as $documents) {
-            $this->index()->addDocuments($documents);
+            $this->index($indexName)->addDocuments($documents);
         }
 
         return $this;
     }
 
-    protected function index(): Indexes
+    public function deleteIndex(string $indexName): self
     {
-        return $this->meilisearch->index($this->indexName);
+        try {
+            $this->index($indexName)->delete();
+        } catch (Exception) {
+        }
+
+        return $this;
     }
 
-    public function search(string $query): SearchResults
+    public function search(string $indexName, string $query): SearchResults
     {
-        $rawResults = $this->index()->rawSearch($query, [
+        $rawResults = $this->index($indexName)->rawSearch($query, [
             'attributesToHighlight' => ['entry', 'description'],
         ]);
 
@@ -73,26 +88,8 @@ class MeiliSearchDriver implements Driver
         return new SearchResults($hits, $rawResults['processingTimeMs']);
     }
 
-    public function createIndex(): self
+    protected function index(string $indexName): Indexes
     {
-        $this->meilisearch->createIndex($this->indexName);
-
-        $this->index()->updateSettings([
-            'distinctAttribute' => 'url',
-        ]);
-
-        return $this;
-    }
-
-    public function delete(): self
-    {
-        try {
-            $this->index()->delete();
-        } catch (Exception) {
-        }
-
-
-
-        return $this;
+        return $this->meilisearch->index($indexName);
     }
 }

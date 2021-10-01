@@ -1,12 +1,7 @@
 <?php
 
 return [
-    'sites' => [
-        'default' => [
-            'url' => env('APP_URL'),
-            'driver' => Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
-            'index_name' => 'default-site-search-index',
-            'profile' => Spatie\SiteSearch\Profiles\DefaultSearchProfile::class,
-        ],
-    ],
+    'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
+
+    'default_profile' => Spatie\SiteSearch\Profiles\DefaultSearchProfile::class,
 ];

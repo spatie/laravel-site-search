@@ -2,6 +2,7 @@
 
 namespace Spatie\SiteSearch\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\SiteSearch\Drivers\Driver;
@@ -9,12 +10,19 @@ use Spatie\SiteSearch\Profiles\SearchProfile;
 
 class SiteSearchIndex extends Model
 {
+    public $guarded = [];
+
     public $casts = [
         'crawling_started_at' => 'datetime',
         'crawling_ended_at' => 'datetime',
         'extra' => 'array',
         'enabled' => 'boolean',
     ];
+
+    public function scopeEnabled(Builder $query): void
+    {
+        $query->where('enabled', true);
+    }
 
     public function generateAndUpdatePendingIndexName(): string
     {

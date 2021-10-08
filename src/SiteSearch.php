@@ -6,6 +6,7 @@ use Spatie\Crawler\Crawler;
 use Spatie\SiteSearch\Crawler\SearchProfileCrawlObserver;
 use Spatie\SiteSearch\Crawler\SiteSearchCrawlProfile;
 use Spatie\SiteSearch\Drivers\Driver;
+use Spatie\SiteSearch\Exceptions\SiteSearchIndexDoesNotExist;
 use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\Profiles\SearchProfile;
 use Spatie\SiteSearch\SearchResults\SearchResults;
@@ -15,6 +16,10 @@ class SiteSearch
     public static function index(string $indexName): self
     {
         $siteSearchIndex = SiteSearchIndex::firstWhere('name', $indexName);
+
+        if (! $siteSearchIndex) {
+            throw SiteSearchIndexDoesNotExist::make($indexName);
+        }
 
         return self::make($siteSearchIndex);
     }
@@ -55,6 +60,7 @@ class SiteSearch
             $this->driver
         );
 
+        ray("crawling {$baseUrl}");
         Crawler::create()
             ->setCrawlProfile($profile)
             ->setCrawlObserver($observer)

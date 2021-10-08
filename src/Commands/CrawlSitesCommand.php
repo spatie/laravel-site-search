@@ -12,6 +12,7 @@ class CrawlSitesCommand extends Command
 
     public function handle()
     {
+        ray()->newScreen('crawling...');
         SiteSearchIndex::enabled()
             ->each(function (SiteSearchIndex $siteSearchIndex) {
                 $this->comment("Dispatching job to crawl `{$siteSearchIndex->url}`");

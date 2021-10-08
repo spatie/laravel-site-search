@@ -24,6 +24,8 @@ class SearchProfileCrawlObserver extends CrawlObserver
         ResponseInterface $response,
         ?UriInterface $foundOnUrl = null
     ): void {
+        ray("crawled {$url}")->green();
+
         $indexer = $this->searchProfile->useIndexer($url, $response);
 
         if (! $indexer) {
@@ -57,5 +59,6 @@ class SearchProfileCrawlObserver extends CrawlObserver
         RequestException $requestException,
         ?UriInterface $foundOnUrl = null
     ): void {
+        ray('crawl failed')->red();
     }
 }

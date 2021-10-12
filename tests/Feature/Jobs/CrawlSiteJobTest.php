@@ -31,4 +31,4 @@ it('can crawl a site', function () {
     expect($hit)
         ->pageTitle->toEqual('My title')
         ->entry->toEqual('My content');
-})->only();
+});

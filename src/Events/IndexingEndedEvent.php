@@ -6,5 +6,7 @@ use Spatie\SiteSearch\Models\SiteSearchIndex;
 
 class IndexingEndedEvent
 {
-    public function __construct(public SiteSearchIndex $siteSearchIndex) {}
+    public function __construct(public SiteSearchIndex $siteSearchIndex)
+    {
+    }
 }

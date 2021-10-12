@@ -22,7 +22,7 @@ class CreateSearchIndexCommand extends Command
         SiteSearchIndex::create([
             'name' => $name,
             'crawl_url' => $url,
-            'enabled' => 1
+            'enabled' => 1,
         ]);
 
         $this->newLine();

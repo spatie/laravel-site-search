@@ -24,7 +24,7 @@ $app->router->group([
 
     $config = json_decode(file_get_contents($configFile), true);
 
-    $routesFile =  __DIR__ . "/routeFiles/{$config['routes']}.php";
+    $routesFile = __DIR__ . "/routeFiles/{$config['routes']}.php";
 
     require $routesFile;
 });

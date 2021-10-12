@@ -5,7 +5,7 @@ use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\SiteSearch;
 use Tests\Server\Server;
 
-it('can crawl a site', function() {
+it('can crawl a site', function () {
     Server::boot();
 
     Server::activateRoutes('homePage');
@@ -13,7 +13,7 @@ it('can crawl a site', function() {
     $siteSearchIndex = SiteSearchIndex::create([
         'name' => 'test',
         'index_base_name' => 'test',
-        'crawl_url' => 'http://localhost:8181'
+        'crawl_url' => 'http://localhost:8181',
     ]);
 
     dispatch(new CrawlSiteJob($siteSearchIndex));

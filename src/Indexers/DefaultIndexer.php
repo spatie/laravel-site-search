@@ -74,5 +74,4 @@ class DefaultIndexer implements Indexer
     {
         return now();
     }
-
 }

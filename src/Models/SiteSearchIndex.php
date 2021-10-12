@@ -3,6 +3,7 @@
 namespace Spatie\SiteSearch\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\SiteSearch\Drivers\Driver;
@@ -10,6 +11,8 @@ use Spatie\SiteSearch\Profiles\SearchProfile;
 
 class SiteSearchIndex extends Model
 {
+    use HasFactory;
+
     public $guarded = [];
 
     public $casts = [

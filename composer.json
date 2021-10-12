@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "guzzlehttp/psr7": "^2.1",
         "illuminate/contracts": "^8.37",
         "illuminate/http": "^8.60",
         "nunomaduro/termwind": "dev-master",

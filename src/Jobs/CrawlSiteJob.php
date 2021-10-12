@@ -49,7 +49,6 @@ class CrawlSiteJob implements ShouldQueue
 
     protected function startCrawler(): self
     {
-        ray('starting crawler');
         $driver = $this->siteSearchIndex->getDriver();
         $profile = $this->siteSearchIndex->getProfile();
 
@@ -60,8 +59,6 @@ class CrawlSiteJob implements ShouldQueue
         );
 
         $siteSearch->crawl($this->siteSearchIndex->crawl_url);
-
-        ray('crawling done...');
 
         return $this;
     }

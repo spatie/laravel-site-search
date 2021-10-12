@@ -31,7 +31,6 @@ class Server
         $pid = exec($startServerCommand);
 
         while (! static::serverHasBooted()) {
-            ray('waiting...');
             sleep(1);
         }
 
@@ -62,7 +61,6 @@ class Server
 
     public static function activateRoutes(string $routeConfiguration)
     {
-        ray('activating routes ' . $routeConfiguration);
         file_put_contents(__DIR__ ."/public/config.json", json_encode(['routes' => $routeConfiguration]));
     }
 }

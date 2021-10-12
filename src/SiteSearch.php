@@ -60,7 +60,6 @@ class SiteSearch
             $this->driver
         );
 
-        ray("crawling {$baseUrl}");
         Crawler::create()
             ->setCrawlProfile($profile)
             ->setCrawlObserver($observer)

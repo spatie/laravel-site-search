@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-class DefaultIndexer
+class DefaultIndexer implements Indexer
 {
     protected Crawler $domCrawler;
 
@@ -74,4 +74,5 @@ class DefaultIndexer
     {
         return now();
     }
+
 }

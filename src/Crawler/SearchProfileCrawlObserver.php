@@ -30,6 +30,10 @@ class SearchProfileCrawlObserver extends CrawlObserver
             return;
         }
 
+        if (! $this->searchProfile->shouldIndex($url)) {
+            return;
+        }
+
         $pageTitle = $indexer->pageTitle();
         $h1 = $indexer->h1();
         $dateModified = $indexer->dateModified();

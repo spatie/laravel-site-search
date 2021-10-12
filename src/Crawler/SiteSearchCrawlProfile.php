@@ -21,6 +21,6 @@ class SiteSearchCrawlProfile extends CrawlInternalUrls
             return false;
         }
 
-        return $this->profile->shouldIndex($url);
+        return $this->profile->shouldCrawl($url);
     }
 }

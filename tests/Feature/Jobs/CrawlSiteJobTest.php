@@ -18,7 +18,7 @@ it('can crawl a site', function () {
 
     dispatch(new CrawlSiteJob($siteSearchIndex));
 
-    sleep(5);
+    sleep(6);
 
     /** @var \Spatie\SiteSearch\SearchResults\SearchResults $searchResults */
     $searchResults = SiteSearch::index('test')->query('content');

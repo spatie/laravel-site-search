@@ -1,5 +1,7 @@
 <?php
 
-use Spatie\SiteSearch\Tests\TestCase;
+use Tests\TestCase;
 
-uses(TestCase::class)->in(__DIR__);
+uses(TestCase::class)
+    ->beforeEach(fn() => ray()->clearScreen())
+    ->in(__DIR__);

@@ -26,6 +26,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: MeiliSearch setup with Docker
+        run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --master-key=masterKey --no-analytics=true
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:

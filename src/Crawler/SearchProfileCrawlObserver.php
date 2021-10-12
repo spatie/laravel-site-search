@@ -59,6 +59,6 @@ class SearchProfileCrawlObserver extends CrawlObserver
         RequestException $requestException,
         ?UriInterface $foundOnUrl = null
     ): void {
-        ray('crawl failed')->red();
+        ray('crawl failed', $requestException)->red();
     }
 }

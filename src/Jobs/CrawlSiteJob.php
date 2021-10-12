@@ -29,7 +29,6 @@ class CrawlSiteJob implements ShouldQueue
         $newIndexName = $this->createNewIndex();
 
         $this->startCrawler();
-
         $oldIndexName = $this->blessNewIndex($newIndexName);
 
         if ($oldIndexName) {

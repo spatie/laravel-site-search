@@ -1,6 +1,8 @@
 <?php
 
-$router->get('/', fn () =>
+$router->get(
+    '/',
+    fn () =>
 <<<HTML
         Here is the homepage
         <a href="/do-not-index">Next page</a>

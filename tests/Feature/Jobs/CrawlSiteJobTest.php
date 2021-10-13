@@ -85,3 +85,22 @@ it('can be configured not to index a specific url', function () {
         'http://localhost:8181/3',
     ]);
 });
+
+it('will only crawl pages that start with the crawl url', function () {
+    Server::activateRoutes('subPage');
+
+    $this->siteSearchIndex->update([
+        'crawl_url' => 'http://localhost:8181/docs',
+    ]);
+
+    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+
+    waitForMeilisearch();
+
+    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('here');
+
+    expect(hitUrls($searchResults))->toEqual([
+        'http://localhost:8181/docs',
+        'http://localhost:8181/docs/sub-page',
+    ]);
+});

@@ -39,7 +39,7 @@ class DefaultIndexer implements Indexer
 
     public function entries(): array
     {
-        $content = attempt(fn () => $this->domCrawler->filter('body')->first()->html());
+        $content = $this->getHtmlToIndex();
 
         if (is_null($content)) {
             return [];
@@ -70,6 +70,30 @@ class DefaultIndexer implements Indexer
         $entries = array_filter($entries);
 
         return array_values($entries);
+    }
+
+    protected function getHtmlToIndex(): ?string
+    {
+        return attempt(function () {
+            $this->removeIgnoredContent($this->domCrawler);
+
+            return $this->domCrawler->filter("body")->html();
+        });
+    }
+
+    protected function removeIgnoredContent(Crawler $crawler): Crawler
+    {
+        foreach(config('site-search.do_not_index') as $selector) {
+            $this->domCrawler
+                ->filter($selector)
+                ->each(function (Crawler $crawler) {
+                    foreach ($crawler as $node) {
+                        $node->parentNode->removeChild($node);
+                    }
+                });
+        }
+
+        return $crawler;
     }
 
     public function dateModified(): ?CarbonInterface

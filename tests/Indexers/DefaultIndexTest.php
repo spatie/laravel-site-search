@@ -19,3 +19,16 @@ it('can index a page', function () {
             'This is the content',
         ]);
 });
+
+it('can ignore content', function () {
+    $indexer = new DefaultIndexer(
+        new Uri('https://example.com'),
+        new Response(body: view('test::noIndex'))
+    );
+
+    expect($indexer)
+        ->entries()->toEqual([
+            'This is the H1',
+            'This is the content',
+        ]);
+});

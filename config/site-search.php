@@ -6,4 +6,9 @@ return [
     'default_profile' => Spatie\SiteSearch\Profiles\DefaultSearchProfile::class,
 
     'default_indexer' => Spatie\SiteSearch\Indexers\DefaultIndexer::class,
+
+    'do_not_index' => [
+        '[data-no-index]',
+        'nav',
+    ]
 ];

@@ -13,8 +13,12 @@ class DefaultSearchProfile implements SearchProfile
         return true;
     }
 
-    public function shouldIndex(UriInterface $url): bool
+    public function shouldIndex(UriInterface $url, ResponseInterface $response): bool
     {
+        if ($response->hasHeader('site-search-do-not-index')) {
+            return false;
+        }
+
         return true;
     }
 

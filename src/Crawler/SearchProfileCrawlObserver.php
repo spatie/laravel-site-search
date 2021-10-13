@@ -31,7 +31,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
             return;
         }
 
-        if (! $this->searchProfile->shouldIndex($url)) {
+        if (! $this->searchProfile->shouldIndex($url, $response)) {
             return;
         }
 

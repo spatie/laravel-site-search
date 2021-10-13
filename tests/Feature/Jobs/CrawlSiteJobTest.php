@@ -20,7 +20,6 @@ it('can crawl a site', function () {
 
     waitForMeilisearch();
 
-    /** @var \Spatie\SiteSearch\SearchResults\SearchResults $searchResults */
     $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('content');
 
     expect($searchResults->hits)->toHaveCount(1);
@@ -102,5 +101,19 @@ it('will only crawl pages that start with the crawl url', function () {
     expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/docs',
         'http://localhost:8181/docs/sub-page',
+    ]);
+});
+
+it('can will not index pages with a certain header', function () {
+    Server::activateRoutes('doNotIndexHeader');
+
+    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+
+    waitForMeilisearch();
+
+    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('here');
+
+    expect(hitUrls($searchResults))->toEqual([
+        'http://localhost:8181/',
     ]);
 });

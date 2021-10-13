@@ -9,6 +9,12 @@
 
 This package can crawl your entire site and index it. 
 
+TODO:
+- make `extra` on indexer work (+ __get on search hit)
+- add test with invalid html
+- consider renaming model
+- finish docs
+
 ## Support us
 
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-site-search.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-site-search)

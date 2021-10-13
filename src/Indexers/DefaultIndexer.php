@@ -67,7 +67,9 @@ class DefaultIndexer implements Indexer
             return strlen($entry) > 3;
         });
 
-        return array_filter($entries);
+        $entries = array_filter($entries);
+
+        return array_values($entries);
     }
 
     public function dateModified(): ?CarbonInterface

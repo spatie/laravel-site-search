@@ -2,13 +2,13 @@
 
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
-use Tests\TestCase;
+use Tests\TestSupport\TestCase;
 
 uses(TestCase::class)
     ->beforeEach(fn () => ray()->clearScreen())
     ->in(__DIR__);
 
-function waitForMeiliseach(): void
+function waitForMeilisearch(): void
 {
     sleep(6);
 }

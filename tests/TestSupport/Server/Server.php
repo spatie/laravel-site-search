@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Server;
+namespace Tests\TestSupport\Server;
 
 use GuzzleHttp\Client;
 use Throwable;
@@ -26,7 +26,7 @@ class Server
             return;
         }
 
-        $startServerCommand = 'php -S '.rtrim(static::getServerUrl(), '/').' -t ./tests/Server/public > /dev/null 2>&1 & echo $!';
+        $startServerCommand = 'php -S '.rtrim(static::getServerUrl(), '/').' -t ./tests/TestSupport/Server/public > /dev/null 2>&1 & echo $!';
 
         $pid = exec($startServerCommand);
 
@@ -52,7 +52,7 @@ class Server
 
         try {
             $result = file_get_contents('http://'.self::getServerUrl('booted'), false, $context) != false;
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
             $result = false;
         }
 

@@ -21,7 +21,7 @@
     <testsuites>
         <testsuite name="Spatie Test Suite">
             <directory>tests</directory>
-            <exclude>./tests/Server</exclude>
+            <exclude>./tests/TestSupport/Server</exclude>
         </testsuite>
     </testsuites>
     <coverage>

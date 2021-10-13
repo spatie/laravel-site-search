@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\TestClasses\SearchProfiles;
+namespace Tests\TestSupport\TestClasses\SearchProfiles;
 
 use Psr\Http\Message\UriInterface;
 use Spatie\SiteSearch\Profiles\DefaultSearchProfile;

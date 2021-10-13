@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Factories;
+namespace Tests\TestSupport\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Spatie\SiteSearch\Models\SiteSearchIndex;

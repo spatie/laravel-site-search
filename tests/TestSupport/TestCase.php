@@ -2,12 +2,11 @@
 
 namespace Tests\TestSupport;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Blade;
-use Orchestra\Testbench\TestCase as Orchestra;
-use Spatie\SiteSearch\SiteSearchServiceProvider;
 use function class_basename;
 use function config;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\SiteSearch\SiteSearchServiceProvider;
 
 class TestCase extends Orchestra
 {

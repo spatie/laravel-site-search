@@ -14,7 +14,7 @@ class CrawlSitesCommand extends Command
     {
         SiteSearchIndex::enabled()
             ->each(function (SiteSearchIndex $siteSearchIndex) {
-                $this->comment("Dispatching job to crawl `{$siteSearchIndex->url}`");
+                $this->comment("Dispatching job to crawl `{$siteSearchIndex->crawl_url}`");
 
                 dispatch(new CrawlSiteJob($siteSearchIndex));
             });

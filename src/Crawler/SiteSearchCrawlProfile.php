@@ -17,7 +17,7 @@ class SiteSearchCrawlProfile extends CrawlInternalUrls
 
     public function shouldCrawl(UriInterface $url): bool
     {
-        if (! parent::shouldCrawl($url)) {
+        if (! str_starts_with((string)$url, (string)$this->baseUrl)) {
             return false;
         }
 

@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Spatie\Crawler\CrawlObservers\CrawlObserver;
 use Spatie\SiteSearch\Drivers\Driver;
+use Spatie\SiteSearch\Events\FailedToCrawlUrlEvent;
 use Spatie\SiteSearch\Profiles\SearchProfile;
 
 class SearchProfileCrawlObserver extends CrawlObserver
@@ -42,13 +43,13 @@ class SearchProfileCrawlObserver extends CrawlObserver
         $documents = collect($indexer->entries())
             ->map(function (string $entry) use ($dateModified, $url, $h1, $description, $pageTitle) {
                 return [
-                    'id' => (string)Str::uuid(),
-                    'entry' => $entry,
                     'pageTitle' => $pageTitle,
-                    'description' => $description,
-                    'h1' => $h1,
                     'url' => (string)$url,
+                    'h1' => $h1,
+                    'entry' => $entry,
+                    'description' => $description,
                     'date_modified_timestamp' => $dateModified->getTimestamp(),
+                    'id' => (string)Str::uuid(),
                 ];
             })
             ->toArray();
@@ -61,6 +62,6 @@ class SearchProfileCrawlObserver extends CrawlObserver
         RequestException $requestException,
         ?UriInterface $foundOnUrl = null
     ): void {
-        ray('crawl failed', $requestException)->red();
+        event(new FailedToCrawlUrlEvent($url, $requestException, $foundOnUrl));
     }
 }

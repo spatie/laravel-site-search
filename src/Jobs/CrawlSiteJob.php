@@ -52,7 +52,6 @@ class CrawlSiteJob implements ShouldQueue
 
     protected function startCrawler(): self
     {
-
         $driver = $this->siteSearchIndex->getDriver();
         $profile = $this->siteSearchIndex->getProfile();
 

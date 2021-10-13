@@ -16,6 +16,6 @@ function waitForMeilisearch(): void
 function hitUrls(SearchResults $searchResults): array
 {
     return collect($searchResults->hits)
-        ->map(fn(Hit $hit) => $hit->url)
+        ->map(fn (Hit $hit) => $hit->url)
         ->toArray();
 }

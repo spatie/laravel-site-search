@@ -7,7 +7,7 @@ use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfile;
 
-beforeEach(function() {
+beforeEach(function () {
     Server::boot();
 
     $this->siteSearchIndex = SiteSearchIndex::factory()->create();
@@ -33,7 +33,7 @@ it('can crawl a site', function () {
         ->entry->toEqual('My content');
 });
 
-it('can crawl all pages', function() {
+it('can crawl all pages', function () {
     Server::activateRoutes('chain');
 
     dispatch(new CrawlSiteJob($this->siteSearchIndex));
@@ -49,7 +49,7 @@ it('can crawl all pages', function() {
     ]);
 });
 
-it('can be configured not to crawl a specific url', function() {
+it('can be configured not to crawl a specific url', function () {
     Server::activateRoutes('chain');
 
     $this->siteSearchIndex->update([
@@ -67,7 +67,7 @@ it('can be configured not to crawl a specific url', function() {
     ]);
 });
 
-it('can be configured not to index a specific url', function() {
+it('can be configured not to index a specific url', function () {
     Server::activateRoutes('chain');
 
     $this->siteSearchIndex->update([

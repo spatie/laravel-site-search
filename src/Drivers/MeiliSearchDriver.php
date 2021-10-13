@@ -6,7 +6,6 @@ use Exception;
 use MeiliSearch\Client;
 use MeiliSearch\Client as MeiliSearchClient;
 use MeiliSearch\Endpoints\Indexes;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
 
@@ -106,8 +105,8 @@ class MeiliSearchDriver implements Driver
             ->getAllUpdateStatus();
 
         return collect($statusUpdates)
-            ->map(fn(array $updateProperties) => $updateProperties['status'])
-            ->filter(fn(string $status) => $status === 'processing')
+            ->map(fn (array $updateProperties) => $updateProperties['status'])
+            ->filter(fn (string $status) => $status === 'processing')
             ->isNotEmpty();
     }
 }

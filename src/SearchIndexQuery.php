@@ -21,9 +21,7 @@ class SearchIndexQuery
 
     public function __construct(
         protected SiteSearch $siteSearch
-    )
-    {
-
+    ) {
     }
 
     public function search(string $query): self
@@ -53,11 +51,11 @@ class SearchIndexQuery
 
         $pageNumber = Paginator::resolveCurrentPage($pageName);
 
-        $offset = ($pageNumber -1 ) * $pageSize;
+        $offset = ($pageNumber - 1) * $pageSize;
 
         $searchResults = $this->siteSearch->search($this->query, $pageSize, $offset);
 
-       return new Paginator($searchResults->hits, $pageSize);
+        return new Paginator($searchResults->hits, $pageSize);
     }
 
     protected function ensureQueryHasBeenSet(): void

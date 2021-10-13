@@ -2,11 +2,11 @@
 
 namespace Tests\TestSupport;
 
-use Spatie\LaravelRay\RayServiceProvider;
 use function class_basename;
 use function config;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\LaravelRay\RayServiceProvider;
 use Spatie\SiteSearch\SiteSearchServiceProvider;
 
 class TestCase extends Orchestra

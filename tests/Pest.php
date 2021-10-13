@@ -15,7 +15,7 @@ function waitForMeilisearch(SiteSearchIndex $siteSearchIndex): void
 {
     $indexName = $siteSearchIndex->refresh()->index_name;
 
-    while(MeiliSearchDriver::make()->isProcessing($indexName)) {
+    while (MeiliSearchDriver::make()->isProcessing($indexName)) {
         sleep(1);
     }
 }

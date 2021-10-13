@@ -2,8 +2,6 @@
 
 namespace Spatie\SiteSearch;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\Pagination\Paginator;
 use Spatie\Crawler\Crawler;
 use Spatie\SiteSearch\Crawler\SearchProfileCrawlObserver;
 use Spatie\SiteSearch\Crawler\SiteSearchCrawlProfile;

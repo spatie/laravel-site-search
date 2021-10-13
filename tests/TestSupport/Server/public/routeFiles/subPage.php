@@ -1,6 +1,8 @@
 <?php
 
-$router->get('/docs', fn () =>
+$router->get(
+    '/docs',
+    fn () =>
     <<<HTML
         Here is the docs page
 

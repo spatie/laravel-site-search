@@ -11,5 +11,6 @@ class FailedToCrawlUrlEvent
         public UriInterface $url,
         public RequestException $requestException,
         public?UriInterface $foundOnUrl = null
-    ) {}
+    ) {
+    }
 }

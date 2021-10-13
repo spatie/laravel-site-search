@@ -10,6 +10,5 @@ class CreatedNewIndexEvent
         public string $newIndexName,
         public SiteSearchIndex $siteSearchIndex,
     ) {
-
     }
 }

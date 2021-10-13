@@ -160,3 +160,21 @@ it('can paginate the results', function () {
         'http://localhost:8181/3',
     ]);
 });
+
+it('can limit results', function () {
+    Server::activateRoutes('chain');
+
+    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+
+    waitForMeilisearch($this->siteSearchIndex);
+
+    $paginator = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->limit(2)
+        ->get();
+
+    expect(hitUrls($paginator))->toEqual([
+        'http://localhost:8181/',
+        'http://localhost:8181/2',
+    ]);
+});

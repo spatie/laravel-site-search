@@ -2,7 +2,6 @@
 
 namespace Spatie\SiteSearch\Drivers;
 
-use Spatie\SiteSearch\Models\SiteSearchIndex;
 use Spatie\SiteSearch\SearchResults\SearchResults;
 
 interface Driver

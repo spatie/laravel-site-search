@@ -2,6 +2,8 @@
 
 namespace Spatie\SiteSearch;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 use Spatie\Crawler\Crawler;
 use Spatie\SiteSearch\Crawler\SearchProfileCrawlObserver;
 use Spatie\SiteSearch\Crawler\SiteSearchCrawlProfile;
@@ -22,16 +24,6 @@ class SiteSearch
         }
 
         return self::make($siteSearchIndex);
-    }
-
-    public function query(string $query): SearchResults
-    {
-        /** @var SiteSearchIndex $siteSearchIndex */
-        $siteSearchIndex = SiteSearchIndex::first();
-
-        $siteSearch = static::make($siteSearchIndex);
-
-        return $siteSearch->search($query);
     }
 
     public static function make(SiteSearchIndex $siteSearchIndex): self
@@ -68,8 +60,8 @@ class SiteSearch
         return $this;
     }
 
-    public function search(string $query): SearchResults
+    public function search(string $query, ?int $limit = null, ?int $offset = 0): SearchResults
     {
-        return $this->driver->search($this->indexName, $query);
+        return $this->driver->search($this->indexName, $query, $limit, $offset);
     }
 }

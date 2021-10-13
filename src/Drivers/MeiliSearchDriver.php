@@ -12,7 +12,7 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 
 class MeiliSearchDriver implements Driver
 {
-    public static function make(SiteSearchIndex $siteSearchIndex): self
+    public static function make(): self
     {
         $client = new Client('http://127.0.0.1:7700');
 
@@ -63,11 +63,17 @@ class MeiliSearchDriver implements Driver
         return $this;
     }
 
-    public function search(string $indexName, string $query): SearchResults
+    public function search(string $indexName, string $query, ?int $limit = null, int $offset = 0): SearchResults
     {
-        $rawResults = $this->index($indexName)->rawSearch($query, [
+        $searchParams = [
+            'limit' => $limit,
+            'offset' => $offset,
             'attributesToHighlight' => ['entry', 'description'],
-        ]);
+        ];
+
+        $rawResults = $this
+            ->index($indexName)
+            ->rawSearch($query, array_filter($searchParams));
 
         $hits = array_map(function (array $hitProperties) {
             return new Hit(
@@ -91,5 +97,17 @@ class MeiliSearchDriver implements Driver
     protected function index(string $indexName): Indexes
     {
         return $this->meilisearch->index($indexName);
+    }
+
+    public function isProcessing(string $indexName): bool
+    {
+        $statusUpdates = $this->meilisearch
+            ->getIndex($indexName)
+            ->getAllUpdateStatus();
+
+        return collect($statusUpdates)
+            ->map(fn(array $updateProperties) => $updateProperties['status'])
+            ->filter(fn(string $status) => $status === 'processing')
+            ->isNotEmpty();
     }
 }

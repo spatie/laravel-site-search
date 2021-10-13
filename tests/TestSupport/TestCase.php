@@ -2,6 +2,7 @@
 
 namespace Tests\TestSupport;
 
+use Spatie\LaravelRay\RayServiceProvider;
 use function class_basename;
 use function config;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,6 +26,7 @@ class TestCase extends Orchestra
     {
         return [
             SiteSearchServiceProvider::class,
+            RayServiceProvider::class,
         ];
     }
 

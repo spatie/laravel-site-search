@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Pagination\Paginator;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Models\SiteSearchIndex;
-use Spatie\SiteSearch\SiteSearch;
+use Spatie\SiteSearch\SearchIndexQuery;
 use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfile;
@@ -18,9 +19,11 @@ it('can crawl a site', function () {
 
     dispatch(new CrawlSiteJob($this->siteSearchIndex));
 
-    waitForMeilisearch();
+    waitForMeilisearch($this->siteSearchIndex);
 
-    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('content');
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('content')
+        ->get();
 
     expect($searchResults->hits)->toHaveCount(1);
 
@@ -37,9 +40,11 @@ it('can crawl all pages', function () {
 
     dispatch(new CrawlSiteJob($this->siteSearchIndex));
 
-    waitForMeilisearch();
+    waitForMeilisearch($this->siteSearchIndex);
 
-    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('here');
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->get();
 
     expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/',
@@ -57,9 +62,11 @@ it('can be configured not to crawl a specific url', function () {
 
     dispatch(new CrawlSiteJob($this->siteSearchIndex));
 
-    waitForMeilisearch();
+    waitForMeilisearch($this->siteSearchIndex);
 
-    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('here');
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->get();
 
     expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/',
@@ -75,9 +82,11 @@ it('can be configured not to index a specific url', function () {
 
     dispatch(new CrawlSiteJob($this->siteSearchIndex));
 
-    waitForMeilisearch();
+    waitForMeilisearch($this->siteSearchIndex);
 
-    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('here');
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->get();
 
     expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/',
@@ -94,9 +103,11 @@ it('will only crawl pages that start with the crawl url', function () {
 
     dispatch(new CrawlSiteJob($this->siteSearchIndex));
 
-    waitForMeilisearch();
+    waitForMeilisearch($this->siteSearchIndex);
 
-    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('here');
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->get();
 
     expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/docs',
@@ -109,11 +120,43 @@ it('can will not index pages with a certain header', function () {
 
     dispatch(new CrawlSiteJob($this->siteSearchIndex));
 
-    waitForMeilisearch();
+    waitForMeilisearch($this->siteSearchIndex);
 
-    $searchResults = SiteSearch::index($this->siteSearchIndex->name)->query('here');
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->get();
 
     expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/',
+    ]);
+});
+
+it('can paginate the results', function () {
+    Server::activateRoutes('chain');
+
+    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+
+    waitForMeilisearch($this->siteSearchIndex);
+
+    $paginator = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->paginate(2);
+
+    expect(hitUrls($paginator))->toEqual([
+        'http://localhost:8181/',
+        'http://localhost:8181/2',
+    ]);
+
+    // fake that we're on page 2
+    Paginator::currentPageResolver(function () {
+        return 2;
+    });
+
+    $paginator = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->paginate(2);
+
+    expect(hitUrls($paginator))->toEqual([
+        'http://localhost:8181/3',
     ]);
 });

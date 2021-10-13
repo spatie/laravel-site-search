@@ -7,7 +7,7 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 
 interface Driver
 {
-    public static function make(SiteSearchIndex $siteSearchIndex): self;
+    public static function make(): self;
 
     public function createIndex(string $indexName): self;
 
@@ -17,5 +17,5 @@ interface Driver
 
     public function deleteIndex(string $indexName): self;
 
-    public function search(string $indexName, string $query): SearchResults;
+    public function search(string $indexName, string $query, ?int $limit = null, int $offset = 0): SearchResults;
 }

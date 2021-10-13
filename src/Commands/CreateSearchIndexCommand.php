@@ -11,7 +11,7 @@ class CreateSearchIndexCommand extends Command
 
     public function handle()
     {
-        $this->info('Let create your first index!');
+        $this->info('Let create your index!');
 
         $this->newLine();
         $name = $this->ask('What should your index be named?');

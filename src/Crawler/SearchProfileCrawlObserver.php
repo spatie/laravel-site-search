@@ -25,13 +25,13 @@ class SearchProfileCrawlObserver extends CrawlObserver
         ResponseInterface $response,
         ?UriInterface $foundOnUrl = null
     ): void {
-        $indexer = $this->searchProfile->useIndexer($url, $response);
-
-        if (! $indexer) {
+        if (! $this->searchProfile->shouldIndex($url, $response)) {
             return;
         }
 
-        if (! $this->searchProfile->shouldIndex($url, $response)) {
+        $indexer = $this->searchProfile->useIndexer($url, $response);
+
+        if (! $indexer) {
             return;
         }
 

@@ -8,13 +8,17 @@ use Spatie\SiteSearch\Indexers\Indexer;
 
 class DefaultSearchProfile implements SearchProfile
 {
-    public function shouldCrawl(UriInterface $url): bool
+    public function shouldCrawl(UriInterface $url, ResponseInterface $response): bool
     {
         return true;
     }
 
     public function shouldIndex(UriInterface $url, ResponseInterface $response): bool
     {
+        if ($response->getStatusCode() !== 200) {
+            return false;
+        }
+
         if ($response->hasHeader('site-search-do-not-index')) {
             return false;
         }
@@ -24,10 +28,6 @@ class DefaultSearchProfile implements SearchProfile
 
     public function useIndexer(UriInterface $url, ResponseInterface $response): ?Indexer
     {
-        if ($response->getStatusCode() !== 200) {
-            return null;
-        }
-
         $defaultIndexer = config('site-search.default_indexer');
 
         return new $defaultIndexer($url, $response);

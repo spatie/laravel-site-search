@@ -72,6 +72,13 @@ class DefaultIndexer implements Indexer
         return array_values($entries);
     }
 
+    public function extra(): array
+    {
+        return [
+
+        ];
+    }
+
     protected function getHtmlToIndex(): ?string
     {
         return attempt(function () {

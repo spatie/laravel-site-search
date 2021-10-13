@@ -25,7 +25,7 @@ return [
 
     /*
      * An indexer is a class that is responsible for converting the content of a page
-     * to a structure that will be added to the search index..
+     * to a structure that will be added to the search index.
      *
      * This indexer will be used when none is specified in the `profile_class` attribute
      * of a `SiteSearchIndex` model.

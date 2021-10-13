@@ -52,6 +52,7 @@ class CrawlSiteJob implements ShouldQueue
 
     protected function startCrawler(): self
     {
+
         $driver = $this->siteSearchIndex->getDriver();
         $profile = $this->siteSearchIndex->getProfile();
 
@@ -61,7 +62,9 @@ class CrawlSiteJob implements ShouldQueue
             $profile
         );
 
+        $this->siteSearchIndex->update(['crawling_started_at' => now()]);
         $siteSearch->crawl($this->siteSearchIndex->crawl_url);
+        $this->siteSearchIndex->update(['crawling_ended_at' => now()]);
 
         return $this;
     }

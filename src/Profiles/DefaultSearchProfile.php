@@ -8,7 +8,7 @@ use Spatie\SiteSearch\Indexers\Indexer;
 
 class DefaultSearchProfile implements SearchProfile
 {
-    public function shouldCrawl(UriInterface $url, ResponseInterface $response): bool
+    public function shouldCrawl(UriInterface $url): bool
     {
         return true;
     }

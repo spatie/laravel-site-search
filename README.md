@@ -11,7 +11,6 @@ This package can crawl your entire site and index it.
 
 TODO:
 - make `extra` on indexer work (+ __get on search hit)
-- add test with invalid html
 - consider renaming model
 - finish docs
 

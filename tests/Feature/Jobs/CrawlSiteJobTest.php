@@ -168,13 +168,29 @@ it('can limit results', function () {
 
     waitForMeilisearch($this->siteSearchIndex);
 
-    $paginator = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
         ->search('here')
         ->limit(2)
         ->get();
 
-    expect(hitUrls($paginator))->toEqual([
+    expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/',
         'http://localhost:8181/2',
+    ]);
+});
+
+it('can handle invalid html', function() {
+    Server::activateRoutes('invalidHtml');
+
+    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+
+    waitForMeilisearch($this->siteSearchIndex);
+
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+        ->search('here')
+        ->get();
+
+    expect(hitUrls($searchResults))->toEqual([
+        'http://localhost:8181/',
     ]);
 });

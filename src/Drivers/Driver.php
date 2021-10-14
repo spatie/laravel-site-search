@@ -2,11 +2,12 @@
 
 namespace Spatie\SiteSearch\Drivers;
 
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\SearchResults;
 
 interface Driver
 {
-    public static function make(): self;
+    public static function make(SiteSearchConfig $siteSearchConfig): self;
 
     public function createIndex(string $indexName): self;
 

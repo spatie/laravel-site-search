@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Spatie\SiteSearch\Drivers\Driver;
 use Spatie\SiteSearch\Profiles\SearchProfile;
 
-class SiteSearchIndex extends Model
+class SiteSearchConfig extends Model
 {
     use HasFactory;
 

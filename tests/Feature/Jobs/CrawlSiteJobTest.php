@@ -2,7 +2,7 @@
 
 use Illuminate\Pagination\Paginator;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchIndexQuery;
 use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
@@ -11,17 +11,17 @@ use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfi
 beforeEach(function () {
     Server::boot();
 
-    $this->siteSearchIndex = SiteSearchIndex::factory()->create();
+    $this->siteSearchConfig = SiteSearchConfig::factory()->create();
 });
 
 it('can crawl a site', function () {
     Server::activateRoutes('homePage');
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('content')
         ->get();
 
@@ -38,11 +38,11 @@ it('can crawl a site', function () {
 it('can crawl all pages', function () {
     Server::activateRoutes('chain');
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->get();
 
@@ -56,15 +56,15 @@ it('can crawl all pages', function () {
 it('can be configured not to crawl a specific url', function () {
     Server::activateRoutes('chain');
 
-    $this->siteSearchIndex->update([
+    $this->siteSearchConfig->update([
         'profile_class' => DoNotCrawlSecondLinkSearchProfile::class,
     ]);
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->get();
 
@@ -76,15 +76,15 @@ it('can be configured not to crawl a specific url', function () {
 it('can be configured not to index a specific url', function () {
     Server::activateRoutes('chain');
 
-    $this->siteSearchIndex->update([
+    $this->siteSearchConfig->update([
         'profile_class' => DoNotIndexSecondLinkSearchProfile::class,
     ]);
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->get();
 
@@ -97,15 +97,15 @@ it('can be configured not to index a specific url', function () {
 it('will only crawl pages that start with the crawl url', function () {
     Server::activateRoutes('subPage');
 
-    $this->siteSearchIndex->update([
+    $this->siteSearchConfig->update([
         'crawl_url' => 'http://localhost:8181/docs',
     ]);
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->get();
 
@@ -118,11 +118,11 @@ it('will only crawl pages that start with the crawl url', function () {
 it('can will not index pages with a certain header', function () {
     Server::activateRoutes('doNotIndexHeader');
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->get();
 
@@ -134,11 +134,11 @@ it('can will not index pages with a certain header', function () {
 it('can paginate the results', function () {
     Server::activateRoutes('chain');
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $paginator = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $paginator = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->paginate(2);
 
@@ -152,7 +152,7 @@ it('can paginate the results', function () {
         return 2;
     });
 
-    $paginator = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $paginator = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->paginate(2);
 
@@ -164,11 +164,11 @@ it('can paginate the results', function () {
 it('can limit results', function () {
     Server::activateRoutes('chain');
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->limit(2)
         ->get();
@@ -182,11 +182,11 @@ it('can limit results', function () {
 it('can handle invalid html', function() {
     Server::activateRoutes('invalidHtml');
 
-    dispatch(new CrawlSiteJob($this->siteSearchIndex));
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
 
-    waitForMeilisearch($this->siteSearchIndex);
+    waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchIndex->name)
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
         ->search('here')
         ->get();
 

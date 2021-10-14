@@ -2,7 +2,7 @@
 
 use Illuminate\Pagination\Paginator;
 use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
 use Tests\TestSupport\TestCase;
@@ -11,11 +11,11 @@ uses(TestCase::class)
     ->beforeEach(fn () => ray()->clearScreen())
     ->in(__DIR__);
 
-function waitForMeilisearch(SiteSearchIndex $siteSearchIndex): void
+function waitForMeilisearch(SiteSearchConfig $siteSearchConfig): void
 {
-    $indexName = $siteSearchIndex->refresh()->index_name;
+    $indexName = $siteSearchConfig->refresh()->index_name;
 
-    while (MeiliSearchDriver::make()->isProcessing($indexName)) {
+    while (MeiliSearchDriver::make($siteSearchConfig)->isProcessing($indexName)) {
         sleep(1);
     }
 }

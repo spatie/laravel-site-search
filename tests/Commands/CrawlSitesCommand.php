@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Bus;
 use function Pest\Laravel\artisan;
 use Spatie\SiteSearch\Commands\CrawlSitesCommand;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Symfony\Component\Console\Command\Command;
 
 beforeEach(function () {
@@ -12,7 +12,7 @@ beforeEach(function () {
 });
 
 it('will crawl sites for enabled site indexes', function () {
-    SiteSearchIndex::factory()->create();
+    SiteSearchConfig::factory()->create();
 
     artisan(CrawlSitesCommand::class)->assertExitCode(Command::SUCCESS);
 
@@ -20,7 +20,7 @@ it('will crawl sites for enabled site indexes', function () {
 });
 
 it('will not crawl sites for disabled site indexes', function () {
-    SiteSearchIndex::factory()->create(['enabled' => false]);
+    SiteSearchConfig::factory()->create(['enabled' => false]);
 
     artisan(CrawlSitesCommand::class)->assertExitCode(Command::SUCCESS);
 

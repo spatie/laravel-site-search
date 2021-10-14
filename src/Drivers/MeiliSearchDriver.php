@@ -6,12 +6,13 @@ use Exception;
 use MeiliSearch\Client;
 use MeiliSearch\Client as MeiliSearchClient;
 use MeiliSearch\Endpoints\Indexes;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
 
 class MeiliSearchDriver implements Driver
 {
-    public static function make(): self
+    public static function make(SiteSearchConfig $config): self
     {
         $client = new Client('http://127.0.0.1:7700');
 

@@ -5,7 +5,7 @@ weight: 2
 
 When a site gets crawled, each of the pages is fed to a [search profile](TODO: add URL). When that search profile determines that page should be indexed, the URL and response is being given to an indexer. The job of the indexer is to extract the title of the page, the h1, description, content, ... that should be put in the site index.
 
-By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer::class`... TODO``
+By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer::class`... TODO
 
 An indexer is any class that implements `Spatie\SiteSearch\Indexers\Indexer`. Here's how that interface looks like.
 

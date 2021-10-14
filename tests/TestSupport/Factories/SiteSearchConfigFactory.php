@@ -3,13 +3,13 @@
 namespace Tests\TestSupport\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 
-class SiteSearchIndexFactory extends Factory
+class SiteSearchConfigFactory extends Factory
 {
-    protected $model = SiteSearchIndex::class;
+    protected $model = SiteSearchConfig::class;
 
-    public function definition()
+    public function definition(): array
     {
         return [
             'name' => $this->faker->word,

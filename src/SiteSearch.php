@@ -7,7 +7,7 @@ use Spatie\SiteSearch\Crawler\SearchProfileCrawlObserver;
 use Spatie\SiteSearch\Crawler\SiteSearchCrawlProfile;
 use Spatie\SiteSearch\Drivers\Driver;
 use Spatie\SiteSearch\Exceptions\SiteSearchIndexDoesNotExist;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\Profiles\SearchProfile;
 use Spatie\SiteSearch\SearchResults\SearchResults;
 
@@ -15,22 +15,22 @@ class SiteSearch
 {
     public static function index(string $indexName): self
     {
-        $siteSearchIndex = SiteSearchIndex::firstWhere('name', $indexName);
+        $siteSearchConfig = SiteSearchConfig::firstWhere('name', $indexName);
 
-        if (! $siteSearchIndex) {
+        if (! $siteSearchConfig) {
             throw SiteSearchIndexDoesNotExist::make($indexName);
         }
 
-        return self::make($siteSearchIndex);
+        return self::make($siteSearchConfig);
     }
 
-    public static function make(SiteSearchIndex $siteSearchIndex): self
+    public static function make(SiteSearchConfig $siteSearchConfig): self
     {
-        $driver = $siteSearchIndex->getDriver();
+        $driver = $siteSearchConfig->getDriver();
 
-        $profile = $siteSearchIndex->getProfile();
+        $profile = $siteSearchConfig->getProfile();
 
-        return new static($siteSearchIndex->index_name, $driver, $profile);
+        return new static($siteSearchConfig->index_name, $driver, $profile);
     }
 
     public function __construct(

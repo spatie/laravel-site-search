@@ -3,7 +3,7 @@
 namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 class CreateSearchIndexCommand extends Command
 {
@@ -19,7 +19,7 @@ class CreateSearchIndexCommand extends Command
         $this->newLine();
         $url = $this->ask('Great! Which url should be crawled to fill this index?');
 
-        SiteSearchIndex::create([
+        SiteSearchConfig::create([
             'name' => $name,
             'crawl_url' => $url,
             'enabled' => 1,

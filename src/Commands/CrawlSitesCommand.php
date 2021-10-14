@@ -4,7 +4,7 @@ namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 class CrawlSitesCommand extends Command
 {
@@ -12,11 +12,11 @@ class CrawlSitesCommand extends Command
 
     public function handle()
     {
-        SiteSearchIndex::enabled()
-            ->each(function (SiteSearchIndex $siteSearchIndex) {
-                $this->comment("Dispatching job to crawl `{$siteSearchIndex->crawl_url}`");
+        SiteSearchConfig::enabled()
+            ->each(function (SiteSearchConfig $siteSearchConfig) {
+                $this->comment("Dispatching job to crawl `{$siteSearchConfig->crawl_url}`");
 
-                dispatch(new CrawlSiteJob($siteSearchIndex));
+                dispatch(new CrawlSiteJob($siteSearchConfig));
             });
 
         $this->info('All done');

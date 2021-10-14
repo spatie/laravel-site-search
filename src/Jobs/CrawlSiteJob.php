@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Spatie\SiteSearch\Events\CreatedNewIndexEvent;
 use Spatie\SiteSearch\Events\IndexingEndedEvent;
 use Spatie\SiteSearch\Events\IndexingStartedEvent;
-use Spatie\SiteSearch\Models\SiteSearchIndex;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SiteSearch;
 
 class CrawlSiteJob implements ShouldQueue
@@ -19,13 +19,13 @@ class CrawlSiteJob implements ShouldQueue
     use SerializesModels;
 
     public function __construct(
-        public SiteSearchIndex $siteSearchIndex
+        public SiteSearchConfig $siteSearchConfig
     ) {
     }
 
     public function handle()
     {
-        event(new IndexingStartedEvent($this->siteSearchIndex));
+        event(new IndexingStartedEvent($this->siteSearchConfig));
 
         $newIndexName = $this->createNewIndex();
 
@@ -36,50 +36,53 @@ class CrawlSiteJob implements ShouldQueue
             $this->deleteOldIndex($oldIndexName);
         }
 
-        event(new IndexingEndedEvent($this->siteSearchIndex));
+        event(new IndexingEndedEvent($this->siteSearchConfig));
     }
 
     protected function createNewIndex(): string
     {
-        $newIndexName = $this->siteSearchIndex->generateAndUpdatePendingIndexName();
+        $newIndexName = $this->siteSearchConfig->generateAndUpdatePendingIndexName();
 
-        $this->siteSearchIndex->getDriver()->createIndex($newIndexName);
+        $this->siteSearchConfig->getDriver()->createIndex($newIndexName);
 
-        event(new CreatedNewIndexEvent($newIndexName, $this->siteSearchIndex));
+        event(new CreatedNewIndexEvent($newIndexName, $this->siteSearchConfig));
 
         return $newIndexName;
     }
 
     protected function startCrawler(): self
     {
-        $driver = $this->siteSearchIndex->getDriver();
-        $profile = $this->siteSearchIndex->getProfile();
+        $driver = $this->siteSearchConfig->getDriver();
+        $profile = $this->siteSearchConfig->getProfile();
 
         $siteSearch = new SiteSearch(
-            $this->siteSearchIndex->pending_index_name,
+            $this->siteSearchConfig->pending_index_name,
             $driver,
             $profile
         );
 
-        $this->siteSearchIndex->update(['crawling_started_at' => now()]);
-        $siteSearch->crawl($this->siteSearchIndex->crawl_url);
-        $this->siteSearchIndex->update(['crawling_ended_at' => now()]);
+        $this->siteSearchConfig->update(['crawling_started_at' => now()]);
+        $siteSearch->crawl($this->siteSearchConfig->crawl_url);
+        $this->siteSearchConfig->update(['crawling_ended_at' => now()]);
 
         return $this;
     }
 
     protected function blessNewIndex(string $newIndexName): ?string
     {
-        $oldIndexName = $this->siteSearchIndex->index_name;
+        $oldIndexName = $this->siteSearchConfig->index_name;
 
-        $this->siteSearchIndex->update(['index_name' => $newIndexName]);
+        $this->siteSearchConfig->update([
+            'index_name' => $newIndexName,
+            'pending_index_name' => null,
+        ]);
 
         return $oldIndexName;
     }
 
     protected function deleteOldIndex(string $oldIndexName): self
     {
-        $this->siteSearchIndex->getDriver()->deleteIndex($oldIndexName);
+        $this->siteSearchConfig->getDriver()->deleteIndex($oldIndexName);
 
         return $this;
     }

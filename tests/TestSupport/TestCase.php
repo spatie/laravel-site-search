@@ -46,7 +46,7 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
-        $class = include __DIR__ . '/../../database/migrations/create_site_search_indexes_table.php.stub';
+        $class = include __DIR__ . '/../../database/migrations/create_site_search_configs_table.php.stub';
         $class->up();
 
         return $this;

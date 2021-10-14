@@ -179,7 +179,7 @@ it('can limit results', function () {
     ]);
 });
 
-it('can handle invalid html', function() {
+it('can handle invalid html', function () {
     Server::activateRoutes('invalidHtml');
 
     dispatch(new CrawlSiteJob($this->siteSearchConfig));

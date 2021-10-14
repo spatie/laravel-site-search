@@ -4,6 +4,7 @@ namespace Spatie\SiteSearch\Profiles;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
+use Spatie\Crawler\Crawler;
 use Spatie\SiteSearch\Indexers\Indexer;
 
 class DefaultSearchProfile implements SearchProfile
@@ -31,5 +32,10 @@ class DefaultSearchProfile implements SearchProfile
         $defaultIndexer = config('site-search.default_indexer');
 
         return new $defaultIndexer($url, $response);
+    }
+
+    public function configureCrawler(Crawler $crawler): void
+    {
+
     }
 }

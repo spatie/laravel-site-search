@@ -17,7 +17,7 @@ class SiteSearch
     {
         $siteSearchConfig = SiteSearchConfig::firstWhere('name', $indexName);
 
-        if (! $siteSearchConfig) {
+        if (!$siteSearchConfig) {
             throw SiteSearchIndexDoesNotExist::make($indexName);
         }
 
@@ -34,26 +34,30 @@ class SiteSearch
     }
 
     public function __construct(
-        protected string $indexName,
-        protected Driver $driver,
-        protected SearchProfile $profile,
-    ) {
+        protected string        $indexName,
+        protected Driver        $driver,
+        protected SearchProfile $searchProfile,
+    )
+    {
     }
 
     public function crawl(string $baseUrl): self
     {
-        $profile = new SiteSearchCrawlProfile($this->profile, $baseUrl);
+        $crawlProfile = new SiteSearchCrawlProfile($this->searchProfile, $baseUrl);
 
         $observer = new SearchProfileCrawlObserver(
             $this->indexName,
-            $this->profile,
+            $this->searchProfile,
             $this->driver
         );
 
-        Crawler::create()
-            ->setCrawlProfile($profile)
-            ->setCrawlObserver($observer)
-            ->startCrawling($baseUrl);
+        $crawler = Crawler::create()
+            ->setCrawlProfile($crawlProfile)
+            ->setCrawlObserver($observer);
+
+        $this->searchProfile->configureCrawler($crawler);
+
+        $crawler->startCrawling($baseUrl);
 
         return $this;
     }

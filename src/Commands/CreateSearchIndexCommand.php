@@ -7,7 +7,7 @@ use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 class CreateSearchIndexCommand extends Command
 {
-    protected $signature = 'search-index:create';
+    protected $signature = 'site-search:create-index';
 
     public function handle()
     {

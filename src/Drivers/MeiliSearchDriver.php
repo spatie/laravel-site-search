@@ -75,23 +75,15 @@ class MeiliSearchDriver implements Driver
             ->index($indexName)
             ->rawSearch($query, array_filter($searchParams));
 
-        $hits = array_map(function (array $hitProperties) {
-            return new Hit(
-                $hitProperties['id'],
-                $hitProperties['pageTitle'] ?? '',
-                $hitProperties['h1'] ?? '',
-                $hitProperties['_formatted']['h1'] ?? '',
-                $hitProperties['description'] ?? '',
-                $hitProperties['_formatted']['description'] ?? '',
-                $hitProperties['url'],
-                $hitProperties['entry'],
-                $hitProperties['_formatted']['entry'] ?? '',
-                $hitProperties['date_modified_timestamp'],
-                $hitProperties['extra'] ?? [],
-            );
-        }, $rawResults['hits']);
+        $hits = array_map(
+            fn(array $hitProperties) => new Hit($hitProperties),
+            $rawResults['hits']
+        );
 
-        return new SearchResults($hits, $rawResults['processingTimeMs']);
+        return new SearchResults(
+            collect($hits),
+            $rawResults['processingTimeMs']
+        );
     }
 
     protected function index(string $indexName): Indexes

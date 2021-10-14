@@ -10,30 +10,28 @@ class Hit
 {
     use Macroable;
 
-    public CarbonInterface $dateModified;
-
-    public function __construct(
-        public string $id,
-        public string $pageTitle,
-        public string $h1,
-        public string $highlightedH1,
-        public string $description,
-        public string $highlightedDescription,
-        public string $url,
-        public string $entry,
-        public string $highlightedEntry,
-        public string $dateModifiedTimestamp,
-        public array $extra
-    ) {
-        $this->dateModified = Carbon::createFromTimestamp($this->dateModifiedTimestamp);
+    public function __construct(protected array $properties) {
     }
 
     public function __get(string $name): mixed
     {
-        return $this->extra[$name] ?? null;
+        if ($name === 'dateModified') {
+            return $this->dateModified();
+        }
+
+        return $this->properties[$name] ?? null;
     }
 
-    public function title()
+    public function dateModified(): ?Carbon
+    {
+        if (! $this->dateModifiedTimestamp) {
+            return null;
+        }
+
+        return Carbon::createFromTimestamp($this->dateModifiedTimestamp);
+    }
+
+    public function title(): ?string
     {
         return $this->pageTitle ?? $this->h1;
     }

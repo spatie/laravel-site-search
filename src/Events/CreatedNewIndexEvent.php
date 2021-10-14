@@ -7,7 +7,7 @@ use Spatie\SiteSearch\Models\SiteSearchConfig;
 class CreatedNewIndexEvent
 {
     public function __construct(
-        public string           $newIndexName,
+        public string $newIndexName,
         public SiteSearchConfig $siteSearchConfig,
     ) {
     }

@@ -2,10 +2,12 @@
 
 namespace Spatie\SiteSearch\SearchResults;
 
+use Illuminate\Support\Collection;
+
 class SearchResults
 {
     public function __construct(
-        public array $hits,
+        public Collection $hits,
         public int $processingTimeInMs,
     ) {
     }

@@ -7,6 +7,7 @@ use Spatie\SiteSearch\SearchIndexQuery;
 use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfile;
+use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
 
 beforeEach(function () {
     Server::boot();
@@ -193,4 +194,21 @@ it('can handle invalid html', function () {
     expect(hitUrls($searchResults))->toEqual([
         'http://localhost:8181/',
     ]);
+});
+
+it('can add extra properties', function() {
+    $this->siteSearchConfig->update(['profile_class' => SearchProfileWithCustomIndexer::class]);
+
+    Server::activateRoutes('homePage');
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    waitForMeilisearch($this->siteSearchConfig);
+
+    $firstHit = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
+        ->search('content')
+        ->get()
+        ->hits->first();
+
+    expect($firstHit->extraName)->toEqual('extraValue');
 });

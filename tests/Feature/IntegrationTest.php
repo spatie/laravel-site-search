@@ -196,7 +196,7 @@ it('can handle invalid html', function () {
     ]);
 });
 
-it('can add extra properties', function() {
+it('can add extra properties', function () {
     $this->siteSearchConfig->update(['profile_class' => SearchProfileWithCustomIndexer::class]);
 
     Server::activateRoutes('homePage');

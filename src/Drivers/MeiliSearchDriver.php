@@ -76,7 +76,7 @@ class MeiliSearchDriver implements Driver
             ->rawSearch($query, array_filter($searchParams));
 
         $hits = array_map(
-            fn(array $hitProperties) => new Hit($hitProperties),
+            fn (array $hitProperties) => new Hit($hitProperties),
             $rawResults['hits']
         );
 

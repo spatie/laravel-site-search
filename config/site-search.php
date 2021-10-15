@@ -37,5 +37,4 @@ return [
      * to a search index.
      */
     'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
-
 ];

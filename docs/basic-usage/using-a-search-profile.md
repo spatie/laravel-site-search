@@ -1,6 +1,6 @@
 ---
 title: Using a search profile
-weight: 3
+weight: 5
 ---
 
 A search profile determines which pages get crawled and what content gets indexed. In the `site-search` config file, you'll in the `default_profile` key that the `Spatie\SiteSearch\Profiles\DefaultSearchProfile::class` is being use by default.

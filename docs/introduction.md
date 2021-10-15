@@ -5,6 +5,8 @@ weight: 1
 
 This package can crawl and index your entire site. You can of it as private Google search. What gets crawled and indexed can be highly customized. Under the hood Meilisearch is used to provide blazing fast search speeds.
 
+When crawling your site, multiple concurrent connections are used to speed up the crawling process.
+
 ## How does this package differ from Laravel Scout?
 
 [Laravel Scout](https://laravel.com/docs/8.x/scout) is an excellent package to add search capabilities for Eloquent models. In most cases, this is very useful if you want to provide a structured search. For example, if you have a `Product` model, scout can help to build up a search index to search the properties of these products.

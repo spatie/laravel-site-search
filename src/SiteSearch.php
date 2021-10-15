@@ -17,7 +17,7 @@ class SiteSearch
     {
         $siteSearchConfig = SiteSearchConfig::firstWhere('name', $indexName);
 
-        if (!$siteSearchConfig) {
+        if (! $siteSearchConfig) {
             throw SiteSearchIndexDoesNotExist::make($indexName);
         }
 
@@ -37,8 +37,7 @@ class SiteSearch
         protected string        $indexName,
         protected Driver        $driver,
         protected SearchProfile $searchProfile,
-    )
-    {
+    ) {
     }
 
     public function crawl(string $baseUrl): self

@@ -6,9 +6,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Spatie\SiteSearch\Events\NewIndexCreatedEvent;
 use Spatie\SiteSearch\Events\IndexingEndedEvent;
 use Spatie\SiteSearch\Events\IndexingStartedEvent;
+use Spatie\SiteSearch\Events\NewIndexCreatedEvent;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SiteSearch;
 

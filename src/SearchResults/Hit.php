@@ -3,14 +3,14 @@
 namespace Spatie\SiteSearch\SearchResults;
 
 use Carbon\Carbon;
-use Carbon\CarbonInterface;
 use Illuminate\Support\Traits\Macroable;
 
 class Hit
 {
     use Macroable;
 
-    public function __construct(protected array $properties) {
+    public function __construct(protected array $properties)
+    {
     }
 
     public function __get(string $name): mixed

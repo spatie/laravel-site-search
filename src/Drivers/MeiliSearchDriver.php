@@ -14,13 +14,17 @@ class MeiliSearchDriver implements Driver
 {
     public static function make(SiteSearchConfig $config): self
     {
-        $client = new Client('http://127.0.0.1:7700');
+        $url = $config->getExtraValue('meilisearch.url', 'http://127.0.0.1:7700');
+        $client = new Client($url);
 
-        return new self($client);
+        $settings = $config->getExtraValue('meilisearch.indexSettings');
+
+        return new self($client, $settings);
     }
 
     public function __construct(
         protected MeiliSearchClient $meilisearch,
+        protected $settings = [],
     ) {
     }
 
@@ -28,9 +32,11 @@ class MeiliSearchDriver implements Driver
     {
         $this->meilisearch->createIndex($indexName);
 
-        $this->index($indexName)->updateSettings([
+        $settings = array_merge($this->settings, [
             'distinctAttribute' => 'url',
         ]);
+
+        $this->index($indexName)->updateSettings($settings);
 
         return $this;
     }
@@ -63,7 +69,12 @@ class MeiliSearchDriver implements Driver
         return $this;
     }
 
-    public function search(string $indexName, string $query, ?int $limit = null, int $offset = 0): SearchResults
+    public function search(
+        string $indexName,
+        string $query,
+        ?int $limit = null,
+        int $offset = 0)
+    : SearchResults
     {
         $searchParams = [
             'limit' => $limit,

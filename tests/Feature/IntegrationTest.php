@@ -196,7 +196,7 @@ it('can handle invalid html', function () {
     ]);
 });
 
-it('can add extra properties', function() {
+it('can add extra properties', function () {
     $this->siteSearchConfig->update(['profile_class' => SearchProfileWithCustomIndexer::class]);
 
     Server::activateRoutes('homePage');
@@ -211,4 +211,34 @@ it('can add extra properties', function() {
         ->hits->first();
 
     expect($firstHit->extraName)->toEqual('extraValue');
+});
+
+it('synonyms can be specified by customizing the index settings', function () {
+    $this->siteSearchConfig->update(['profile_class' => SearchProfileWithCustomIndexer::class]);
+
+    $extraValue = [
+        'meilisearch' => [
+            'indexSettings' => [
+                'synonyms' => [
+                    'Macintosh' => ['computer'],
+                ],
+            ],
+        ],
+    ];
+
+    $this->siteSearchConfig->update(['extra' => $extraValue]);
+
+    Server::activateRoutes('synonym');
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    waitForMeilisearch($this->siteSearchConfig);
+
+    $firstHit = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
+        ->search('macintosh')
+        ->get()
+        ->hits->first();
+
+
+    expect($firstHit->entry)->toEqual('I am a computer');
 });

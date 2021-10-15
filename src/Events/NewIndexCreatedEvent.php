@@ -4,7 +4,7 @@ namespace Spatie\SiteSearch\Events;
 
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 
-class CreatedNewIndexEvent
+class NewIndexCreatedEvent
 {
     public function __construct(
         public string $newIndexName,

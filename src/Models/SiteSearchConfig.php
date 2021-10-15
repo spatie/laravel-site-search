@@ -5,6 +5,7 @@ namespace Spatie\SiteSearch\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Spatie\SiteSearch\Drivers\Driver;
 use Spatie\SiteSearch\Profiles\SearchProfile;
@@ -49,5 +50,10 @@ class SiteSearchConfig extends Model
         $profileClass = $this->profile_class ?? config('site-search.default_profile');
 
         return app($profileClass);
+    }
+
+    public function getExtraValue(string $key, mixed $default = null)
+    {
+        return Arr::get($this->extra, $key, $default);
     }
 }

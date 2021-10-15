@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Spatie\SiteSearch\Events\CreatedNewIndexEvent;
+use Spatie\SiteSearch\Events\NewIndexCreatedEvent;
 use Spatie\SiteSearch\Events\IndexingEndedEvent;
 use Spatie\SiteSearch\Events\IndexingStartedEvent;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
@@ -46,7 +46,7 @@ class CrawlSiteJob implements ShouldQueue
 
         $this->siteSearchConfig->getDriver()->createIndex($newIndexName);
 
-        event(new CreatedNewIndexEvent($newIndexName, $this->siteSearchConfig));
+        event(new NewIndexCreatedEvent($newIndexName, $this->siteSearchConfig));
 
         return $newIndexName;
     }

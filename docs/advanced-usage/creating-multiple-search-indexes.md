@@ -5,7 +5,7 @@ weight: 1
 
 This package is able to crawl and create search indexes for multiple sites.
 
-You probably used the `search-index:create` command to [create your first site](TODO: add url). This command creates a record in the `site_search_configs` table.
+You probably used the `site-search:create` command to [create your first site](TODO: add url). This command creates a record in the `site_search_configs` table.
 
 To crawl and create multiple search indexes, just create multiple rows in that table. When executing `site-search:crawl` an indexing process for each of those sites will be performed.
 
@@ -17,10 +17,10 @@ These are the attributes you should manually update in the table:
 - `driver_class`: the search driver to use. If this value is `null`, `config('site-serach.default_driver')` will be used when indexing the site
 - `profile_class`: the search profile to use. If this value is `null`, `config('site-serach.default_profile')` will be used when indexing the site 
 - `index_base_name`: the name that it used by the underlying search engine (eg. Meilisearch) to determine its index name
+- `extra`: used to [customize driver settings](TODO: add URL)
 
 These attributes are set by the package, you should not manually set or update them.
 
 - `pending_index_name`: will be used to hold the temporary index name that is used while indexing
 - `crawling_started_at`: holds the date of when the crawling started when building up this index
 - `crawling_ended_at`: holds the date of when the crawling started when building up this index
-- `extra`: reserved for future use

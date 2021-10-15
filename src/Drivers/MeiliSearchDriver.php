@@ -73,8 +73,8 @@ class MeiliSearchDriver implements Driver
         string $indexName,
         string $query,
         ?int $limit = null,
-        int $offset = 0)
-    : SearchResults
+        int $offset = 0
+    ): SearchResults
     {
         $searchParams = [
             'limit' => $limit,

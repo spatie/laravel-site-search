@@ -36,6 +36,5 @@ class DefaultSearchProfile implements SearchProfile
 
     public function configureCrawler(Crawler $crawler): void
     {
-
     }
 }

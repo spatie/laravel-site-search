@@ -3,11 +3,11 @@ title: Creating multiple search indexes
 weight: 2
 ---
 
-When a site gets crawled, each of the pages is fed to a [search profile](TODO: add URL). When that search profile determines that page should be indexed, the URL and response is being given to an indexer. The job of the indexer is to extract the title of the page, the h1, description, content, ... that should be put in the site index.
+When a site gets crawled, each of the pages is fed to a [search profile](TODO: add URL). When that search profile determines that page should be indexed, the URL and response for that page is being given to an indexer. The job of the indexer is to extract the title of the page, the h1, description, content, ... that should be put in the site index.
 
-By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer::class`... TODO
+By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer`... is used. This indexer makes a best effort in determining the page title, description and content of your page.
 
-An indexer is any class that implements `Spatie\SiteSearch\Indexers\Indexer`. Here's how that interface looks like.
+If the results yielded by `DefaultIndexer` are not good enough for your content, you can create a custom indexer. An indexer is any class that implements `Spatie\SiteSearch\Indexers\Indexer`. Here's how that interface looks like.
 
 ```php
 namespace Spatie\SiteSearch\Indexers;
@@ -30,7 +30,7 @@ interface Indexer
      * We can index all html of page directly, as most search engines have
      * a small limit on how long a search entry should be.
      *
-     * This function should return the content of the response chopped up in
+     * This function should return an array the content of the response chopped up in
      * little pieces of text of a few sentences long.
      */
     public function entries(): array;
@@ -49,4 +49,13 @@ interface Indexer
 }
 ```
 
+In most cases, it's probably the easiest to extend the `DefaultIndexer`
 
+```php
+class YourIndexer extends Spatie\SiteSearch\Indexers\DefaultIndexer
+{
+    // override the desired method
+}
+```
+
+To use your custom indexer, specify its class name in the `default_indexer` key of the  `site-search` config file.

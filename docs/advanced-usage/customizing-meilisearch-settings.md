@@ -23,7 +23,7 @@ A Meilisearch index has [various interesting settings](https://docs.meilisearch.
 
 Every time a site is crawled, a new index is created. You can customize the settings that are used for this index in two ways.
 
-The first way would be by adding a `meilisearch.indexSettings` JSON value to the `extra` attribute in the `site_search_configs`. In `meilisearch.indexSettings` you can put any of [the list settings that Meilisearch provides](https://docs.meilisearch.com/reference/features/settings.html#settings)
+The first way would be by adding a `meilisearch.indexSettings` JSON value to the `extra` attribute in the `site_search_configs`. In `meilisearch.indexSettings` you can put any of [the list settings that Meilisearch provides](https://docs.meilisearch.com/reference/features/settings.html#settings).
 
 Here's how that value you would put in `extra` if you only want results based on the `url` and `description` fields in the index.
 

@@ -1,13 +1,19 @@
 ---
-title: Base installation
+title: Installation and setup
 weight: 4
 ---
+
+Here are the steps that you need to perform to install the package.
+
+## Require via composer
 
 laravel-site-search can be installed via Composer:
 
 ```bash
 composer require "spatie/laravel-site-search:^1.0.0"
 ```
+
+## Publish migrations
 
 Next, you should publish the migrations and run them:
 
@@ -16,8 +22,7 @@ php artisan vendor:publish --tag="site-search-migrations"
 php artisan migrate
 ```
 
-
-
+## Publish the config file
 
 Optionally, You can publish the config file with this command.
 
@@ -67,3 +72,38 @@ return [
     'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
 ];
 ```
+## Install Meilisearch
+
+This package uses Meilisearch under the hood to provide blazing fast search results.
+Head over to [the Meilisearch docs](https://docs.meilisearch.com/learn/getting_started/installation.html#download-and-launch) to learn how to install it on your system. 
+
+Here are the steps for installing it on a Forge provisioned server. You must first download the stable release:
+
+```bash
+curl -L https://install.meilisearch.com | sh
+```
+
+Next, you must change the ownership and modify permission
+
+```bash
+chmod 755 meilisearch chown root:root meilisearch
+```
+
+After that, move the binary to a system-wide available path
+
+```bash
+sudo mv meilisearch /usr/bin/
+```
+
+Finally, you can run the binary and make sure it keeps running. In the Forge Dashboard, click on "Daemons" under "Server Details". Fill out the following for a new daemon:
+
+Command: `meilisearch --master-key=SOME_MASTER_KEY --env=production --http-addr 0.0.0.0:7700 --db-path ./home/forge/meilifiles`
+User: `forge` 
+Directory: leave blank 
+Processes: `1`
+
+These instructions were take from [this gist](https://gist.github.com/josecanhelp/126d627ef125538943f33253d16fc882) by Jose Soto.
+
+## Authenticating requests to Meilisearch
+
+To avoid unauthorized persons making request to Meilisearch, either block Meilisearch's default port (7700) in your firewall, or make sure all requests [use authentication](/docs/laravel-site-search/v1/basic-usage/authenticating-requests).

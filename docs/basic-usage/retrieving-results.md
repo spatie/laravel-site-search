@@ -3,7 +3,7 @@ title: Retrieving results
 weight: 3
 ---
 
-You can retrieve results from an index using the `Spatie\SiteSearch\SearchIndexQuery`.
+You can retrieve results from an index using `Spatie\SiteSearch\SearchIndexQuery`.
 
 ## Getting all results
 

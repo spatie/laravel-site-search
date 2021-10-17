@@ -15,9 +15,12 @@ class MeiliSearchDriver implements Driver
     public static function make(SiteSearchConfig $config): self
     {
         $url = $config->getExtraValue('meilisearch.url', 'http://127.0.0.1:7700');
-        $client = new Client($url);
 
-        $settings = $config->getExtraValue('meilisearch.indexSettings');
+        $apiKey = $config->getExtraValue('meilisearch.apiKey');
+
+        $client = new Client($url, $apiKey);
+
+        $settings = $config->getExtraValue('meilisearch.indexSettings', []);
 
         return new self($client, $settings);
     }

@@ -1,6 +1,6 @@
 ---
 title: v1
-slogan: A customizable search index for Laravel apps.
+slogan: Create a full-text search index by crawling your site.
 githubUrl: https://github.com/spatie/laravel-site-search
 branch: main
 ---

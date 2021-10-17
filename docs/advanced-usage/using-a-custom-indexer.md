@@ -1,5 +1,5 @@
 ---
-title: Creating multiple search indexes
+title: Using a custom indexer
 weight: 2
 ---
 

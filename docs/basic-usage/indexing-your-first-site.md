@@ -13,8 +13,6 @@ php artisan site-search:create-index
 
 This command will ask for a name for your index, and the URL of your site that should be crawled.
 
-//TODO: add screenshot
-
 After that you should run this command to start a queued job that crawls your site, and puts the content in a search index:
 
 ```php
@@ -35,15 +33,15 @@ This is how you could render the results in a Blade view
 
 ```html
 <ul>
-@foreach($searchResults->hits as $hit)
-    <li>
-        <a href="{{ $hit->url }}">
-            <div>{{ $hit->url }}</div>
-            <div>{{ $hit->title() }}</div>
-            <div>{!! $hit->highlightedSnippet() !!}</div>
-        </a>
-    </li>
-@endforeach
+    @foreach($searchResults->hits as $hit)
+        <li>
+            <a href="{{ $hit->url }}">
+                <div>{{ $hit->url }}</div>
+                <div>{{ $hit->title() }}</div>
+                <div>{!! $hit->highlightedSnippet() !!}</div>
+            </a>
+        </li>
+    @endforeach
 </ul>
 ```
 

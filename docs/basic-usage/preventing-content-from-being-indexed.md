@@ -39,4 +39,4 @@ If the response of your site contains a header `site-search-do-not-index`, then 
 
 ## Using a search profile
 
-A search profile is a class that determines what pages get crawled and what content gets indexed. Learn more about search profiles [here](TODO: add link).
+A search profile is a class that determines what pages get crawled and what content gets indexed. Learn more about search profiles [here](/docs/laravel-site-search/v1/basic-usage/using-a-search-profile).

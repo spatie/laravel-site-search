@@ -44,8 +44,7 @@ class DefaultSearchProfile implements SearchProfile
 
     protected function hasDoNotIndexHeader(ResponseInterface $response): bool
     {
-        foreach(config('site-search.do_not_index_content_headers') as $headerName)
-        {
+        foreach (config('site-search.do_not_index_content_headers') as $headerName) {
             if ($response->hasHeader($headerName)) {
                 return true;
             }
@@ -56,7 +55,7 @@ class DefaultSearchProfile implements SearchProfile
 
     protected function urlShouldNotBeIndexed(UriInterface $url): bool
     {
-        foreach(config('site-search.do_not_index_content_on_urls') as $configuredUrl) {
+        foreach (config('site-search.do_not_index_content_on_urls') as $configuredUrl) {
             if (fnmatch($configuredUrl, $url->getPath())) {
                 return true;
             }

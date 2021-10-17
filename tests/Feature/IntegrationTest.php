@@ -95,7 +95,7 @@ it('can use a search profile not to index a specific url', function () {
     ]);
 });
 
-it('can be configured not to crawl certain urls', function() {
+it('can be configured not to crawl certain urls', function () {
     Server::activateRoutes('chain');
 
     config()->set('site-search.do_not_crawl_urls', [
@@ -115,7 +115,7 @@ it('can be configured not to crawl certain urls', function() {
     ]);
 });
 
-it('can be configured not to index certain urls', function() {
+it('can be configured not to index certain urls', function () {
     Server::activateRoutes('chain');
 
     config()->set('site-search.do_not_index_content_on_urls', [

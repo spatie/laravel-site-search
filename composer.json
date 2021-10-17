@@ -55,7 +55,6 @@
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
     "suggest": {
-        "fivefilters/readability.php": "Required to use the ReadabilityIndexer",
         "meilisearch/meilisearch-php": "Required to use the MeiliSearch engine (^0.17)."
     },
     "config": {

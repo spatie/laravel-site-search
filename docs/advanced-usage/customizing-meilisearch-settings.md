@@ -3,7 +3,7 @@ title: Customizing Meilisearch settings
 weight: 4
 ---
 
-When using Meilisearch sane defaults are used to connect and create an index. These defaults can be customized.
+When using Meilisearch, sane defaults are used to connect and create an index. These defaults can be customized.
 
 Most customizations can be done by adding values to the `extra` field of a row of the `site_search_configs` table. This field must be either `null` or contain valid JSON.  
 

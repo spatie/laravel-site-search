@@ -19,7 +19,7 @@ Our laravel-site-search package is not tied to Eloquent models. Like Google, it 
 
 [Algolia Docsearch](https://laravel.com/docs/8.x/scout) is an awesome solution for adding search capabilities to open-source documentation. 
 
-Our laravel-site-search package maybe used to index non-open-source stuff as well. Where Docsearch makes basic assumptions on how the content is structure, our package tries to make a best effort to index all kinds of content.
+Our laravel-site-search package may be used to index non-open-source stuff as well. Where Docsearch makes basic assumptions on how the content is structure, our package tries to make a best effort to index all kinds of content.
 
 ## We have badges!
 

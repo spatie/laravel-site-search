@@ -102,8 +102,16 @@ return [
      */
     'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
 ];
-
 ```
+
+## Install the Meilisearch client
+
+Next, you should require the Meilisearch PHP client
+
+```bash
+composer require meilisearch/meilisearch-php
+```
+
 ## Install Meilisearch
 
 This package uses Meilisearch under the hood to provide blazing fast search results.

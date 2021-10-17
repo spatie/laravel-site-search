@@ -95,7 +95,10 @@ class MeiliSearchDriver implements Driver
 
         return new SearchResults(
             collect($hits),
-            $rawResults['processingTimeMs']
+            $rawResults['processingTimeMs'],
+            $rawResults['nbHits'],
+            $rawResults['limit'],
+            $rawResults['offset'],
         );
     }
 

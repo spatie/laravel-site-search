@@ -9,6 +9,9 @@ class SearchResults
     public function __construct(
         public Collection $hits,
         public int $processingTimeInMs,
+        public int $totalCount,
+        public int $limit,
+        public int $offset,
     ) {
     }
 }

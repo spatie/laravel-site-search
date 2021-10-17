@@ -15,6 +15,7 @@ class SiteSearchServiceProvider extends PackageServiceProvider
             ->name('laravel-site-search')
             ->hasConfigFile()
             ->hasViews()
+            ->hasMigration('create_site_search_configs_table')
             ->hasCommands([
                 CreateSearchIndexCommand::class,
                 CrawlSitesCommand::class,

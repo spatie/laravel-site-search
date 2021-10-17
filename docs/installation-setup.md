@@ -9,7 +9,14 @@ laravel-site-search can be installed via Composer:
 composer require "spatie/laravel-site-search:^1.0.0"
 ```
 
-Next, you should publish the migrations
+Next, you should publish the migrations and run them:
+
+```bash
+php artisan vendor:publish --tag="site-search-migrations"
+php artisan migrate
+```
+
+
 
 
 Optionally, You can publish the config file with this command.

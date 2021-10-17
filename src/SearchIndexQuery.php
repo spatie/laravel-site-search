@@ -2,6 +2,7 @@
 
 namespace Spatie\SiteSearch;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Spatie\SiteSearch\Exceptions\NoQuerySet;
 use Spatie\SiteSearch\SearchResults\SearchResults;
@@ -53,9 +54,20 @@ class SearchIndexQuery
 
         $offset = ($pageNumber - 1) * $pageSize;
 
-        $searchResults = $this->siteSearch->search($this->query, $pageSize, $offset);
+        /*
+         *  We search for one more result than requested. If there are
+         *  $pageSize + 1 number of results, then the paginator, which uses
+         *  the original $pageSize, will know that there is an extra page.
+         */
+        $realPageSize = $pageSize + 1;
 
-        return new Paginator($searchResults->hits, $pageSize);
+        $searchResults = $this->siteSearch->search($this->query, $realPageSize, $offset);
+
+        return new Paginator(
+            $searchResults->hits,
+            $pageSize,
+            $pageNumber,
+        );
     }
 
     protected function ensureQueryHasBeenSet(): void

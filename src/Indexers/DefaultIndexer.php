@@ -90,7 +90,7 @@ class DefaultIndexer implements Indexer
 
     protected function removeIgnoredContent(Crawler $crawler): Crawler
     {
-        foreach (config('site-search.do_not_index') as $selector) {
+        foreach (config('site-search.do_not_index_content_by_css_selector') as $selector) {
             $this->domCrawler
                 ->filter($selector)
                 ->each(function (Crawler $crawler) {

@@ -21,6 +21,21 @@ class SiteSearchCrawlProfile extends CrawlInternalUrls
             return false;
         }
 
+        if ($this->isConfiguredNotToBeCrawled($url)) {
+            return false;
+        }
+
         return $this->profile->shouldCrawl($url);
+    }
+
+    protected function isConfiguredNotToBeCrawled(UriInterface $url): bool
+    {
+        foreach(config('site-search.do_not_crawl_urls') as $configuredUrl) {
+            if (fnmatch($configuredUrl, $url->getPath())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

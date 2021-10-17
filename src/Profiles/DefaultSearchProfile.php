@@ -20,7 +20,11 @@ class DefaultSearchProfile implements SearchProfile
             return false;
         }
 
-        if ($response->hasHeader('site-search-do-not-index')) {
+        if ($this->hasDoNotIndexHeader($response)) {
+            return false;
+        }
+
+        if ($this->urlShouldNotBeIndexed($url)) {
             return false;
         }
 
@@ -36,5 +40,28 @@ class DefaultSearchProfile implements SearchProfile
 
     public function configureCrawler(Crawler $crawler): void
     {
+    }
+
+    protected function hasDoNotIndexHeader(ResponseInterface $response): bool
+    {
+        foreach(config('site-search.do_not_index_content_headers') as $headerName)
+        {
+            if ($response->hasHeader($headerName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function urlShouldNotBeIndexed(UriInterface $url): bool
+    {
+        foreach(config('site-search.do_not_index_content_on_urls') as $configuredUrl) {
+            if (fnmatch($configuredUrl, $url->getPath())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

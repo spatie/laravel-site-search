@@ -54,7 +54,7 @@ it('can crawl all pages', function () {
     ]);
 });
 
-it('can be configured not to crawl a specific url', function () {
+it('can use a search profile to not to crawl a specific url', function () {
     Server::activateRoutes('chain');
 
     $this->siteSearchConfig->update([
@@ -74,11 +74,52 @@ it('can be configured not to crawl a specific url', function () {
     ]);
 });
 
-it('can be configured not to index a specific url', function () {
+it('can use a search profile not to index a specific url', function () {
     Server::activateRoutes('chain');
 
     $this->siteSearchConfig->update([
         'profile_class' => DoNotIndexSecondLinkSearchProfile::class,
+    ]);
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    waitForMeilisearch($this->siteSearchConfig);
+
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
+        ->search('here')
+        ->get();
+
+    expect(hitUrls($searchResults))->toEqual([
+        'http://localhost:8181/',
+        'http://localhost:8181/3',
+    ]);
+});
+
+it('can be configured not to crawl certain urls', function() {
+    Server::activateRoutes('chain');
+
+    config()->set('site-search.do_not_crawl_urls', [
+         '/2',
+    ]);
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    waitForMeilisearch($this->siteSearchConfig);
+
+    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
+        ->search('here')
+        ->get();
+
+    expect(hitUrls($searchResults))->toEqual([
+        'http://localhost:8181/',
+    ]);
+});
+
+it('can be configured not to index certain urls', function() {
+    Server::activateRoutes('chain');
+
+    config()->set('site-search.do_not_index_content_on_urls', [
+        '/2',
     ]);
 
     dispatch(new CrawlSiteJob($this->siteSearchConfig));

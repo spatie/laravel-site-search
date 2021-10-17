@@ -9,11 +9,6 @@
 
 This package can crawl your entire site and index it. 
 
-TODO:
-- make `extra` on indexer work (+ __get on search hit)
-- consider renaming model
-- finish docs
-
 ## Support us
 
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-site-search.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-site-search)
@@ -22,40 +17,13 @@ We invest a lot of resources into creating [best in class open source packages](
 
 We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
-## Installation
+## Documentation
 
-You can install the package via composer:
-
-```bash
-composer require spatie/laravel-site-search
-```
-
-You can publish the config file with:
-```bash
-php artisan vendor:publish --provider="Spatie\SiteSearch\SiteSearchServiceProvider" --tag="laravel-site-search-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-    'sites' => [
-        'default' => [
-            'url' => env('APP_URL'),
-            'driver' => Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
-            'index_name' => 'default-site-search-index',
-            'profile' => Spatie\SiteSearch\Profiles\DefaultSearchProfile::class,
-        ],
-    ],
-];
-
-```
-
-## Usage
-
-Coming soon...
+You will find full documentation on [the dedicated documentions site](https://spatie.be/docs/laravel-site-search).
 
 ## Testing
+
+Before running the test, make sure you are running Meilisearch locally.
 
 ```bash
 composer test

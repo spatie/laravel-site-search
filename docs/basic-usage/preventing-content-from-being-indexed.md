@@ -37,7 +37,6 @@ Additionally, any elements with a `data-no-index` will not get indexed. In the f
 
 In the `do_not_index_content_on_urls` key of the `site-search` config file, you may specify URLs whose content should not be indexed. All links on these URLs will still be followed and crawled.
 
-
 ## Using headers
 
 If the response of your site contains a header whose name is in the `do_not_index_content_headers` of the `site-search` config file, then that page will not be indexed.

@@ -11,7 +11,7 @@ class CreateSearchIndexCommand extends Command
 
     public function handle()
     {
-        $this->info('Let create your index!');
+        $this->info("Let's create your index!");
 
         $this->newLine();
         $name = $this->ask('What should your index be named?');
@@ -22,6 +22,7 @@ class CreateSearchIndexCommand extends Command
         SiteSearchConfig::create([
             'name' => $name,
             'crawl_url' => $url,
+            'index_base_name' => $name,
             'enabled' => 1,
         ]);
 

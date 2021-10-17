@@ -2,7 +2,6 @@
 
 namespace Spatie\SiteSearch;
 
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Spatie\SiteSearch\Exceptions\NoQuerySet;
 use Spatie\SiteSearch\SearchResults\SearchResults;

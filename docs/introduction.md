@@ -3,6 +3,8 @@ title: Introduction
 weight: 1
 ---
 
+**THIS PACKAGE IS STILL IN DEVELOPMENT, DO NOT USE IN PRODUCTION (YET)**
+
 This package can crawl and index your entire site. You can of it as private Google search. What gets crawled and indexed can be highly customized. Under the hood Meilisearch is used to provide blazing fast search speeds.
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.

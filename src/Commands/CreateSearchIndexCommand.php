@@ -28,6 +28,6 @@ class CreateSearchIndexCommand extends Command
 
         $this->newLine();
         $this->info('Your index has been created.');
-        $this->info('You should now run `php artisan search-index:crawl` to fill your index');
+        $this->info('You should now run `php artisan site-search:crawl` to fill your index');
     }
 }

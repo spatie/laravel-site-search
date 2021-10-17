@@ -26,7 +26,5 @@ Our laravel-site-search package maybe used to index non-open-source stuff as wel
 <section class="article_badges">
     <a href="https://github.com/spatie/laravel-site-search/releases"><img src="https://img.shields.io/github/release/spatie/laravel-site-search.svg?style=flat-square" alt="Latest Version"></a>
     <a href="https://github.com/spatie/laravel-site-search/blob/master/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="Software License"></a>
-    <a href="https://travis-ci.org/spatie/laravel-site-search"><img src="https://img.shields.io/travis/spatie/laravel-site-search/master.svg?style=flat-square" alt="Build Status"></a>
-    <a href="https://scrutinizer-ci.com/g/spatie/laravel-site-search"><img src="https://img.shields.io/scrutinizer/g/spatie/laravel-site-search.svg?style=flat-square" alt="Quality Score"></a>
     <a href="https://packagist.org/packages/spatie/laravel-site-search"><img src="https://img.shields.io/packagist/dt/spatie/laravel-site-search.svg?style=flat-square" alt="Total Downloads"></a>
 </section>

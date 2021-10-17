@@ -24,7 +24,7 @@ php artisan migrate
 
 ## Publish the config file
 
-Optionally, You can publish the config file with this command.
+Optionally, you can publish the config file with this command.
 
 ```bash
 php artisan vendor:publish --tag="site-search-config"

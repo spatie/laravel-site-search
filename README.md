@@ -7,7 +7,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-site-search/Check%20&%20fix%20styling?label=code%20style)](https://github.com/spatie/laravel-site-search/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-site-search.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-site-search)
 
-This package can crawl and index your entire site. You can of it as private Google search. What gets crawled and indexed can be highly customized. Under the hood Meilisearch is used to provide blazing fast search speeds.
+This package can crawl and index your entire site. You can think of it as private Google search. What gets crawled and indexed can be highly customized. Under the hood Meilisearch is used to provide blazing fast search speeds.
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.
 

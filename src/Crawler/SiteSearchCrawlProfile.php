@@ -30,7 +30,7 @@ class SiteSearchCrawlProfile extends CrawlInternalUrls
 
     protected function isConfiguredNotToBeCrawled(UriInterface $url): bool
     {
-        foreach(config('site-search.do_not_crawl_urls') as $configuredUrl) {
+        foreach (config('site-search.do_not_crawl_urls') as $configuredUrl) {
             if (fnmatch($configuredUrl, $url->getPath())) {
                 return true;
             }

@@ -19,7 +19,7 @@ After that you should run this command to start a queued job that crawls your si
 php artisan site-search:crawl
 ```
 
-Finally, you can use `SiteSearch` to perform a query on your index.
+Finally, you can use the `Search` class to perform a query on your index.
 
 ```php
 use Spatie\SiteSearch\Search;

@@ -7,8 +7,6 @@ use Illuminate\Support\Traits\Macroable;
 
 class Hit
 {
-    use Macroable;
-
     public function __construct(protected array $properties)
     {
     }

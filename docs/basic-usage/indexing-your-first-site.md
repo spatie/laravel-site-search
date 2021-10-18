@@ -22,10 +22,10 @@ php artisan site-search:crawl
 Finally, you can use `SiteSearch` to perform a query on your index.
 
 ```php
-use Spatie\SiteSearch\SearchIndexQuery;
+use Spatie\SiteSearch\Search;
 
-$searchResults = SearchIndexQuery::onIndex($indexName)
-    ->search('your query')
+$searchResults = Search::onIndex($indexName)
+    ->query('your query')
     ->get();
 ```
 

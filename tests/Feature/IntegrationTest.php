@@ -3,7 +3,7 @@
 use Illuminate\Pagination\Paginator;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
-use Spatie\SiteSearch\SearchIndexQuery;
+use Spatie\SiteSearch\Search;
 use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfile;
@@ -22,8 +22,8 @@ it('can crawl a site', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('content')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('content')
         ->get();
 
     expect($searchResults->hits)->toHaveCount(1);
@@ -43,8 +43,8 @@ it('can crawl all pages', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -65,8 +65,8 @@ it('can use a search profile to not to crawl a specific url', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -85,8 +85,8 @@ it('can use a search profile not to index a specific url', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -106,8 +106,8 @@ it('can be configured not to crawl certain urls', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -126,8 +126,8 @@ it('can be configured not to index certain urls', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -147,8 +147,8 @@ it('will only crawl pages that start with the crawl url', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -164,8 +164,8 @@ it('can will not index pages with a certain header', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -180,8 +180,8 @@ it('can paginate the results', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $paginator = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $paginator = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->paginate(2);
 
     expect(hitUrls($paginator))->toEqual([
@@ -194,8 +194,8 @@ it('can paginate the results', function () {
         return 2;
     });
 
-    $paginator = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $paginator = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->paginate(2);
 
     expect(hitUrls($paginator))->toEqual([
@@ -210,8 +210,8 @@ it('can limit results', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->limit(2)
         ->get();
 
@@ -228,8 +228,8 @@ it('can handle invalid html', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $searchResults = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('here')
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('here')
         ->get();
 
     expect(hitUrls($searchResults))->toEqual([
@@ -246,8 +246,8 @@ it('can add extra properties', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $firstHit = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('content')
+    $firstHit = Search::onIndex($this->siteSearchConfig->name)
+        ->query('content')
         ->get()
         ->hits->first();
 
@@ -275,8 +275,8 @@ it('synonyms can be specified by customizing the index settings', function () {
 
     waitForMeilisearch($this->siteSearchConfig);
 
-    $firstHit = SearchIndexQuery::onIndex($this->siteSearchConfig->name)
-        ->search('macintosh')
+    $firstHit = Search::onIndex($this->siteSearchConfig->name)
+        ->query('macintosh')
         ->get()
         ->hits->first();
 

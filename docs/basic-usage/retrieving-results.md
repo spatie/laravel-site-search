@@ -7,13 +7,13 @@ You can retrieve results from an index using `Spatie\SiteSearch\SearchIndexQuery
 
 ## Getting all results
 
-Here's how you can retrieve all results from an index named `my-index`. 
+Here's how you can retrieve all results from an index named `my-index`.
 
 ```php
-use Spatie\SiteSearch\SearchIndexQuery;
+use Spatie\SiteSearch\Search;
 
-$searchResults = SearchIndexQuery::onIndex('my-index')
-    ->search('your query')
+$searchResults = Search::onIndex('my-index')
+    ->query('your query')
     ->get(); // returns all results
 ```
 
@@ -22,10 +22,10 @@ $searchResults = SearchIndexQuery::onIndex('my-index')
 You can limit the amount of results using the `limit` function.
 
 ```php
-use Spatie\SiteSearch\SearchIndexQuery;
+use Spatie\SiteSearch\Search;
 
-$searchResults = SearchIndexQuery::onIndex('my-index')
-    ->search('your query')
+$searchResults = Search::onIndex('my-index')
+    ->query('your query')
     ->limit(20)
     ->get(); // returns the first 20 results
 ```
@@ -35,9 +35,9 @@ $searchResults = SearchIndexQuery::onIndex('my-index')
 You can paginate results using by calling `paginate`.
 
 ```php
-use Spatie\SiteSearch\SearchIndexQuery;
+use Spatie\SiteSearch\Search;
 
-$searchResults = SearchIndexQuery::onIndex('my-index')
-    ->search('your query')
+$searchResults = Search::onIndex('my-index')
+    ->query('your query')
     ->paginate(20); // returns an instance of `Illuminate\Pagination\Paginator` with 20 results per page
 ```

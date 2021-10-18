@@ -6,7 +6,7 @@ use Illuminate\Pagination\Paginator;
 use Spatie\SiteSearch\Exceptions\NoQuerySet;
 use Spatie\SiteSearch\SearchResults\SearchResults;
 
-class SearchIndexQuery
+class Search
 {
     protected ?string $query = null;
     protected ?int $limit = null;
@@ -24,7 +24,7 @@ class SearchIndexQuery
     ) {
     }
 
-    public function search(string $query): self
+    public function query(string $query): self
     {
         $this->query = $query;
 

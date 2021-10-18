@@ -3,6 +3,8 @@ title: Installation and setup
 weight: 4
 ---
 
+You can install this package inside a Laravel app of which the content needs to be indexed. You could also install this package inside a Laravel app that is dedicated to crawling multiple other sites.
+
 Here are the steps that you need to perform to install the package.
 
 ## Require via composer

@@ -106,7 +106,7 @@ return [
 
 ## Install the Meilisearch client
 
-Next, you should require the Meilisearch PHP client
+Next, you should require the Meilisearch PHP client:
 
 ```bash
 composer require meilisearch/meilisearch-php
@@ -123,14 +123,14 @@ Here are the steps for installing it on a Forge provisioned server. You must fir
 curl -L https://install.meilisearch.com | sh
 ```
 
-Next, you must change the ownership and modify permission
+Next, you must change the ownership and modify permission:
 
 ```bash
 chmod 755 meilisearch 
 chown root:root meilisearch
 ```
 
-After that, move the binary to a system-wide available path
+After that, move the binary to a system-wide available path:
 
 ```bash
 sudo mv meilisearch /usr/bin/

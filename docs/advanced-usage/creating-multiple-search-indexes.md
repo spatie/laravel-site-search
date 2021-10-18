@@ -14,8 +14,8 @@ These are the attributes you should manually update in the table:
 - `name`: the name of your index
 - `enabled`: if set to `false` , the `site-search:crawl` command will not crawl and update this index
 - `crawl_url`: the url to be crawled to populate this index
-- `driver_class`: the search driver to use. If this value is `null`, `config('site-serach.default_driver')` will be used when indexing the site
-- `profile_class`: the search profile to use. If this value is `null`, `config('site-serach.default_profile')` will be used when indexing the site 
+- `driver_class`: the search driver to use. If this value is `null`, `config('site-search.default_driver')` will be used when indexing the site
+- `profile_class`: the search profile to use. If this value is `null`, `config('site-search.default_profile')` will be used when indexing the site 
 - `index_base_name`: the name that it used by the underlying search engine (eg. Meilisearch) to determine its index name
 - `extra`: used to [customize various settings](/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings)
 

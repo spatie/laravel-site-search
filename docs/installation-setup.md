@@ -26,7 +26,7 @@ php artisan migrate
 
 ## Publish the config file
 
-Optionally, You can publish the config file with this command.
+Optionally, you can publish the config file with this command.
 
 ```bash
 php artisan vendor:publish --tag="site-search-config"
@@ -108,7 +108,7 @@ return [
 
 ## Install the Meilisearch client
 
-Next, you should require the Meilisearch PHP client
+Next, you should require the Meilisearch PHP client:
 
 ```bash
 composer require meilisearch/meilisearch-php
@@ -125,13 +125,14 @@ Here are the steps for installing it on a Forge provisioned server. You must fir
 curl -L https://install.meilisearch.com | sh
 ```
 
-Next, you must change the ownership and modify permission
+Next, you must change the ownership and modify permission:
 
 ```bash
-chmod 755 meilisearch chown root:root meilisearch
+chmod 755 meilisearch 
+chown root:root meilisearch
 ```
 
-After that, move the binary to a system-wide available path
+After that, move the binary to a system-wide available path:
 
 ```bash
 sudo mv meilisearch /usr/bin/
@@ -139,10 +140,10 @@ sudo mv meilisearch /usr/bin/
 
 Finally, you can run the binary and make sure it keeps running. In the Forge Dashboard, click on "Daemons" under "Server Details". Fill out the following for a new daemon:
 
-Command: `meilisearch --master-key=SOME_MASTER_KEY --env=production --http-addr 0.0.0.0:7700 --db-path ./home/forge/meilifiles`
-User: `forge` 
-Directory: leave blank 
-Processes: `1`
+- Command: `meilisearch --master-key=SOME_MASTER_KEY --env=production --http-addr 0.0.0.0:7700 --db-path ./home/forge/meilifiles`
+- User: `forge` 
+- Directory: leave blank 
+- Processes: `1`
 
 These instructions were take from [this gist](https://gist.github.com/josecanhelp/126d627ef125538943f33253d16fc882) by Jose Soto.
 

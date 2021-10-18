@@ -14,7 +14,7 @@ A search profile is also responsible for determining which indexer will be used 
 
 ## Creating your own search profile
 
-If you want to customize the crawling and indexing behaviour, you could opt to extend `Spatie\SiteSearch\Profiles\DefaultSearchProfile` or create your own class that implements the `Spatie\SiteSearch\Profiles\SearchProfile` interface. This is how that interface looks like.
+If you want to customize the crawling and indexing behavior, you could opt to extend `Spatie\SiteSearch\Profiles\DefaultSearchProfile` or create your own class that implements the `Spatie\SiteSearch\Profiles\SearchProfile` interface. This is how that interface looks like.
 
 ```php
 namespace Spatie\SiteSearch\Profiles;

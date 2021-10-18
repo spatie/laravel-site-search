@@ -5,7 +5,7 @@ weight: 3
 
 By default, only the page title, URL, description, and some content are added to the search index. However, you can add any extra property you want.
 
-To do this by using [a custom indexer](/docs/laravel-site-search/v1/advanced-usage/using-a-custom-indexer) and override the `extra` method.
+You do this by using [a custom indexer](/docs/laravel-site-search/v1/advanced-usage/using-a-custom-indexer) and override the `extra` method.
 
 ```php
 class YourIndexer extends Spatie\SiteSearch\Indexers\DefaultIndexer

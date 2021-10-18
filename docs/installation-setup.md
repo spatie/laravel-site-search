@@ -24,6 +24,26 @@ php artisan vendor:publish --tag="site-search-migrations"
 php artisan migrate
 ```
 
+## Schedule the crawl command
+
+This package contains a command that will crawl your site(s), and update the indexes.
+In most cases, it's best to schedule that command, so you don't need to run it manually.
+
+In the example below, we schedule to run the command every three hours, but you can decide which frequency is best for you.
+
+```php
+// in app/Console/Kernel.php
+use Spatie\SiteSearch\Commands\CrawlSitesCommand;
+
+protected function schedule(Schedule $schedule)
+{
+    // other commands
+    // ...
+    
+    $schedule->command(CrawlSitesCommand::class)->everyThreeHours();
+}
+```
+
 ## Publish the config file
 
 Optionally, you can publish the config file with this command.

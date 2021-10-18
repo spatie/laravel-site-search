@@ -3,7 +3,6 @@
 namespace Spatie\SiteSearch\SearchResults;
 
 use Carbon\Carbon;
-use Illuminate\Support\Traits\Macroable;
 
 class Hit
 {

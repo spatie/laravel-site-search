@@ -122,7 +122,7 @@ class MeiliSearchDriver implements Driver
     public function allIndexNames(): array
     {
         return array_map(
-            fn(Indexes $index) => $index->getUid(),
+            fn (Indexes $index) => $index->getUid(),
             $this->meilisearch->getAllIndexes(),
         );
     }

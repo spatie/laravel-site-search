@@ -10,6 +10,8 @@ This default profile will instruct the indexing process:
 - to only index any page that had `200` as the status code of its response
 - to not index a page if the response had a header `site-search-do-not-index`
 
+By default, the crawling process will respect the `robots.txt` of your site.
+
 A search profile is also responsible for determining which indexer will be used for a certain page. An indexer is responsible for determining the title, content, description, ... of a page. By default, `Spatie\SiteSearch\Indexers\DefaultIndexer` will get used. To know more about indexers and how to customize them, head over to [the section on indexers](/docs/laravel-site-search/v1/advanced-usage/using-a-custom-indexer).
 
 ## Creating your own search profile

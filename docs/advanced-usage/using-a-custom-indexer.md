@@ -45,7 +45,10 @@ interface Indexer
 
     /*
      * Any keys and values this function returns will also
-     * be put in the search index.
+     * be put in the search index. This is useful for adding
+     * custom attributes.
+     * 
+     * More info: https://spatie.be/docs/laravel-site-search/v1/advanced-usage/indexing-extra-properties
      */
     public function extra(): array;
 }

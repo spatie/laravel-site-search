@@ -47,14 +47,14 @@ class CrawlSiteJob implements ShouldQueue
         $driver = $this->siteSearchConfig->getDriver();
 
         collect($driver->allIndexNames())
-            ->filter(fn(string $indexName) => str_starts_with($indexName, $this->siteSearchConfig->index_base_name . '-'))
-            ->reject(function(string $indexName) {
+            ->filter(fn (string $indexName) => str_starts_with($indexName, $this->siteSearchConfig->index_base_name . '-'))
+            ->reject(function (string $indexName) {
                 return in_array($indexName, [
                     $this->siteSearchConfig->index_name,
-                    $this->siteSearchConfig->pending_index_name
+                    $this->siteSearchConfig->pending_index_name,
                 ]);
             })
-            ->each(fn(string $indexName) => $driver->deleteIndex($indexName));
+            ->each(fn (string $indexName) => $driver->deleteIndex($indexName));
 
         return $this;
     }

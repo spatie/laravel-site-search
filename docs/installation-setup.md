@@ -44,7 +44,7 @@ return [
      *
      * You may use `*` as a wildcard.
      */
-    'do_not_index_content_on_urls' => [
+    'ignore_content_on_urls' => [
         //
     ],
 
@@ -55,7 +55,7 @@ return [
      * All links inside such content will still be crawled, so it's safe
      * it's safe to add a selector for your menu structure.
      */
-    'do_not_index_content_by_css_selector' => [
+    'ignore_content_by_css_selector' => [
         '[data-no-index]',
         'nav',
     ],

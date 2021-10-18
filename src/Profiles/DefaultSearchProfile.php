@@ -55,7 +55,7 @@ class DefaultSearchProfile implements SearchProfile
 
     protected function urlShouldNotBeIndexed(UriInterface $url): bool
     {
-        foreach (config('site-search.do_not_index_content_on_urls') as $configuredUrl) {
+        foreach (config('site-search.ignore_content_on_urls') as $configuredUrl) {
             if (fnmatch($configuredUrl, $url->getPath())) {
                 return true;
             }

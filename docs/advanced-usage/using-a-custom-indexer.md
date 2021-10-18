@@ -5,7 +5,7 @@ weight: 2
 
 When a site gets crawled, each of the pages is fed to a [search profile](/docs/laravel-site-search/v1/basic-usage/using-a-search-profile). When that search profile determines that page should be indexed, the URL and response for that page is being given to an indexer. The job of the indexer is to extract the title of the page, the h1, description, content, ... that should be put in the site index.
 
-By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer`... is used. This indexer makes the best effort in determining the page title, description, and content of your page.
+By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer` is used. This indexer makes the best effort in determining the page title, description, and content of your page.
 
 If the results yielded by `DefaultIndexer` are not good enough for your content, you can create a custom indexer. An indexer is any class that implements `Spatie\SiteSearch\Indexers\Indexer`. Here's how that interface looks like.
 
@@ -59,3 +59,24 @@ class YourIndexer extends Spatie\SiteSearch\Indexers\DefaultIndexer
 ```
 
 To use your custom indexer, specify its class name in the `default_indexer` key of the  `site-search` config file.
+
+Here's an example of a custom indexer [used at freek.dev](https://github.com/spatie/freek.dev/blob/3fdfc1ecc958be75563a3b54a72194c3a0c3e1ca/app/Services/Search/Indexer.php) that will remove the suffix of site.
+
+```php
+
+namespace App\Services\Search;
+
+use Spatie\SiteSearch\Indexers\DefaultIndexer;
+
+class Indexer extends DefaultIndexer
+{
+    public function pageTitle(): ?string
+    {
+        return str_replace(
+            " - Freek Van der Herten's blog on PHP, Laravel and JavaScript",
+            '',
+            parent::pageTitle()
+        );
+    }
+}
+```

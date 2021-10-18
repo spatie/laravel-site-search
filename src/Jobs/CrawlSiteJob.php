@@ -27,6 +27,8 @@ class CrawlSiteJob implements ShouldQueue
     {
         event(new IndexingStartedEvent($this->siteSearchConfig));
 
+        $this->deleteOldIndexes();
+
         $newIndexName = $this->createNewIndex();
 
         $this->startCrawler();
@@ -38,6 +40,23 @@ class CrawlSiteJob implements ShouldQueue
         }
 
         event(new IndexingEndedEvent($this->siteSearchConfig));
+    }
+
+    protected function deleteOldIndexes(): self
+    {
+        $driver = $this->siteSearchConfig->getDriver();
+
+        collect($driver->allIndexNames())
+            ->filter(fn(string $indexName) => str_starts_with($indexName, $this->siteSearchConfig->index_base_name . '-'))
+            ->reject(function(string $indexName) {
+                return in_array($indexName, [
+                    $this->siteSearchConfig->index_name,
+                    $this->siteSearchConfig->pending_index_name
+                ]);
+            })
+            ->each(fn(string $indexName) => $driver->deleteIndex($indexName));
+
+        return $this;
     }
 
     protected function createNewIndex(): string

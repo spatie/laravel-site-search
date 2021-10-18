@@ -118,4 +118,12 @@ class MeiliSearchDriver implements Driver
             ->filter(fn (string $status) => $status === 'processing')
             ->isNotEmpty();
     }
+
+    public function allIndexNames(): array
+    {
+        return array_map(
+            fn(Indexes $index) => $index->getUid(),
+            $this->meilisearch->getAllIndexes(),
+        );
+    }
 }

@@ -6,6 +6,7 @@ use Exception;
 use MeiliSearch\Client;
 use MeiliSearch\Client as MeiliSearchClient;
 use MeiliSearch\Endpoints\Indexes;
+use MeiliSearch\Exceptions\ApiException;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
@@ -109,14 +110,7 @@ class MeiliSearchDriver implements Driver
 
     public function isProcessing(string $indexName): bool
     {
-        $statusUpdates = $this->meilisearch
-            ->getIndex($indexName)
-            ->getAllUpdateStatus();
-
-        return collect($statusUpdates)
-            ->map(fn (array $updateProperties) => $updateProperties['status'])
-            ->filter(fn (string $status) => $status === 'processing')
-            ->isNotEmpty();
+        return $this->meilisearch->index($indexName)->stats()['isIndexing'];
     }
 
     public function allIndexNames(): array
@@ -125,5 +119,15 @@ class MeiliSearchDriver implements Driver
             fn (Indexes $index) => $index->getUid(),
             $this->meilisearch->getAllIndexes(),
         );
+    }
+
+    public function documentCount(string $indexName): int
+    {
+        try {
+            return $this->meilisearch->index($indexName)->stats()['numberOfDocuments'];
+        } catch (ApiException) {
+            return 0;
+        }
+
     }
 }

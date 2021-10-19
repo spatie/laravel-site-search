@@ -33,14 +33,14 @@ In the example below, we schedule to run the command every three hours, but you 
 
 ```php
 // in app/Console/Kernel.php
-use Spatie\SiteSearch\Commands\CrawlSitesCommand;
+use Spatie\SiteSearch\Commands\CrawlCommand;
 
 protected function schedule(Schedule $schedule)
 {
     // other commands
     // ...
     
-    $schedule->command(CrawlSitesCommand::class)->everyThreeHours();
+    $schedule->command(CrawlCommand::class)->everyThreeHours();
 }
 ```
 

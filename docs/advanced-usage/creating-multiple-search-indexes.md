@@ -18,9 +18,12 @@ These are the attributes you should manually update in the table:
 - `profile_class`: the search profile to use. If this value is `null`, `config('site-search.default_profile')` will be used when indexing the site 
 - `index_base_name`: the name that it used by the underlying search engine (eg. Meilisearch) to determine its index name
 - `extra`: used to [customize various settings](/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings)
+- 
 
 These attributes are set by the package, you should not manually set or update them.
 
+- `index_name`: the real name of the underlying index
+- `number_of_urls_indexed`: the number of URLs that were crawled to created the index in `index_name`
 - `pending_index_name`: will be used to hold the temporary index name that is used while indexing
 - `crawling_started_at`: holds the date of when the crawling started when building up this index
 - `crawling_ended_at`: holds the date of when the crawling started when building up this index

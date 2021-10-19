@@ -2,6 +2,7 @@
 
 namespace Spatie\SiteSearch\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -55,5 +56,19 @@ class SiteSearchConfig extends Model
     public function getExtraValue(string $key, mixed $default = null)
     {
         return Arr::get($this->extra, $key, $default);
+    }
+
+    public function getDocumentCountAttribute(): int
+    {
+        if (! $this->index_name) {
+            return 0;
+        }
+
+        try {
+            return $this->getDriver()->documentCount($this->index_name);
+        }
+        catch(Exception $exception) {
+            return 0;
+        }
     }
 }

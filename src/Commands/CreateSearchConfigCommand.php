@@ -5,7 +5,7 @@ namespace Spatie\SiteSearch\Commands;
 use Illuminate\Console\Command;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 
-class CreateSearchIndexCommand extends Command
+class CreateSearchConfigCommand extends Command
 {
     protected $signature = 'site-search:create-index';
 

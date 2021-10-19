@@ -106,6 +106,8 @@ class CrawlSiteJob implements ShouldQueue
             'number_of_urls_indexed' => $this->numberOfUrlsIndexed
         ]);
 
+        $this->siteSearchConfig->document_count;
+
         return $oldIndexName;
     }
 

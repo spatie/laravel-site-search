@@ -20,4 +20,8 @@ interface Driver
     public function search(string $indexName, string $query, ?int $limit = null, int $offset = 0): SearchResults;
 
     public function allIndexNames(): array;
+
+    public function documentCount(string $indexName);
+
+    public function isProcessing(string $indexName): bool;
 }

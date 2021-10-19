@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 
-class CrawlSitesCommand extends Command
+class CrawlCommand extends Command
 {
     public $signature = 'site-search:crawl';
 

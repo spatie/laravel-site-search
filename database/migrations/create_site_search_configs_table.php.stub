@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('profile_class')->nullable();
             $table->json('extra')->nullable();
             $table->string('index_name')->nullable();
+            $table->integer('number_of_urls_indexed')->default(0);
             $table->string('pending_index_name')->nullable();
             $table->dateTime('crawling_started_at')->nullable();
             $table->dateTime('crawling_ended_at')->nullable();

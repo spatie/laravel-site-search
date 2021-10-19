@@ -36,7 +36,7 @@ it('can crawl a site', function () {
         ->entry->toEqual('My content');
 });
 
-it('can crawl all pages', function () {
+it('can crawl and index all pages', function () {
     Server::activateRoutes('chain');
 
     dispatch(new CrawlSiteJob($this->siteSearchConfig));
@@ -53,6 +53,17 @@ it('can crawl all pages', function () {
         'http://localhost:8181/3',
     ]);
 });
+
+it('can determine the number of indexed urls', function () {
+    Server::activateRoutes('chain');
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    waitForMeilisearch($this->siteSearchConfig);
+
+    expect($this->siteSearchConfig->refresh()->number_of_urls_indexed)->toEqual(3);
+});
+
 
 it('can use a search profile to not to crawl a specific url', function () {
     Server::activateRoutes('chain');

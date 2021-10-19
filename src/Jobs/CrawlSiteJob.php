@@ -6,6 +6,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Event;
+use Spatie\SiteSearch\Events\IndexedUrlEvent;
 use Spatie\SiteSearch\Events\IndexingEndedEvent;
 use Spatie\SiteSearch\Events\IndexingStartedEvent;
 use Spatie\SiteSearch\Events\NewIndexCreatedEvent;
@@ -17,6 +19,8 @@ class CrawlSiteJob implements ShouldQueue
     use Dispatchable;
     use InteractsWithQueue;
     use SerializesModels;
+
+    protected $numberOfUrlsIndexed = 0;
 
     public function __construct(
         public SiteSearchConfig $siteSearchConfig
@@ -72,6 +76,10 @@ class CrawlSiteJob implements ShouldQueue
 
     protected function startCrawler(): self
     {
+        Event::listen(function(IndexedUrlEvent $event) {
+            $this->numberOfUrlsIndexed = $this->numberOfUrlsIndexed+ 1;
+        });
+
         $driver = $this->siteSearchConfig->getDriver();
         $profile = $this->siteSearchConfig->getProfile();
 
@@ -95,6 +103,7 @@ class CrawlSiteJob implements ShouldQueue
         $this->siteSearchConfig->update([
             'index_name' => $newIndexName,
             'pending_index_name' => null,
+            'number_of_urls_indexed' => $this->numberOfUrlsIndexed
         ]);
 
         return $oldIndexName;

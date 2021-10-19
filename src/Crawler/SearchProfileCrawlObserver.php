@@ -9,6 +9,7 @@ use Psr\Http\Message\UriInterface;
 use Spatie\Crawler\CrawlObservers\CrawlObserver;
 use Spatie\SiteSearch\Drivers\Driver;
 use Spatie\SiteSearch\Events\FailedToCrawlUrlEvent;
+use Spatie\SiteSearch\Events\IndexedUrlEvent;
 use Spatie\SiteSearch\Profiles\SearchProfile;
 
 class SearchProfileCrawlObserver extends CrawlObserver
@@ -56,6 +57,8 @@ class SearchProfileCrawlObserver extends CrawlObserver
             ->toArray();
 
         $this->driver->updateManyDocuments($this->indexName, $documents);
+
+        event(new IndexedUrlEvent($url, $response, $foundOnUrl));
     }
 
     public function crawlFailed(

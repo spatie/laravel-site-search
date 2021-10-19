@@ -76,8 +76,8 @@ class CrawlSiteJob implements ShouldQueue
 
     protected function startCrawler(): self
     {
-        Event::listen(function(IndexedUrlEvent $event) {
-            $this->numberOfUrlsIndexed = $this->numberOfUrlsIndexed+ 1;
+        Event::listen(function (IndexedUrlEvent $event) {
+            $this->numberOfUrlsIndexed = $this->numberOfUrlsIndexed + 1;
         });
 
         $driver = $this->siteSearchConfig->getDriver();
@@ -103,7 +103,7 @@ class CrawlSiteJob implements ShouldQueue
         $this->siteSearchConfig->update([
             'index_name' => $newIndexName,
             'pending_index_name' => null,
-            'number_of_urls_indexed' => $this->numberOfUrlsIndexed
+            'number_of_urls_indexed' => $this->numberOfUrlsIndexed,
         ]);
 
         $this->siteSearchConfig->document_count;

@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Console\Command;
-use Spatie\SiteSearch\Commands\CreateSearchConfigCommand;
 use function Pest\Laravel\artisan;
+use Spatie\SiteSearch\Commands\CreateSearchConfigCommand;
 
-it('has a command to create a site search config', function() {
-   artisan(CreateSearchConfigCommand::class)
+it('has a command to create a site search config', function () {
+    artisan(CreateSearchConfigCommand::class)
        ->expectsQuestion('What should your index be named?', 'test-index')
        ->expectsQuestion('Great! Which url should be crawled to fill this index?', 'https://example.com')
        ->assertExitCode(Command::SUCCESS);

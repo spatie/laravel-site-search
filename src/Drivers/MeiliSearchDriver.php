@@ -128,6 +128,5 @@ class MeiliSearchDriver implements Driver
         } catch (ApiException) {
             return 0;
         }
-
     }
 }

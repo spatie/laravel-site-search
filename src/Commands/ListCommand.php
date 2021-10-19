@@ -38,8 +38,7 @@ class ListCommand extends Command
             if ($searchConfig->getDriver()->isProcessing($searchConfig->index_name)) {
                 return "⚠️ Processing...";
             }
-        }
-        catch (ApiException) {
+        } catch (ApiException) {
             return "🚨 Did not find index";
         }
 
@@ -56,7 +55,7 @@ class ListCommand extends Command
             'Status',
             '# Indexed URLs',
             '# Documents',
-            'Lastest crawl ended at'
+            'Lastest crawl ended at',
         ];
 
         $rows = SiteSearchConfig::all()->map(function (SiteSearchConfig $config) {

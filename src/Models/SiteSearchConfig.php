@@ -66,8 +66,7 @@ class SiteSearchConfig extends Model
 
         try {
             return $this->getDriver()->documentCount($this->index_name);
-        }
-        catch(Exception $exception) {
+        } catch (Exception $exception) {
             return 0;
         }
     }

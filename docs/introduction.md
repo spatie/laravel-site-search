@@ -3,9 +3,7 @@ title: Introduction
 weight: 1
 ---
 
-**THIS PACKAGE IS STILL IN DEVELOPMENT, DO NOT USE IN PRODUCTION (YET)**
-
-This package can crawl and index your entire site. You can think of it as a private Google search. What gets crawled and indexed can be highly customized. Under the hood, Meilisearch is used to provide blazing fast search speeds.
+This package can crawl and index one or more sites. You can think of it as a private Google search. What gets crawled and indexed can be highly customized. Under the hood, Meilisearch is used to provide blazing fast search speeds. You can add any [custom property](/docs/laravel-site-search/v1/advanced-usage/indexing-extra-properties) that you want, and even [add synonyms](https://spatie.be/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings#modifying-index-settings).
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.
 

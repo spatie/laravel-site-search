@@ -2,12 +2,10 @@
 
 namespace Spatie\SiteSearch;
 
-use Illuminate\Support\Facades\Event;
 use Spatie\Crawler\Crawler;
 use Spatie\SiteSearch\Crawler\SearchProfileCrawlObserver;
 use Spatie\SiteSearch\Crawler\SiteSearchCrawlProfile;
 use Spatie\SiteSearch\Drivers\Driver;
-use Spatie\SiteSearch\Events\IndexedUrlEvent;
 use Spatie\SiteSearch\Exceptions\SiteSearchIndexDoesNotExist;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\Profiles\SearchProfile;

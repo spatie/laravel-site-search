@@ -11,5 +11,6 @@ class IndexedUrlEvent
         UriInterface $url,
         ResponseInterface $response,
         ?UriInterface $foundOnUrl = null
-    ) {}
+    ) {
+    }
 }

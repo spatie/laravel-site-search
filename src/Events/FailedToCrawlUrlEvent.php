@@ -10,7 +10,7 @@ class FailedToCrawlUrlEvent
     public function __construct(
         public UriInterface $url,
         public RequestException $requestException,
-        public?UriInterface $foundOnUrl = null
+        public ?UriInterface $foundOnUrl = null
     ) {
     }
 }

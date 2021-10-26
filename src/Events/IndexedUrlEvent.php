@@ -8,9 +8,9 @@ use Psr\Http\Message\UriInterface;
 class IndexedUrlEvent
 {
     public function __construct(
-        UriInterface $url,
-        ResponseInterface $response,
-        ?UriInterface $foundOnUrl = null
+        public UriInterface $url,
+        public ResponseInterface $response,
+        public ?UriInterface $foundOnUrl = null
     ) {
     }
 }

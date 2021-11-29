@@ -44,11 +44,11 @@ class Hit
     {
         $propertyName = $this->getSnippetProperty();
 
-        if (!is_array($this->_formatted)){
+        if (! is_array($this->_formatted)) {
             return null;
         }
 
-        if (!array_key_exists($propertyName, $this->_formatted)){
+        if (! array_key_exists($propertyName, $this->_formatted)) {
             return null;
         }
 

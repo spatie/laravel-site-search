@@ -44,10 +44,15 @@ class Hit
     {
         $propertyName = $this->getSnippetProperty();
 
-        $propertyName = ucfirst($propertyName);
-        $propertyName = 'highlighted' . $propertyName;
+        if (!is_array($this->_formatted)){
+            return null;
+        }
 
-        return $this->$propertyName;
+        if (!array_key_exists($propertyName, $this->_formatted)){
+            return null;
+        }
+
+        return $this->_formatted[$propertyName];
     }
 
     protected function getSnippetProperty(): string

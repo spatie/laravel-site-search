@@ -1,5 +1,17 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.0.2 - 2021-11-29
+
+## What's Changed
+
+- Fix highlightedSnippet looking in wrong place by @SimonJulian in https://github.com/spatie/laravel-site-search/pull/20
+
+## New Contributors
+
+- @SimonJulian made their first contribution in https://github.com/spatie/laravel-site-search/pull/20
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/1.0.1...1.0.2
+
 ## 1.0.1 - 2021-10-27
 
 - Fix event constructors by @sebdesign in (#12)

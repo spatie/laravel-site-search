@@ -41,6 +41,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
         $dateModified = $indexer->dateModified();
         $description = $indexer->description();
         $extra = $indexer->extra();
+        $url = $indexer->url();
 
         $documents = collect($indexer->entries())
             ->map(function (string $entry) use ($extra, $dateModified, $url, $h1, $description, $pageTitle) {

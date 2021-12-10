@@ -3,6 +3,7 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
+use Psr\Http\Message\UriInterface;
 
 interface Indexer
 {
@@ -39,4 +40,9 @@ interface Indexer
      * More info: https://spatie.be/docs/laravel-site-search/v1/advanced-usage/indexing-extra-properties
      */
     public function extra(): array;
+
+    /*
+     * This function should return the url of the page.
+     */
+    public function url(): UriInterface;
 }

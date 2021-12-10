@@ -116,6 +116,7 @@ Here's an example of a custom indexer to use the canonical url (if applicable) a
 
 namespace App\Services\Search;
 
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
 
@@ -123,7 +124,13 @@ class Indexer extends DefaultIndexer
 {
     public function url(): UriInterface
     {
-        return attempt(fn () => $this->domCrawler->filter('link[rel="canonical"]')->first()->attr('href')) ?? parent::url();
+        $canonical = attempt(fn () => $this->domCrawler->filter('link[rel="canonical"]')->first()->attr('href'));
+        
+        if (! $canonical) {
+            return parent::url();
+        }
+        
+        return new Uri($canonical);
     }
 }
 ```

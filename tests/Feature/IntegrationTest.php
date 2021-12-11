@@ -8,6 +8,8 @@ use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
+use Tests\TestSupport\TestClasses\SearchProfiles\ModifyUrlSearchProfile;
+use Tests\TestSupport\TestClasses\SearchProfiles\UseCanonicalUrlSearchProfile;
 
 beforeEach(function () {
     Server::boot();
@@ -293,4 +295,22 @@ it('synonyms can be specified by customizing the index settings', function () {
 
 
     expect($firstHit->entry)->toEqual('I am a computer');
+});
+
+it('can modify indexed url', function () {
+    $this->siteSearchConfig->update(['profile_class' => ModifyUrlSearchProfile::class]);
+
+    Server::activateRoutes('modifyUrl');
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    waitForMeilisearch($this->siteSearchConfig);
+
+    $searchResults = Search::onIndex($this->siteSearchConfig->name)
+        ->query('with query')
+        ->get();
+
+    expect(hitUrls($searchResults))->toEqual([
+        'http://localhost:8181/page',
+    ]);
 });

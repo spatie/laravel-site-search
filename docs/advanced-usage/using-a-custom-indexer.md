@@ -15,6 +15,7 @@ If the results yielded by `DefaultIndexer` are not good enough for your content,
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
+use Psr\Http\Message\UriInterface;
 
 interface Indexer
 {
@@ -51,6 +52,11 @@ interface Indexer
      * More info: https://spatie.be/docs/laravel-site-search/v1/advanced-usage/indexing-extra-properties
      */
     public function extra(): array;
+    
+    /*
+     * This function should return the url of the page.
+     */
+     public function url(): UriInterface;
 }
 ```
 
@@ -82,6 +88,49 @@ class Indexer extends DefaultIndexer
             '',
             parent::pageTitle()
         );
+    }
+}
+```
+
+Here's an example of a custom indexer to strip away the query parameters from the url.
+
+```php
+
+namespace App\Services\Search;
+
+use Psr\Http\Message\UriInterface;
+use Spatie\SiteSearch\Indexers\DefaultIndexer;
+
+class Indexer extends DefaultIndexer
+{
+    public function url(): UriInterface
+    {
+        return $this->url->withQuery('');
+    }
+}
+```
+
+Here's an example of a custom indexer to use the canonical url (if applicable) as the url.
+
+```php
+
+namespace App\Services\Search;
+
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
+use Spatie\SiteSearch\Indexers\DefaultIndexer;
+
+class Indexer extends DefaultIndexer
+{
+    public function url(): UriInterface
+    {
+        $canonical = attempt(fn () => $this->domCrawler->filter('link[rel="canonical"]')->first()->attr('href'));
+        
+        if (! $canonical) {
+            return parent::url();
+        }
+        
+        return new Uri($canonical);
     }
 }
 ```

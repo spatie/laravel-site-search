@@ -7,9 +7,8 @@ use Spatie\SiteSearch\Search;
 use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfile;
-use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
 use Tests\TestSupport\TestClasses\SearchProfiles\ModifyUrlSearchProfile;
-use Tests\TestSupport\TestClasses\SearchProfiles\UseCanonicalUrlSearchProfile;
+use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
 
 beforeEach(function () {
     Server::boot();

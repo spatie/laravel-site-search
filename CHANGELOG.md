@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.2.0 - 2022-01-19
+
+- support Laravel 9
+
 ## 1.1.1 - 2022-01-19
 
 - fix serviceprovider so it doesn't load views

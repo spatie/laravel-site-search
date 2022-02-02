@@ -6,7 +6,7 @@ weight: 7
 You can list all configured search indexes using this command:
 
 ```php
-php artisan site-search:index
+php artisan site-search:list
 ```
 
 The `status` column will display one of these values:

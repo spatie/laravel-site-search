@@ -1,3 +1,6 @@
+
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+
 # Create a full-text search index by crawling your site
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-site-search.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-site-search)

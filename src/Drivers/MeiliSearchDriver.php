@@ -117,7 +117,7 @@ class MeiliSearchDriver implements Driver
     {
         return array_map(
             fn (Indexes $index) => $index->getUid(),
-            $this->meilisearch->getAllIndexes(),
+            $this->meilisearch->getAllIndexes()->getResults(),
         );
     }
 

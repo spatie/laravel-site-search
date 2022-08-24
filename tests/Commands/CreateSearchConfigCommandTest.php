@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Console\Command;
+
 use function Pest\Laravel\artisan;
+
 use Spatie\SiteSearch\Commands\CreateSearchConfigCommand;
 
 it('has a command to create a site search config', function () {

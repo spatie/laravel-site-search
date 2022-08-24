@@ -4,6 +4,7 @@ namespace Tests\TestSupport;
 
 use function class_basename;
 use function config;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelRay\RayServiceProvider;

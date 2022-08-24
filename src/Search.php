@@ -66,7 +66,7 @@ class Search
             $searchResults->hits,
             $pageSize,
             $pageNumber,
-            ['total'=>$searchResults->totalCount]
+            ['total' => $searchResults->totalCount]
         );
     }
 

@@ -1,5 +1,17 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.2.1 - 2022-08-24
+
+### What's Changed
+
+- Bug fix indexs meilisearch by @mikzero in https://github.com/spatie/laravel-site-search/pull/28
+
+### New Contributors
+
+- @mikzero made their first contribution in https://github.com/spatie/laravel-site-search/pull/28
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/1.2.0...1.2.1
+
 ## 1.2.0 - 2022-01-19
 
 - support Laravel 9

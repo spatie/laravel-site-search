@@ -61,8 +61,8 @@ class SiteSearch
         return $this;
     }
 
-    public function search(string $query, ?int $limit = null, ?int $offset = 0): SearchResults
+    public function search(string $query, ?int $limit = null, ?int $offset = 0, $searchParameters = []): SearchResults
     {
-        return $this->driver->search($this->indexName, $query, $limit, $offset);
+        return $this->driver->search($this->indexName, $query, $limit, $offset, $searchParameters);
     }
 }

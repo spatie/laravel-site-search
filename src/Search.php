@@ -11,6 +11,7 @@ class Search
     protected ?string $query = null;
     protected ?int $limit = null;
     protected int $offset = 0;
+    protected array $searchParameters = [];
 
     public static function onIndex(string $indexName)
     {
@@ -38,11 +39,23 @@ class Search
         return $this;
     }
 
+    public function searchParameters(array $searchParameters): self
+    {
+        $this->searchParameters = $searchParameters;
+
+        return $this;
+    }
+
     public function get(): SearchResults
     {
         $this->ensureQueryHasBeenSet();
 
-        return $this->siteSearch->search($this->query, $this->limit);
+        return $this->siteSearch->search(
+            $this->query,
+            $this->limit,
+            $this->offset,
+            $this->searchParameters,
+        );
     }
 
     public function paginate(int $pageSize = 20, string $pageName = 'page'): Paginator

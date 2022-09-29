@@ -17,7 +17,7 @@ interface Driver
 
     public function deleteIndex(string $indexName): self;
 
-    public function search(string $indexName, string $query, ?int $limit = null, int $offset = 0): SearchResults;
+    public function search(string $indexName, string $query, ?int $limit = null, int $offset = 0, array $searchParameters = []): SearchResults;
 
     public function allIndexNames(): array;
 

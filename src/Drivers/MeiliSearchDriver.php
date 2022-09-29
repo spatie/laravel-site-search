@@ -77,17 +77,20 @@ class MeiliSearchDriver implements Driver
         string $indexName,
         string $query,
         ?int $limit = null,
-        int $offset = 0
+        int $offset = 0,
+        array $searchParameters = [],
     ): SearchResults {
-        $searchParams = [
+        $defaultSearchParameters = [
             'limit' => $limit,
             'offset' => $offset,
             'attributesToHighlight' => ['entry', 'description'],
         ];
 
+        $searchParameters = array_merge($defaultSearchParameters, $searchParameters);
+
         $rawResults = $this
             ->index($indexName)
-            ->rawSearch($query, array_filter($searchParams));
+            ->rawSearch($query, array_filter($searchParameters));
 
         $hits = array_map(
             fn (array $hitProperties) => new Hit($hitProperties),

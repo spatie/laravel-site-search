@@ -57,7 +57,10 @@
         "meilisearch/meilisearch-php": "Required to use the MeiliSearch engine (^0.17)."
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {

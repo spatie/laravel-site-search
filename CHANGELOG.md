@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.3.0 - 2022-09-29
+
+- add support for search parameters
+
 ## 1.2.1 - 2022-08-24
 
 ### What's Changed

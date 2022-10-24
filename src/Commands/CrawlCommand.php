@@ -12,11 +12,13 @@ class CrawlCommand extends Command
 
     public function handle()
     {
+        $crawlSiteJob = config('site-search.crawl_site_job');
+
         SiteSearchConfig::enabled()
-            ->each(function (SiteSearchConfig $siteSearchConfig) {
+            ->each(function (SiteSearchConfig $siteSearchConfig) use ($crawlSiteJob) {
                 $this->comment("Dispatching job to crawl `{$siteSearchConfig->crawl_url}`");
 
-                dispatch(new CrawlSiteJob($siteSearchConfig));
+                dispatch(new $crawlSiteJob($siteSearchConfig));
             });
 
         $this->info('All done');

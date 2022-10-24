@@ -22,6 +22,8 @@ class CrawlSiteJob implements ShouldQueue
 
     protected $numberOfUrlsIndexed = 0;
 
+    public $timeout = 60 * 5;
+
     public function __construct(
         public SiteSearchConfig $siteSearchConfig
     ) {

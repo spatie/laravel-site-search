@@ -1,5 +1,17 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.4.0 - 2022-10-24
+
+### What's Changed
+
+- Allow to customise job by @freekmurze in https://github.com/spatie/laravel-site-search/pull/29
+
+### New Contributors
+
+- @freekmurze made their first contribution in https://github.com/spatie/laravel-site-search/pull/29
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/1.3.0...1.4.0
+
 ## 1.3.0 - 2022-09-29
 
 - add support for search parameters

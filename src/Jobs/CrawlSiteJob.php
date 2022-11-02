@@ -2,6 +2,7 @@
 
 namespace Spatie\SiteSearch\Jobs;
 
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,7 +15,7 @@ use Spatie\SiteSearch\Events\NewIndexCreatedEvent;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SiteSearch;
 
-class CrawlSiteJob implements ShouldQueue
+class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -24,9 +25,16 @@ class CrawlSiteJob implements ShouldQueue
 
     public $timeout = 60 * 5;
 
+    public $uniqueFor = 60 * 60;
+
     public function __construct(
         public SiteSearchConfig $siteSearchConfig
     ) {
+    }
+
+    public function uniqueId(): string
+    {
+        return $this->siteSearchConfig->getKey();
     }
 
     public function handle()

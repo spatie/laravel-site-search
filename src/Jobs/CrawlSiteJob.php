@@ -34,7 +34,7 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
 
     public function uniqueId(): string
     {
-        return $this->siteSearchConfig->index_base_name;
+        return $this->siteSearchConfig->getKey();
     }
 
     public function handle()

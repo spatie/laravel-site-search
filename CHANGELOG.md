@@ -1,5 +1,17 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.4.1 - 2022-11-02
+
+### What's Changed
+
+- Make the CrawlSiteJob unique by @riasvdv in https://github.com/spatie/laravel-site-search/pull/30
+
+### New Contributors
+
+- @riasvdv made their first contribution in https://github.com/spatie/laravel-site-search/pull/30
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/1.4.0...1.4.1
+
 ## 1.4.0 - 2022-10-24
 
 ### What's Changed

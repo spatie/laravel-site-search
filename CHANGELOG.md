@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.4.2 - 2023-01-25
+
+- support L10
+
 ## 1.4.1 - 2022-11-02
 
 ### What's Changed

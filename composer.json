@@ -26,7 +26,7 @@
     "require-dev": {
         "brianium/paratest": "^6.2",
         "guzzlehttp/guzzle": "^7.3",
-        "meilisearch/meilisearch-php": "^0.19.1",
+        "meilisearch/meilisearch-php": "^1.0",
         "nunomaduro/collision": "^5.3|^6.0",
         "orchestra/testbench": "^6.23|^7.0|^8.0",
         "pestphp/pest": "^1.18",
@@ -53,7 +53,7 @@
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
     "suggest": {
-        "meilisearch/meilisearch-php": "Required to use the MeiliSearch engine (^0.17)."
+        "meilisearch/meilisearch-php": "Required to use the MeiliSearch engine."
     },
     "config": {
         "sort-packages": true,

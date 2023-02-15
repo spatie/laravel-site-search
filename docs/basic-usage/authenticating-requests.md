@@ -9,7 +9,7 @@ In the Meilisearch docs you'll find [how to start Meilisearch with a master pass
 
 Here's how you can create a new API key for a given master key:
 
-```curl
+```
 curl   -X POST 'http://localhost:7700/keys'   -H 'Content-Type: application/json'   -H 'Authorization: Bearer <MASTER-KEY>'   --data-binary '{
    "description": "Site search key",
    "actions": ["*"],
@@ -20,7 +20,7 @@ curl   -X POST 'http://localhost:7700/keys'   -H 'Content-Type: application/json
 
 You can view all previously created keys with this command:
 
-```php
+```
 curl   -X GET 'http://localhost:7700/keys'   -H 'Content-Type: application/json'   -H 'Authorization: Bearer <MASTER-KEY>'
 ```
 

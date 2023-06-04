@@ -24,7 +24,8 @@ class SearchProfileCrawlObserver extends CrawlObserver
     public function crawled(
         UriInterface $url,
         ResponseInterface $response,
-        ?UriInterface $foundOnUrl = null
+        ?UriInterface $foundOnUrl = null,
+        ?string $linkText = null,
     ): void {
         if (! $this->searchProfile->shouldIndex($url, $response)) {
             return;
@@ -65,7 +66,8 @@ class SearchProfileCrawlObserver extends CrawlObserver
     public function crawlFailed(
         UriInterface $url,
         RequestException $requestException,
-        ?UriInterface $foundOnUrl = null
+        ?UriInterface $foundOnUrl = null,
+        ?string $linkText = null,
     ): void {
         event(new FailedToCrawlUrlEvent($url, $requestException, $foundOnUrl));
     }

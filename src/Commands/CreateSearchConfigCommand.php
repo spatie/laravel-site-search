@@ -4,6 +4,10 @@ namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
+use function Laravel\Prompts\intro;
+use function Laravel\Prompts\outro;
+use function Laravel\Prompts\text;
+use Illuminate\Support\Facades\Validator;
 
 class CreateSearchConfigCommand extends Command
 {
@@ -11,13 +15,26 @@ class CreateSearchConfigCommand extends Command
 
     public function handle()
     {
-        $this->info("Let's create your index!");
+        intro("Let's create your index!");
 
-        $this->newLine();
-        $name = $this->ask('What should your index be named?');
+        $name = text(
+            label: 'What should your index be named?',
+            placeholder: 'E.g. my-index',
+            required: 'An index name is required.'
+        );
 
-        $this->newLine();
-        $url = $this->ask('Great! Which url should be crawled to fill this index?');
+        $url = text(
+            label: 'Which url should be crawled to fill this index?',
+            placeholder: 'E.g. https://example.com',
+            required: 'A URL is required.',
+            validate: function (string $value) {
+                $passes = Validator::make(['url' => $value], [
+                    'url' => 'url',
+                ])->passes();
+
+                return $passes ? null : 'You must enter a valid URL';
+            }
+        );
 
         SiteSearchConfig::create([
             'name' => $name,
@@ -26,8 +43,6 @@ class CreateSearchConfigCommand extends Command
             'enabled' => 1,
         ]);
 
-        $this->newLine();
-        $this->info('Your index has been created.');
-        $this->info('You should now run `php artisan site-search:crawl` to fill your index');
+        outro('Your index has been created.' . PHP_EOL . 'You should now run `php artisan site-search:crawl` to fill your index');
     }
 }

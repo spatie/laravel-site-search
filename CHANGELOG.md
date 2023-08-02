@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.1.0 - 2023-08-02
+
+- use Laravel Prompts
+
 ## 2.0.0 - 2023-06-04
 
 - upgrade to crawler v8

@@ -3,11 +3,13 @@
 namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\SiteSearch\Models\SiteSearchConfig;
+use Illuminate\Support\Facades\Validator;
+
 use function Laravel\Prompts\intro;
 use function Laravel\Prompts\outro;
 use function Laravel\Prompts\text;
-use Illuminate\Support\Facades\Validator;
+
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 class CreateSearchConfigCommand extends Command
 {

@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.0.0 - 2023-06-04
+
+- upgrade to crawler v8
+
 ## 1.5.0 - 2023-02-09
 
 - support Meilisearch 1.0

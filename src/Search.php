@@ -73,7 +73,7 @@ class Search
          */
         $realPageSize = $pageSize + 1;
 
-        $searchResults = $this->siteSearch->search($this->query, $realPageSize, $offset);
+        $searchResults = $this->siteSearch->search($this->query, $realPageSize, $offset, $this->searchParameters);
 
         return new Paginator(
             $searchResults->hits,

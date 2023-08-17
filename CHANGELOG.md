@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 1.5.1 - 2023-08-17
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/1.5.0...1.5.1
+
 ## 2.1.2 - 2023-08-17
 
 ### What's Changed

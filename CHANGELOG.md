@@ -1,5 +1,18 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.1.2 - 2023-08-17
+
+### What's Changed
+
+- Use the searchParameters also for paging. by @eggnaube in https://github.com/spatie/laravel-site-search/pull/37
+- Also apply the searchParameter - V1 by @eggnaube in https://github.com/spatie/laravel-site-search/pull/38
+
+### New Contributors
+
+- @eggnaube made their first contribution in https://github.com/spatie/laravel-site-search/pull/37
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/2.1.0...2.1.2
+
 ## 2.1.0 - 2023-08-02
 
 - use Laravel Prompts

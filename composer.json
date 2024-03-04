@@ -18,8 +18,8 @@
     "require": {
         "php": "^8.1",
         "guzzlehttp/psr7": "^2.5",
-        "illuminate/contracts": "^10.0",
-        "illuminate/http": "^10.0",
+        "illuminate/contracts": "^10.0|^11.0",
+        "illuminate/http": "^10.0|^11.0",
         "laravel/prompts": "^0.1.1",
         "spatie/crawler": "^8.0",
         "spatie/laravel-package-tools": "^1.15"
@@ -27,8 +27,8 @@
     "require-dev": {
         "guzzlehttp/guzzle": "^7.7",
         "meilisearch/meilisearch-php": "^1.1.1",
-        "nunomaduro/collision": "^7.5.2",
-        "orchestra/testbench": "^8.5.5",
+        "nunomaduro/collision": "^7.5.2|^8.0",
+        "orchestra/testbench": "^8.5.5|^9.0",
         "pestphp/pest": "^2.6.2",
         "pestphp/pest-plugin-laravel": "^2.0",
         "spatie/laravel-ray": "^1.32.4"

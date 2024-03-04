@@ -1,5 +1,17 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.2.0 - 2024-03-04
+
+### What's Changed
+
+* Laravel 11.x Compatibility by @laravel-shift in https://github.com/spatie/laravel-site-search/pull/39
+
+### New Contributors
+
+* @laravel-shift made their first contribution in https://github.com/spatie/laravel-site-search/pull/39
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/2.1.2...2.2.0
+
 ## 1.5.1 - 2023-08-17
 
 **Full Changelog**: https://github.com/spatie/laravel-site-search/compare/1.5.0...1.5.1

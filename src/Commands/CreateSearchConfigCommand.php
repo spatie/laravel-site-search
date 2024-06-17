@@ -5,6 +5,8 @@ namespace Spatie\SiteSearch\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 
+use Laravel\Prompts\FormBuilder;
+use function Laravel\Prompts\form;
 use function Laravel\Prompts\intro;
 use function Laravel\Prompts\outro;
 use function Laravel\Prompts\text;
@@ -17,26 +19,25 @@ class CreateSearchConfigCommand extends Command
 
     public function handle()
     {
-        intro("Let's create your index!");
+        [, $name, $url] = form()->intro("Let's create your index!")
+            ->text(
+                label: 'What should your index be named?',
+                placeholder: 'E.g. my-index',
+                required: 'An index name is required.'
+            )
+            ->text(
+                label: 'Which url should be crawled to fill this index?',
+                placeholder: 'E.g. https://example.com',
+                required: 'A URL is required.',
+                validate: function (string $value) {
+                    $passes = Validator::make(['url' => $value], [
+                        'url' => 'url',
+                    ])->passes();
 
-        $name = text(
-            label: 'What should your index be named?',
-            placeholder: 'E.g. my-index',
-            required: 'An index name is required.'
-        );
-
-        $url = text(
-            label: 'Which url should be crawled to fill this index?',
-            placeholder: 'E.g. https://example.com',
-            required: 'A URL is required.',
-            validate: function (string $value) {
-                $passes = Validator::make(['url' => $value], [
-                    'url' => 'url',
-                ])->passes();
-
-                return $passes ? null : 'You must enter a valid URL';
-            }
-        );
+                    return $passes ? null : 'You must enter a valid URL';
+                }
+            )
+            ->submit();
 
         SiteSearchConfig::create([
             'name' => $name,

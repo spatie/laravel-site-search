@@ -5,11 +5,8 @@ namespace Spatie\SiteSearch\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 
-use Laravel\Prompts\FormBuilder;
 use function Laravel\Prompts\form;
-use function Laravel\Prompts\intro;
 use function Laravel\Prompts\outro;
-use function Laravel\Prompts\text;
 
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 

@@ -1,5 +1,18 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.3.0 - 2024-06-17
+
+### What's Changed
+
+* Update links to Meilisearch docs by @timmydhooghe in https://github.com/spatie/laravel-site-search/pull/44
+* Use the new reversable prompt form builder and fix CreateSearchConfigCommand Tests by @masterfermin02 in https://github.com/spatie/laravel-site-search/pull/45
+
+### New Contributors
+
+* @masterfermin02 made their first contribution in https://github.com/spatie/laravel-site-search/pull/45
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/2.2.0...2.3.0
+
 ## 2.2.0 - 2024-03-04
 
 ### What's Changed

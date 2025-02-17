@@ -5,7 +5,8 @@
         "spatie",
         "laravel",
         "laravel-site-search",
-        "crawl"
+        "crawl",
+        "search
     ],
     "homepage": "https://github.com/spatie/laravel-site-search",
     "license": "MIT",

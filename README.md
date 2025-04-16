@@ -1,7 +1,17 @@
-# Create a full-text search index by crawling your site
+<div align="left">
+    <a href="https://spatie.be/open-source?utm_source=github&utm_medium=banner&utm_campaign=laravel-site-search">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://spatie.be/packages/header/laravel-site-search/html/dark.webp">
+        <img alt="Logo for laravel-site-search" src=" https://spatie.be/packages/header/laravel-site-search/html/light.webp" height="190">
+      </picture>
+    </a>
+
+<h1>Create a full-text search index by crawling your site</h1>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-site-search.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-site-search)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-site-search.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-site-search)
+    
+</div>
 
 This package can crawl and index your entire site. You can think of it as private Google search. What gets crawled and indexed can be highly customized. Under the hood Meilisearch is used to provide blazing fast search speeds.
 

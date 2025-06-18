@@ -1,5 +1,11 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.4.0 - 2025-06-18
+
+- Add `--sync` option to `site-search:crawl`
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/2.3.1...2.4.0
+
 ## 2.3.1 - 2025-02-17
 
 ### What's Changed

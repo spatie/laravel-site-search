@@ -121,8 +121,17 @@ return [
     /*
      * A driver is responsible for writing all scraped content
      * to a search index.
+     *
+     * Available drivers are MeiliSearchDriver and ArrayDriver (with logging for testing).
      */
     'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
+
+    /*
+     * This job is responsible for crawling your site. To customize this job,
+     * you can extend the default one, and specify the class name of
+     * your customized job here.
+     */
+    'crawl_site_job' => Spatie\SiteSearch\Jobs\CrawlSiteJob::class,
 ];
 ```
 

@@ -63,6 +63,8 @@ return [
     /*
      * A driver is responsible for writing all scraped content
      * to a search index.
+     *
+     * Available drivers are MeiliSearchDriver and ArrayDriver (with logging for testing).
      */
     'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
 

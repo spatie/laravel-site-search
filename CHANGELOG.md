@@ -1,5 +1,11 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.5.0 - 2025-06-20
+
+- Add `ArrayDriver` with logging functionality for debugging the crawling and indexing process
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/2.4.0...2.5.0
+
 ## 2.4.0 - 2025-06-18
 
 - Add `--sync` option to `site-search:crawl`

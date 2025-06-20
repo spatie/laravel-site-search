@@ -42,7 +42,7 @@ class ArrayDriver implements Driver
             'document' => $documentProperties,
         ]);
 
-        if (!isset($this->documents[$indexName])) {
+        if (! isset($this->documents[$indexName])) {
             $this->createIndex($indexName);
         }
 
@@ -60,7 +60,7 @@ class ArrayDriver implements Driver
             'documents' => $documents,
         ]);
 
-        if (!isset($this->documents[$indexName])) {
+        if (! isset($this->documents[$indexName])) {
             $this->createIndex($indexName);
         }
 
@@ -101,9 +101,10 @@ class ArrayDriver implements Driver
 
         $documents = collect($this->documents[$indexName] ?? []);
 
-        if (!empty($query)) {
+        if (! empty($query)) {
             $documents = $documents->filter(function ($document) use ($query) {
                 $searchableText = collect($document)->values()->implode(' ');
+
                 return stripos($searchableText, $query) !== false;
             });
         }
@@ -119,7 +120,6 @@ class ArrayDriver implements Driver
             $offset,
         );
     }
-
 
     public function isProcessing(string $indexName): bool
     {

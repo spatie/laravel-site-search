@@ -2,11 +2,12 @@
 
 namespace Spatie\SiteSearch\Drivers\Sqlite;
 
-use PDO;
+use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseManager
 {
-    /** @var array<string, PDO> */
+    /** @var array<string, Connection> */
     protected array $connections = [];
 
     public function __construct(
@@ -26,7 +27,7 @@ class DatabaseManager
         return $this->getPath($indexName) . '.tmp';
     }
 
-    public function connect(string $indexName, bool $useTemp = false): PDO
+    public function connect(string $indexName, bool $useTemp = false): Connection
     {
         if (! $useTemp) {
             $this->swapTempIfExists($indexName);
@@ -37,13 +38,21 @@ class DatabaseManager
 
         if (! isset($this->connections[$cacheKey])) {
             $this->ensureDirectoryExists();
+            $this->ensureDatabaseFileExists($path);
 
-            $pdo = new PDO("sqlite:{$path}");
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->exec('PRAGMA journal_mode=WAL');
-            $pdo->exec('PRAGMA synchronous=NORMAL');
+            $connectionName = 'site_search_' . md5($cacheKey);
 
-            $this->connections[$cacheKey] = $pdo;
+            DB::connectUsing($connectionName, [
+                'driver' => 'sqlite',
+                'database' => $path,
+                'foreign_key_constraints' => false,
+            ]);
+
+            $connection = DB::connection($connectionName);
+            $connection->statement('PRAGMA journal_mode=WAL');
+            $connection->statement('PRAGMA synchronous=NORMAL');
+
+            $this->connections[$cacheKey] = $connection;
         }
 
         return $this->connections[$cacheKey];
@@ -124,6 +133,8 @@ class DatabaseManager
     protected function closeConnection(string $path): void
     {
         if (isset($this->connections[$path])) {
+            $connectionName = 'site_search_' . md5($path);
+            DB::purge($connectionName);
             unset($this->connections[$path]);
         }
     }
@@ -131,9 +142,16 @@ class DatabaseManager
     protected function checkpointWal(string $path): void
     {
         if (file_exists($path)) {
-            $pdo = new PDO("sqlite:{$path}");
-            $pdo->exec('PRAGMA wal_checkpoint(TRUNCATE)');
-            $pdo = null;
+            $connectionName = 'site_search_checkpoint_' . md5($path);
+
+            DB::connectUsing($connectionName, [
+                'driver' => 'sqlite',
+                'database' => $path,
+                'foreign_key_constraints' => false,
+            ]);
+
+            DB::connection($connectionName)->statement('PRAGMA wal_checkpoint(TRUNCATE)');
+            DB::purge($connectionName);
         }
     }
 
@@ -156,6 +174,13 @@ class DatabaseManager
     {
         if (! is_dir($this->storagePath)) {
             mkdir($this->storagePath, 0755, true);
+        }
+    }
+
+    protected function ensureDatabaseFileExists(string $path): void
+    {
+        if (! file_exists($path)) {
+            touch($path);
         }
     }
 }

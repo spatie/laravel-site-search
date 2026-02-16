@@ -2,12 +2,12 @@
 
 namespace Spatie\SiteSearch\Drivers\Sqlite;
 
-use PDO;
+use Illuminate\Database\Connection;
 
 class QueryBuilder
 {
     public function search(
-        PDO $pdo,
+        Connection $connection,
         string $query,
         ?int $limit = null,
         int $offset = 0,
@@ -16,7 +16,7 @@ class QueryBuilder
         $limit = $limit ?? 20;
 
         if (empty(trim($query))) {
-            return $this->getAllDocuments($pdo, $limit, $offset);
+            return $this->getAllDocuments($connection, $limit, $offset);
         }
 
         $ftsQuery = $this->prepareFtsQuery($query);
@@ -29,37 +29,32 @@ class QueryBuilder
                 bm25(documents_fts, 0, 1.0, 2.0, 5.0, 3.0, 1.0) as rank
             FROM documents_fts
             JOIN documents d ON documents_fts.id = d.id
-            WHERE documents_fts MATCH :query
+            WHERE documents_fts MATCH ?
             ORDER BY rank
-            LIMIT :limit OFFSET :offset
+            LIMIT ? OFFSET ?
         ';
 
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':query', $ftsQuery, PDO::PARAM_STR);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
+        $results = $connection->select($sql, [$ftsQuery, $limit, $offset]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn ($row) => (array) $row, $results);
     }
 
-    public function getTotalCount(PDO $pdo, string $query): int
+    public function getTotalCount(Connection $connection, string $query): int
     {
         if (empty(trim($query))) {
-            $stmt = $pdo->query('SELECT COUNT(*) FROM documents');
+            $result = $connection->selectOne('SELECT COUNT(*) as count FROM documents');
 
-            return (int) $stmt->fetchColumn();
+            return (int) $result->count;
         }
 
         $ftsQuery = $this->prepareFtsQuery($query);
 
-        $stmt = $pdo->prepare('
-            SELECT COUNT(*) FROM documents_fts WHERE documents_fts MATCH :query
-        ');
-        $stmt->bindValue(':query', $ftsQuery, PDO::PARAM_STR);
-        $stmt->execute();
+        $result = $connection->selectOne(
+            'SELECT COUNT(*) as count FROM documents_fts WHERE documents_fts MATCH ?',
+            [$ftsQuery]
+        );
 
-        return (int) $stmt->fetchColumn();
+        return (int) $result->count;
     }
 
     protected function prepareFtsQuery(string $query): string
@@ -86,17 +81,13 @@ class QueryBuilder
         return implode(' ', $terms);
     }
 
-    protected function getAllDocuments(PDO $pdo, int $limit, int $offset): array
+    protected function getAllDocuments(Connection $connection, int $limit, int $offset): array
     {
-        $stmt = $pdo->prepare('
-            SELECT * FROM documents
-            ORDER BY date_modified_timestamp DESC
-            LIMIT :limit OFFSET :offset
-        ');
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
+        $results = $connection->select(
+            'SELECT * FROM documents ORDER BY date_modified_timestamp DESC LIMIT ? OFFSET ?',
+            [$limit, $offset]
+        );
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn ($row) => (array) $row, $results);
     }
 }

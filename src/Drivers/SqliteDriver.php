@@ -2,7 +2,7 @@
 
 namespace Spatie\SiteSearch\Drivers;
 
-use PDO;
+use Illuminate\Database\Connection;
 use Spatie\SiteSearch\Drivers\Sqlite\DatabaseManager;
 use Spatie\SiteSearch\Drivers\Sqlite\QueryBuilder;
 use Spatie\SiteSearch\Drivers\Sqlite\SchemaManager;
@@ -37,8 +37,8 @@ class SqliteDriver implements Driver
     {
         $isTemp = $this->isPendingIndex($indexName);
 
-        $pdo = $this->databaseManager->connect($indexName, $isTemp);
-        $this->schemaManager->createSchema($pdo);
+        $connection = $this->databaseManager->connect($indexName, $isTemp);
+        $this->schemaManager->createSchema($connection);
 
         return $this;
     }
@@ -46,9 +46,9 @@ class SqliteDriver implements Driver
     public function updateDocument(string $indexName, array $documentProperties): self
     {
         $isTemp = $this->isPendingIndex($indexName);
-        $pdo = $this->databaseManager->connect($indexName, $isTemp);
+        $connection = $this->databaseManager->connect($indexName, $isTemp);
 
-        $this->insertDocument($pdo, $documentProperties);
+        $this->insertDocument($connection, $documentProperties);
 
         return $this;
     }
@@ -56,18 +56,18 @@ class SqliteDriver implements Driver
     public function updateManyDocuments(string $indexName, array $documents): self
     {
         $isTemp = $this->isPendingIndex($indexName);
-        $pdo = $this->databaseManager->connect($indexName, $isTemp);
+        $connection = $this->databaseManager->connect($indexName, $isTemp);
 
-        $pdo->beginTransaction();
+        $connection->beginTransaction();
 
         try {
             foreach ($documents as $document) {
-                $this->insertDocument($pdo, $document);
+                $this->insertDocument($connection, $document);
             }
 
-            $pdo->commit();
+            $connection->commit();
         } catch (\Exception $e) {
-            $pdo->rollBack();
+            $connection->rollBack();
 
             throw $e;
         }
@@ -105,10 +105,10 @@ class SqliteDriver implements Driver
             );
         }
 
-        $pdo = $this->databaseManager->connect($indexName);
+        $connection = $this->databaseManager->connect($indexName);
 
-        $results = $this->queryBuilder->search($pdo, $query, $limit, $offset, $searchParameters);
-        $totalCount = $this->queryBuilder->getTotalCount($pdo, $query);
+        $results = $this->queryBuilder->search($connection, $query, $limit, $offset, $searchParameters);
+        $totalCount = $this->queryBuilder->getTotalCount($connection, $query);
 
         $processingTimeMs = (int) ((microtime(true) - $startTime) * 1000);
 
@@ -141,32 +141,29 @@ class SqliteDriver implements Driver
             return 0;
         }
 
-        $pdo = $this->databaseManager->connect($indexName);
+        $connection = $this->databaseManager->connect($indexName);
 
-        return $this->schemaManager->documentCount($pdo);
+        return $this->schemaManager->documentCount($connection);
     }
 
-    protected function insertDocument(PDO $pdo, array $documentProperties): void
+    protected function insertDocument(Connection $connection, array $documentProperties): void
     {
         $standardFields = ['id', 'url', 'pageTitle', 'h1', 'entry', 'description', 'date_modified_timestamp'];
         $extra = array_diff_key($documentProperties, array_flip($standardFields));
 
-        $sql = '
+        $connection->statement('
             INSERT OR REPLACE INTO documents
             (id, url, page_title, h1, entry, description, date_modified_timestamp, extra)
-            VALUES (:id, :url, :page_title, :h1, :entry, :description, :date_modified_timestamp, :extra)
-        ';
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':id' => $documentProperties['id'] ?? uniqid(),
-            ':url' => $documentProperties['url'] ?? '',
-            ':page_title' => $documentProperties['pageTitle'] ?? null,
-            ':h1' => $documentProperties['h1'] ?? null,
-            ':entry' => $documentProperties['entry'] ?? null,
-            ':description' => $documentProperties['description'] ?? null,
-            ':date_modified_timestamp' => $documentProperties['date_modified_timestamp'] ?? null,
-            ':extra' => ! empty($extra) ? json_encode($extra) : null,
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ', [
+            $documentProperties['id'] ?? uniqid(),
+            $documentProperties['url'] ?? '',
+            $documentProperties['pageTitle'] ?? null,
+            $documentProperties['h1'] ?? null,
+            $documentProperties['entry'] ?? null,
+            $documentProperties['description'] ?? null,
+            $documentProperties['date_modified_timestamp'] ?? null,
+            ! empty($extra) ? json_encode($extra) : null,
         ]);
     }
 

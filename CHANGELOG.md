@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.6.1 - 2026-02-22
+
+Use MeiliSearch service container with health check in CI
+
 ## 2.6.0 - 2026-02-22
 
 Add Laravel 13 support

@@ -1,5 +1,11 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.7.0 - 2026-02-22
+
+- Add Laravel 13 support
+- Upgrade to Pest 4
+- Drop Laravel 10 and PHP 8.2 support
+
 ## 3.0.0 - 2026-02-22
 
 - Add Laravel 13 support

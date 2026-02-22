@@ -1,5 +1,9 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 2.6.0 - 2026-02-22
+
+Add Laravel 13 support
+
 ## 2.5.0 - 2025-06-20
 
 - Add `ArrayDriver` with logging functionality for debugging the crawling and indexing process

@@ -99,7 +99,7 @@ class DatabaseManager
         $this->closeConnection($tempPath);
         $this->closeConnection($finalPath);
 
-        $this->checkpointWal($tempPath);
+        $this->flushPendingWrites($tempPath);
         $this->deleteFileAndWal($tempPath, walOnly: true);
         $this->deleteFileAndWal($finalPath);
 
@@ -139,7 +139,7 @@ class DatabaseManager
         }
     }
 
-    protected function checkpointWal(string $path): void
+    protected function flushPendingWrites(string $path): void
     {
         if (file_exists($path)) {
             $connectionName = 'site_search_checkpoint_' . md5($path);

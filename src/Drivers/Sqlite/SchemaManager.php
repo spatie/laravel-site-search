@@ -3,6 +3,8 @@
 namespace Spatie\SiteSearch\Drivers\Sqlite;
 
 use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Database\Schema\Blueprint;
 
 class SchemaManager
 {
@@ -20,24 +22,25 @@ class SchemaManager
 
     protected function createDocumentsTable(Connection $connection): void
     {
-        $connection->statement('
-            CREATE TABLE IF NOT EXISTS documents (
-                id TEXT PRIMARY KEY,
-                url TEXT NOT NULL,
-                page_title TEXT,
-                h1 TEXT,
-                entry TEXT,
-                description TEXT,
-                date_modified_timestamp INTEGER,
-                extra TEXT,
-                created_at INTEGER DEFAULT (strftime(\'%s\', \'now\'))
-            )
-        ');
+        $schema = $connection->getSchemaBuilder();
 
-        $connection->statement('
-            CREATE INDEX IF NOT EXISTS idx_documents_url
-            ON documents(url)
-        ');
+        if ($schema->hasTable('documents')) {
+            return;
+        }
+
+        $schema->create('documents', function (Blueprint $table) {
+            $table->text('id')->primary();
+            $table->text('url');
+            $table->text('page_title')->nullable();
+            $table->text('h1')->nullable();
+            $table->text('entry')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('date_modified_timestamp')->nullable();
+            $table->text('extra')->nullable();
+            $table->integer('created_at')->default(new Expression("(strftime('%s', 'now'))"));
+
+            $table->index('url', 'idx_documents_url');
+        });
     }
 
     protected function createFtsTable(Connection $connection): void

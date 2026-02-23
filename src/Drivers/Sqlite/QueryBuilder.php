@@ -21,40 +21,32 @@ class QueryBuilder
 
         $ftsQuery = $this->prepareFtsQuery($query);
 
-        $sql = '
-            SELECT
-                d.*,
-                highlight(documents_fts, 4, \'<em>\', \'</em>\') as entry_highlighted,
-                highlight(documents_fts, 5, \'<em>\', \'</em>\') as description_highlighted,
-                bm25(documents_fts, 0, 1.0, 2.0, 5.0, 3.0, 1.0) as rank
-            FROM documents_fts
-            JOIN documents d ON documents_fts.id = d.id
-            WHERE documents_fts MATCH ?
-            ORDER BY rank
-            LIMIT ? OFFSET ?
-        ';
+        $results = $connection->table('documents_fts')
+            ->select('d.*')
+            ->selectRaw("highlight(documents_fts, 4, '<em>', '</em>') as entry_highlighted")
+            ->selectRaw("highlight(documents_fts, 5, '<em>', '</em>') as description_highlighted")
+            ->selectRaw('bm25(documents_fts, 0, 1.0, 2.0, 5.0, 3.0, 1.0) as rank')
+            ->join('documents as d', 'documents_fts.id', '=', 'd.id')
+            ->whereRaw('documents_fts MATCH ?', [$ftsQuery])
+            ->orderBy('rank')
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
 
-        $results = $connection->select($sql, [$ftsQuery, $limit, $offset]);
-
-        return array_map(fn ($row) => (array) $row, $results);
+        return $results->map(fn ($row) => (array) $row)->all();
     }
 
     public function getTotalCount(Connection $connection, string $query): int
     {
         if (empty(trim($query))) {
-            $result = $connection->selectOne('SELECT COUNT(*) as count FROM documents');
-
-            return (int) $result->count;
+            return $connection->table('documents')->count();
         }
 
         $ftsQuery = $this->prepareFtsQuery($query);
 
-        $result = $connection->selectOne(
-            'SELECT COUNT(*) as count FROM documents_fts WHERE documents_fts MATCH ?',
-            [$ftsQuery]
-        );
-
-        return (int) $result->count;
+        return $connection->table('documents_fts')
+            ->whereRaw('documents_fts MATCH ?', [$ftsQuery])
+            ->count();
     }
 
     protected function prepareFtsQuery(string $query): string
@@ -83,11 +75,12 @@ class QueryBuilder
 
     protected function getAllDocuments(Connection $connection, int $limit, int $offset): array
     {
-        $results = $connection->select(
-            'SELECT * FROM documents ORDER BY date_modified_timestamp DESC LIMIT ? OFFSET ?',
-            [$limit, $offset]
-        );
-
-        return array_map(fn ($row) => (array) $row, $results);
+        return $connection->table('documents')
+            ->orderByDesc('date_modified_timestamp')
+            ->limit($limit)
+            ->offset($offset)
+            ->get()
+            ->map(fn ($row) => (array) $row)
+            ->all();
     }
 }

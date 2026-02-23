@@ -21,7 +21,7 @@ interface Driver
 
     public function allIndexNames(): array;
 
-    public function documentCount(string $indexName);
+    public function documentCount(string $indexName): int;
 
     public function isProcessing(string $indexName): bool;
 }

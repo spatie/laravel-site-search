@@ -58,19 +58,11 @@ class SqliteDriver implements Driver
         $isTemp = $this->isPendingIndex($indexName);
         $connection = $this->databaseManager->connect($indexName, $isTemp);
 
-        $connection->beginTransaction();
-
-        try {
+        $connection->transaction(function () use ($connection, $documents) {
             foreach ($documents as $document) {
                 $this->insertDocument($connection, $document);
             }
-
-            $connection->commit();
-        } catch (\Exception $e) {
-            $connection->rollBack();
-
-            throw $e;
-        }
+        });
 
         return $this;
     }
@@ -151,20 +143,18 @@ class SqliteDriver implements Driver
         $standardFields = ['id', 'url', 'pageTitle', 'h1', 'entry', 'description', 'date_modified_timestamp'];
         $extra = array_diff_key($documentProperties, array_flip($standardFields));
 
-        $connection->statement('
-            INSERT OR REPLACE INTO documents
-            (id, url, page_title, h1, entry, description, date_modified_timestamp, extra)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ', [
-            $documentProperties['id'] ?? uniqid(),
-            $documentProperties['url'] ?? '',
-            $documentProperties['pageTitle'] ?? null,
-            $documentProperties['h1'] ?? null,
-            $documentProperties['entry'] ?? null,
-            $documentProperties['description'] ?? null,
-            $documentProperties['date_modified_timestamp'] ?? null,
-            ! empty($extra) ? json_encode($extra) : null,
-        ]);
+        $updateColumns = ['url', 'page_title', 'h1', 'entry', 'description', 'date_modified_timestamp', 'extra'];
+
+        $connection->table('documents')->upsert([
+            'id' => $documentProperties['id'] ?? uniqid(),
+            'url' => $documentProperties['url'] ?? '',
+            'page_title' => $documentProperties['pageTitle'] ?? null,
+            'h1' => $documentProperties['h1'] ?? null,
+            'entry' => $documentProperties['entry'] ?? null,
+            'description' => $documentProperties['description'] ?? null,
+            'date_modified_timestamp' => $documentProperties['date_modified_timestamp'] ?? null,
+            'extra' => ! empty($extra) ? json_encode($extra) : null,
+        ], ['id'], $updateColumns);
     }
 
     protected function buildHitProperties(array $row): array

@@ -15,9 +15,7 @@ class SchemaManager
 
     public function documentCount(Connection $connection): int
     {
-        $result = $connection->selectOne('SELECT COUNT(*) as count FROM documents');
-
-        return (int) $result->count;
+        return $connection->table('documents')->count();
     }
 
     protected function createDocumentsTable(Connection $connection): void

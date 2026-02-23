@@ -16,9 +16,8 @@ These are the attributes you should manually update in the table:
 - `crawl_url`: the url to be crawled to populate this index
 - `driver_class`: the search driver to use. If this value is `null`, `config('site-search.default_driver')` will be used when indexing the site
 - `profile_class`: the search profile to use. If this value is `null`, `config('site-search.default_profile')` will be used when indexing the site 
-- `index_base_name`: the name that it used by the underlying search engine (eg. Meilisearch) to determine its index name
-- `extra`: used to [customize various settings](/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings)
-- 
+- `index_base_name`: the name that is used by the underlying search engine to determine its index name
+- `extra`: used to customize driver-specific settings (see [Meilisearch settings](/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings) or [SQLite driver](/docs/laravel-site-search/v1/advanced-usage/using-the-sqlite-driver))
 
 These attributes are set by the package, you should not manually set or update them.
 

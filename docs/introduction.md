@@ -3,7 +3,12 @@ title: Introduction
 weight: 1
 ---
 
-This package can crawl and index one or more sites. You can think of it as a private Google search. What gets crawled and indexed can be highly customized. Under the hood, Meilisearch is used to provide blazing fast search speeds. You can add any [custom property](/docs/laravel-site-search/v1/advanced-usage/indexing-extra-properties) that you want, and even [add synonyms](https://spatie.be/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings#modifying-index-settings).
+This package can crawl and index one or more sites. You can think of it as a private Google search. What gets crawled and indexed can be highly customized. You can add any [custom property](/docs/laravel-site-search/v1/advanced-usage/indexing-extra-properties) that you want.
+
+Two search drivers are available:
+
+- **Meilisearch** — blazing fast search speeds, supports [synonyms](https://spatie.be/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings#modifying-index-settings) and other advanced Meilisearch features. Requires a running Meilisearch instance.
+- **SQLite** — uses SQLite FTS5 for full-text search with no external dependencies. A great choice when you want to keep things simple.
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.
 

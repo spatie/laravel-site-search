@@ -122,7 +122,10 @@ return [
      * A driver is responsible for writing all scraped content
      * to a search index.
      *
-     * Available drivers are MeiliSearchDriver and ArrayDriver (with logging for testing).
+     * Available drivers:
+     * - MeiliSearchDriver: uses Meilisearch as the search engine (requires a running Meilisearch instance)
+     * - SqliteDriver: uses a local SQLite database with FTS5 full-text search (no external dependencies)
+     * - ArrayDriver: in-memory driver for testing
      */
     'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
 
@@ -135,18 +138,31 @@ return [
 ];
 ```
 
-## Install the Meilisearch client
+## Choose a search driver
 
-Next, you should require the Meilisearch PHP client:
+This package supports two search drivers. You only need to set up the one you plan to use.
+
+### Option A: SQLite driver (no external dependencies)
+
+The SQLite driver uses SQLite FTS5 for full-text search and requires no external services. To use it, update your config file:
+
+```php
+'default_driver' => Spatie\SiteSearch\Drivers\SqliteDriver::class,
+```
+
+That's it! The SQLite databases will be stored in `storage/site-search` by default. See [Using the SQLite driver](/docs/laravel-site-search/v1/advanced-usage/using-the-sqlite-driver) for more configuration options.
+
+### Option B: Meilisearch driver
+
+The Meilisearch driver provides blazing fast search with advanced features like synonyms and custom ranking rules. It requires a running Meilisearch instance.
+
+First, require the Meilisearch PHP client:
 
 ```bash
 composer require meilisearch/meilisearch-php
 ```
 
-## Install Meilisearch
-
-This package uses Meilisearch under the hood to provide blazing fast search results.
-Head over to [the Meilisearch docs](https://docs.meilisearch.com/learn/getting_started/installation.html#download-and-launch) to learn how to install it on your system. 
+Then, install Meilisearch. Head over to [the Meilisearch docs](https://docs.meilisearch.com/learn/getting_started/installation.html#download-and-launch) to learn how to install it on your system.
 
 Here are the steps for installing it on a Forge provisioned server. You must first download the stable release:
 
@@ -157,7 +173,7 @@ curl -L https://install.meilisearch.com | sh
 Next, you must change the ownership and modify permission:
 
 ```bash
-chmod 755 meilisearch 
+chmod 755 meilisearch
 chown root:root meilisearch
 ```
 
@@ -170,12 +186,12 @@ sudo mv meilisearch /usr/bin/
 Finally, you can run the binary and make sure it keeps running. In the Forge Dashboard, click on "Daemons" under "Server Details". Fill out the following for a new daemon:
 
 - Command: `meilisearch --master-key=SOME_MASTER_KEY --env=production --http-addr 0.0.0.0:7700 --db-path ./home/forge/meilifiles`
-- User: `forge` 
-- Directory: leave blank 
+- User: `forge`
+- Directory: leave blank
 - Processes: `1`
 
 These instructions were take from [this gist](https://gist.github.com/josecanhelp/126d627ef125538943f33253d16fc882) by Jose Soto.
 
-## Authenticating requests to Meilisearch
+#### Authenticating requests to Meilisearch
 
 To avoid unauthorized persons making request to Meilisearch, either block Meilisearch's default port (7700) in your firewall, or make sure all requests [use authentication](/docs/laravel-site-search/v1/basic-usage/authenticating-requests).

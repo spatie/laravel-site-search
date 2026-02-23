@@ -64,7 +64,10 @@ return [
      * A driver is responsible for writing all scraped content
      * to a search index.
      *
-     * Available drivers are MeiliSearchDriver and ArrayDriver (with logging for testing).
+     * Available drivers:
+     * - MeiliSearchDriver: uses Meilisearch as the search engine (requires a running Meilisearch instance)
+     * - SqliteDriver: uses a local SQLite database with FTS5 full-text search (no external dependencies)
+     * - ArrayDriver: in-memory driver for testing
      */
     'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
 

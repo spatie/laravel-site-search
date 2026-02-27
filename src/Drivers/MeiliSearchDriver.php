@@ -37,9 +37,7 @@ class MeiliSearchDriver implements Driver
 
         $settings = array_merge([
             'searchableAttributes' => ['entry', 'pageTitle', 'h1', 'description', 'url'],
-        ], $this->settings, [
-            'distinctAttribute' => 'url',
-        ]);
+        ], $this->settings);
 
         $this->index($indexName)->updateSettings($settings);
 

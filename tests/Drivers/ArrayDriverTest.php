@@ -58,7 +58,7 @@ it('handles documents with anchor field', function () {
     expect($searchResults->hits->first()['anchor'])->toBe('section-id');
 });
 
-it('deduplicates search results by url', function () {
+it('returns multiple results per url with different anchors', function () {
     $config = SiteSearchConfig::factory()->create();
     $driver = ArrayDriver::make($config);
 
@@ -87,6 +87,5 @@ it('deduplicates search results by url', function () {
 
     $results = $driver->search($indexName, 'testing');
 
-    expect($results->hits)->toHaveCount(2);
-    expect($results->totalCount)->toBe(2);
+    expect($results->hits)->toHaveCount(3);
 });

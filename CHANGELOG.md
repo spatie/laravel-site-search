@@ -17,10 +17,7 @@ All notable changes to `laravel-site-search` will be documented in this file.
   - `Hit::urlWithAnchor()` method returns URLs with anchor fragments (e.g., `https://example.com/page#installation`)
   - Automatically extracts heading IDs (`<h1>` through `<h6>` with `id` attributes)
   - Works with all drivers (SQLite, MeiliSearch, ArrayDriver)
-  - Configurable via `actions.find_anchor` in config
-
-- **Configurable Actions**: New `actions` config section for customizing indexing behavior
-  - `actions.find_anchor`: Customizable action for extracting heading anchors
+  - All drivers deduplicate search results by URL, returning the best match per page
 
 ### Breaking Changes
 

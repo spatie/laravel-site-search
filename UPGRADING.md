@@ -84,8 +84,6 @@ After upgrading, you can:
 
 2. **Enable deep linking** - Search results now include anchor links to specific sections (requires re-indexing existing content)
 
-3. **Customize anchor extraction** - Create your own `FindClosestAnchorAction` implementation
-
 ### Upgrade Steps
 
 1. Update the package:

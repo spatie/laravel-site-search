@@ -74,31 +74,6 @@ foreach ($results->hits as $hit) {
 
 If no anchor is available for the matched content, `urlWithAnchor()` falls back to the base URL.
 
-### Customizing anchor extraction
-
-By default, the `DefaultFindClosestAnchorAction` extracts anchors from all heading levels (h1-h6). You can customize this by creating your own action class:
-
-```php
-use Spatie\SiteSearch\Contracts\FindClosestAnchorAction;
-
-class MyAnchorFinder implements FindClosestAnchorAction
-{
-    public function execute(string $html, int $textPosition): ?string
-    {
-        // Your custom logic here
-        return 'my-custom-anchor';
-    }
-}
-```
-
-Then register it in your config:
-
-```php
-'actions' => [
-    'find_anchor' => MyAnchorFinder::class,
-],
-```
-
 ## Differences from the Meilisearch driver
 
 - No external service required — everything is file-based

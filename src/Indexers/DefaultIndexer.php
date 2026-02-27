@@ -85,7 +85,7 @@ class DefaultIndexer implements Indexer
             } elseif ($node->nodeType === XML_TEXT_NODE) {
                 // Extract text from text nodes
                 $text = trim($node->nodeValue);
-                if (!empty($text)) {
+                if (! empty($text)) {
                     $this->addTextEntry($text);
                 }
             }
@@ -100,7 +100,7 @@ class DefaultIndexer implements Indexer
         $lines = array_map('trim', explode(PHP_EOL, $text));
 
         foreach ($lines as $line) {
-            if (!empty($line)) {
+            if (! empty($line)) {
                 $this->entries[] = [
                     'text' => $line,
                     'anchor' => $this->currentAnchor,

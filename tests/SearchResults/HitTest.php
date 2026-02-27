@@ -66,3 +66,25 @@ it('handles complex anchors', function () {
 
     expect($hit->urlWithAnchor())->toBe('https://example.com/docs/installation#step-3-configure-database');
 });
+
+it('replaces existing fragment when anchor is present', function () {
+    $hit = new Hit([
+        'url' => 'https://example.com/page#old-fragment',
+        'anchor' => 'new-section',
+        'pageTitle' => 'Test Page',
+        'entry' => 'Test content',
+    ]);
+
+    expect($hit->urlWithAnchor())->toBe('https://example.com/page#new-section');
+});
+
+it('preserves existing fragment when anchor is empty', function () {
+    $hit = new Hit([
+        'url' => 'https://example.com/page#old-fragment',
+        'anchor' => null,
+        'pageTitle' => 'Test Page',
+        'entry' => 'Test content',
+    ]);
+
+    expect($hit->urlWithAnchor())->toBe('https://example.com/page#old-fragment');
+});

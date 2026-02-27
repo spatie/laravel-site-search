@@ -58,12 +58,12 @@ class Hit
     public function urlWithAnchor(): string
     {
         $anchor = $this->properties['anchor'] ?? null;
-        
+
         if (empty($anchor)) {
             return $this->url;
         }
 
-        return $this->url . '#' . $anchor;
+        return strtok($this->url, '#') . '#' . $anchor;
     }
 
     protected function getSnippetProperty(): string

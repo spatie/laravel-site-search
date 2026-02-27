@@ -36,7 +36,9 @@ class MeiliSearchDriver implements Driver
     {
         $this->meilisearch->createIndex($indexName);
 
-        $settings = array_merge($this->settings, [
+        $settings = array_merge([
+            'searchableAttributes' => ['entry', 'pageTitle', 'h1', 'description', 'url'],
+        ], $this->settings, [
             'distinctAttribute' => 'url',
         ]);
 

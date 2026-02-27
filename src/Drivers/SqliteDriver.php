@@ -99,20 +99,27 @@ class SqliteDriver implements Driver
 
         $connection = $this->databaseManager->connect($indexName);
 
-        $results = $this->queryBuilder->search($connection, $query, $limit, $offset, $searchParameters);
+        $results = $this->queryBuilder->search($connection, $query, null, 0, $searchParameters);
         $totalCount = $this->queryBuilder->getTotalCount($connection, $query);
 
         $processingTimeMs = (int) ((microtime(true) - $startTime) * 1000);
 
-        $hits = collect($results)->map(function (array $row) {
-            return new Hit($this->buildHitProperties($row));
-        });
+        $effectiveLimit = $limit ?? 20;
+
+        $hits = collect($results)
+            ->unique('url')
+            ->values()
+            ->map(function (array $row) {
+                return new Hit($this->buildHitProperties($row));
+            });
+
+        $totalCount = $hits->count();
 
         return new SearchResults(
-            $hits,
+            $hits->slice($offset, $effectiveLimit)->values(),
             $processingTimeMs,
             $totalCount,
-            $limit ?? 20,
+            $effectiveLimit,
             $offset
         );
     }

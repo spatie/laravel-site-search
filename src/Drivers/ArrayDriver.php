@@ -109,6 +109,8 @@ class ArrayDriver implements Driver
             });
         }
 
+        $documents = $documents->unique('url')->values();
+
         $total = $documents->count();
         $results = $documents->skip($offset)->take($limit ?? 20);
 

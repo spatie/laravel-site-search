@@ -57,3 +57,36 @@ it('handles documents with anchor field', function () {
     $searchResults = $driver->search($indexName, 'test');
     expect($searchResults->hits->first()['anchor'])->toBe('section-id');
 });
+
+it('deduplicates search results by url', function () {
+    $config = SiteSearchConfig::factory()->create();
+    $driver = ArrayDriver::make($config);
+
+    $indexName = 'test_index';
+    $driver->createIndex($indexName);
+
+    $driver->updateManyDocuments($indexName, [
+        [
+            'id' => 'doc1',
+            'url' => 'https://example.com/page1',
+            'anchor' => 'intro',
+            'entry' => 'Introduction to testing',
+        ],
+        [
+            'id' => 'doc2',
+            'url' => 'https://example.com/page1',
+            'anchor' => 'setup',
+            'entry' => 'Testing setup instructions',
+        ],
+        [
+            'id' => 'doc3',
+            'url' => 'https://example.com/page2',
+            'entry' => 'Another testing page',
+        ],
+    ]);
+
+    $results = $driver->search($indexName, 'testing');
+
+    expect($results->hits)->toHaveCount(2);
+    expect($results->totalCount)->toBe(2);
+});

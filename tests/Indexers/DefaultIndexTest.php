@@ -68,6 +68,6 @@ it('handles headings without id attributes', function () {
     // Find content after "Heading Without ID"
     $contentAfterNoId = collect($entries)->first(fn ($e) => $e['text'] === 'Content after heading without ID');
 
-    // Should inherit from the last heading with ID (subsection)
-    expect($contentAfterNoId['anchor'])->toBe('subsection');
+    // Heading without ID resets the anchor
+    expect($contentAfterNoId['anchor'])->toBeNull();
 });

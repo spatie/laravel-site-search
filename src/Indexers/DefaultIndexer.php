@@ -73,12 +73,9 @@ class DefaultIndexer implements Indexer
             if ($node->nodeType === XML_ELEMENT_NODE) {
                 $tagName = strtolower($node->nodeName);
 
-                // Check if this is a heading with an ID
                 if (in_array($tagName, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
                     $id = $node->getAttribute('id');
-                    if (!empty($id)) {
-                        $this->currentAnchor = $id;
-                    }
+                    $this->currentAnchor = ! empty($id) ? $id : null;
                 }
 
                 // Recurse into child nodes

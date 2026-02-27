@@ -191,4 +191,17 @@ class SqliteDriver implements Driver
     {
         return (bool) preg_match('/^.+-[a-zA-Z0-9]{10,}$/', $indexName);
     }
+
+    /**
+     * Finalize a pending index by atomically swapping the temp file to the final location.
+     * This should be called after crawling is complete to make the index searchable.
+     */
+    public function finalizeIndex(string $indexName): self
+    {
+        if ($this->isPendingIndex($indexName) && $this->databaseManager->tempExists($indexName)) {
+            $this->databaseManager->atomicSwap($indexName);
+        }
+
+        return $this;
+    }
 }

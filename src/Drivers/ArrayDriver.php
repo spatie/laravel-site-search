@@ -145,4 +145,10 @@ class ArrayDriver implements Driver
 
         return count($this->documents[$indexName] ?? []);
     }
+
+    public function finalizeIndex(string $indexName): self
+    {
+        // ArrayDriver doesn't use temp files, no-op here
+        return $this;
+    }
 }

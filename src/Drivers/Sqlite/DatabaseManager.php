@@ -42,6 +42,9 @@ class DatabaseManager
 
             $connectionName = 'site_search_' . md5($cacheKey);
 
+            // Ensure any existing connection with this name is purged first
+            DB::purge($connectionName);
+
             DB::connectUsing($connectionName, [
                 'driver' => 'sqlite',
                 'database' => $path,
@@ -132,11 +135,9 @@ class DatabaseManager
 
     protected function closeConnection(string $path): void
     {
-        if (isset($this->connections[$path])) {
-            $connectionName = 'site_search_' . md5($path);
-            DB::purge($connectionName);
-            unset($this->connections[$path]);
-        }
+        $connectionName = 'site_search_' . md5($path);
+        DB::purge($connectionName);
+        unset($this->connections[$path]);
     }
 
     protected function flushPendingWrites(string $path): void

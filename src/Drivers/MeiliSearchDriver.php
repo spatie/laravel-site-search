@@ -132,4 +132,10 @@ class MeiliSearchDriver implements Driver
             return 0;
         }
     }
+
+    public function finalizeIndex(string $indexName): self
+    {
+        // MeiliSearch handles indexing internally, no-op here
+        return $this;
+    }
 }

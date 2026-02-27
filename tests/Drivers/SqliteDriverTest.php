@@ -260,3 +260,49 @@ it('can replace existing document with same id', function () {
     $results = $this->driver->search('test-index', 'Updated');
     expect($results->hits)->toHaveCount(1);
 });
+
+it('swaps temp to final after crawling workflow', function () {
+    // Simulate the CrawlSiteJob workflow
+    $baseName = 'my-site';
+    $pendingName = $baseName . '-' . Str::random(16);
+
+    // Step 1: Create the pending index (like createNewIndex in CrawlSiteJob)
+    $this->driver->createIndex($pendingName);
+
+    // Step 2: Index documents (like startCrawler in CrawlSiteJob)
+    $this->driver->updateManyDocuments($pendingName, [
+        [
+            'id' => 'doc1',
+            'url' => 'https://example.com/page1',
+            'pageTitle' => 'Page One',
+            'entry' => 'First page content',
+            'date_modified_timestamp' => time(),
+        ],
+        [
+            'id' => 'doc2',
+            'url' => 'https://example.com/page2',
+            'pageTitle' => 'Page Two',
+            'entry' => 'Second page content',
+            'date_modified_timestamp' => time(),
+        ],
+    ]);
+
+    // At this point, only the temp file should exist
+    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeTrue('Temp file should exist after indexing');
+    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeFalse('Final file should not exist yet');
+
+    // Step 3: Finalize the index (like blessNewIndex in CrawlSiteJob)
+    $this->driver->finalizeIndex($pendingName);
+
+    // The swap should have happened
+    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeTrue('Final file should exist after finalizeIndex');
+    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeFalse('Temp file should be gone after swap');
+
+    // Step 4: Verify we can get document count
+    $count = $this->driver->documentCount($pendingName);
+    expect($count)->toBe(2);
+
+    // Verify we can still search
+    $results = $this->driver->search($pendingName, 'First');
+    expect($results->hits)->toHaveCount(1);
+});

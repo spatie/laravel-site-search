@@ -55,6 +55,17 @@ class Hit
         return $this->_formatted[$propertyName];
     }
 
+    public function urlWithAnchor(): string
+    {
+        $anchor = $this->properties['anchor'] ?? null;
+        
+        if (empty($anchor)) {
+            return $this->url;
+        }
+
+        return $this->url . '#' . $anchor;
+    }
+
     protected function getSnippetProperty(): string
     {
         $propertyName = collect([

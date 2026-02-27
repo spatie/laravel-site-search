@@ -140,14 +140,15 @@ class SqliteDriver implements Driver
 
     protected function insertDocument(Connection $connection, array $documentProperties): void
     {
-        $standardFields = ['id', 'url', 'pageTitle', 'h1', 'entry', 'description', 'date_modified_timestamp'];
+        $standardFields = ['id', 'url', 'anchor', 'pageTitle', 'h1', 'entry', 'description', 'date_modified_timestamp'];
         $extra = array_diff_key($documentProperties, array_flip($standardFields));
 
-        $updateColumns = ['url', 'page_title', 'h1', 'entry', 'description', 'date_modified_timestamp', 'extra'];
+        $updateColumns = ['url', 'anchor', 'page_title', 'h1', 'entry', 'description', 'date_modified_timestamp', 'extra'];
 
         $connection->table('documents')->upsert([
             'id' => $documentProperties['id'] ?? uniqid(),
             'url' => $documentProperties['url'] ?? '',
+            'anchor' => $documentProperties['anchor'] ?? null,
             'page_title' => $documentProperties['pageTitle'] ?? null,
             'h1' => $documentProperties['h1'] ?? null,
             'entry' => $documentProperties['entry'] ?? null,
@@ -178,6 +179,7 @@ class SqliteDriver implements Driver
         return array_merge([
             'id' => $row['id'],
             'url' => $row['url'],
+            'anchor' => $row['anchor'] ?? null,
             'pageTitle' => $row['page_title'],
             'h1' => $row['h1'],
             'entry' => $row['entry'],

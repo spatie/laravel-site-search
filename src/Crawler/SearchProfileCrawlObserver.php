@@ -45,12 +45,13 @@ class SearchProfileCrawlObserver extends CrawlObserver
         $url = $indexer->url();
 
         $documents = collect($indexer->entries())
-            ->map(function (string $entry) use ($extra, $dateModified, $url, $h1, $description, $pageTitle) {
+            ->map(function (array $entry) use ($extra, $dateModified, $url, $h1, $description, $pageTitle) {
                 return array_merge([
                     'pageTitle' => $pageTitle,
                     'url' => (string)$url,
                     'h1' => $h1,
-                    'entry' => $entry,
+                    'entry' => $entry['text'],
+                    'anchor' => $entry['anchor'] ?? null,
                     'description' => $description,
                     'date_modified_timestamp' => $dateModified->getTimestamp(),
                     'id' => (string)Str::uuid(),

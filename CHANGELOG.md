@@ -1,5 +1,60 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 3.0.0 - 2025-02-27
+
+### New Features
+
+- **SQLite Driver**: New driver that uses SQLite FTS5 for full-text search with no external dependencies
+  - File-based storage in `storage/site-search/` (configurable)
+  - FTS5 full-text search with porter stemming and unicode61 tokenization
+  - BM25 ranking algorithm for relevance scoring
+  - Atomic index swapping for zero-downtime re-indexing
+  - WAL mode for better concurrency
+  - Prefix matching support
+  - Highlighted search results with `<em>` tags
+
+- **Deep Linking & Anchor Support**: Search results now include anchor links to specific page sections
+  - `Hit::urlWithAnchor()` method returns URLs with anchor fragments (e.g., `https://example.com/page#installation`)
+  - Automatically extracts heading IDs (`<h1>` through `<h6>` with `id` attributes)
+  - Works with all drivers (SQLite, MeiliSearch, ArrayDriver)
+  - Configurable via `actions.find_anchor` in config
+
+- **Configurable Actions**: New `actions` config section for customizing indexing behavior
+  - `actions.find_anchor`: Customizable action for extracting heading anchors
+
+### Breaking Changes
+
+- **Indexer Interface Change**: `Indexer::entries()` now returns an array of arrays with `text` and optional `anchor` keys instead of an array of strings:
+  ```php
+  // Before: ['text content', 'more text']
+  // After: [['text' => 'text content', 'anchor' => 'heading-id'], ['text' => 'more text', 'anchor' => null]]
+  ```
+
+- **Driver Interface Change**: Added required `finalizeIndex(string $indexName): self` method to `Driver` interface
+  - Called after crawling completes to perform driver-specific finalization
+  - SQLite driver uses this for atomic index swapping
+  - Other drivers implement as no-op
+
+- **Database Schema Change** (SQLite only): Added `anchor` column to `documents` table
+  - Existing SQLite databases will need to be re-indexed to populate anchor data
+
+### Improvements
+
+- **MeiliSearch Driver**: Added support for anchor field in documents
+- **Hit Class**: Added `urlWithAnchor()` method for accessing URLs with anchor fragments
+- **DefaultIndexer**: Now extracts heading anchors while indexing
+- **SearchProfileCrawlObserver**: Updated to handle new entry format with anchors
+- **CrawlSiteJob**: Added `finalizeIndex()` call after crawling completes
+
+### Documentation
+
+- Added comprehensive SQLite driver documentation
+- Updated installation docs with SQLite setup instructions
+- Added deep linking/anchor feature documentation
+- Updated requirements docs to mention SQLite has no additional dependencies
+
+**Full Changelog**: https://github.com/spatie/laravel-site-search/compare/2.5.0...3.0.0
+
 ## 2.5.0 - 2025-06-20
 
 - Add `ArrayDriver` with logging functionality for debugging the crawling and indexing process

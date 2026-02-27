@@ -77,4 +77,17 @@ return [
      * your customized job here.
      */
     'crawl_site_job' => Spatie\SiteSearch\Jobs\CrawlSiteJob::class,
+
+    /*
+     * Actions are classes that handle specific tasks during the crawling and indexing process.
+     * You can customize these by providing your own implementation.
+     */
+    'actions' => [
+        /*
+         * This action is responsible for finding the closest heading anchor for a given text position.
+         * It extracts anchor IDs (e.g., #installation) from headings and associates them with text chunks.
+         * This allows search results to include deep links to specific sections of a page.
+         */
+        'find_anchor' => Spatie\SiteSearch\Actions\DefaultFindClosestAnchorAction::class,
+    ],
 ];

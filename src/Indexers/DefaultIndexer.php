@@ -10,6 +10,8 @@ use Symfony\Component\DomCrawler\Crawler;
 class DefaultIndexer implements Indexer
 {
     protected Crawler $domCrawler;
+    protected ?string $currentAnchor = null;
+    protected array $entries = [];
 
     public function __construct(
         protected UriInterface $url,
@@ -39,44 +41,106 @@ class DefaultIndexer implements Indexer
 
     public function entries(): array
     {
+        $this->entries = [];
+        $this->currentAnchor = null;
+
         $content = $this->getHtmlToIndex();
 
         if (is_null($content)) {
             return [];
         }
 
-        $content = strip_tags($content);
+        // Create a new crawler with the cleaned body HTML
+        $crawler = new Crawler($content);
+        $body = $crawler->filter('body');
 
-        $entries = array_map('trim', explode(PHP_EOL, $content));
+        if ($body->count() > 0) {
+            $bodyNode = $body->getNode(0);
+            if ($bodyNode && $bodyNode->hasChildNodes()) {
+                $this->walkNodes($bodyNode->childNodes);
+            }
+        }
 
-        $entries = array_filter($entries);
+        return $this->filterEntries($this->entries);
+    }
 
-        $entries = array_filter($entries, function (string $entry) {
-            if (str_starts_with($entry, '{"')) {
+    /**
+     * Recursively walk through DOM nodes and extract text with anchors
+     */
+    protected function walkNodes(\DOMNodeList $nodes): void
+    {
+        foreach ($nodes as $node) {
+            if ($node->nodeType === XML_ELEMENT_NODE) {
+                $tagName = strtolower($node->nodeName);
+
+                // Check if this is a heading with an ID
+                if (in_array($tagName, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
+                    $id = $node->getAttribute('id');
+                    if (!empty($id)) {
+                        $this->currentAnchor = $id;
+                    }
+                }
+
+                // Recurse into child nodes
+                if ($node->hasChildNodes()) {
+                    $this->walkNodes($node->childNodes);
+                }
+            } elseif ($node->nodeType === XML_TEXT_NODE) {
+                // Extract text from text nodes
+                $text = trim($node->nodeValue);
+                if (!empty($text)) {
+                    $this->addTextEntry($text);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add text entry, splitting by newlines
+     */
+    protected function addTextEntry(string $text): void
+    {
+        $lines = array_map('trim', explode(PHP_EOL, $text));
+
+        foreach ($lines as $line) {
+            if (!empty($line)) {
+                $this->entries[] = [
+                    'text' => $line,
+                    'anchor' => $this->currentAnchor,
+                ];
+            }
+        }
+    }
+
+    /**
+     * Filter out unwanted entries
+     */
+    protected function filterEntries(array $entries): array
+    {
+        $filtered = array_filter($entries, function (array $entry) {
+            $text = $entry['text'];
+
+            if (str_starts_with($text, '{"')) {
                 return false;
             }
 
-            if (str_starts_with($entry, '/')) {
+            if (str_starts_with($text, '/')) {
                 return false;
             }
 
-            if (str_starts_with($entry, '.')) {
+            if (str_starts_with($text, '.')) {
                 return false;
             }
 
-            return strlen($entry) > 3;
+            return strlen($text) > 3;
         });
 
-        $entries = array_filter($entries);
-
-        return array_values($entries);
+        return array_values($filtered);
     }
 
     public function extra(): array
     {
-        return [
-
-        ];
+        return [];
     }
 
     protected function getHtmlToIndex(): ?string

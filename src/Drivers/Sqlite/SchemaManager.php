@@ -31,6 +31,7 @@ class SchemaManager
         $schema->create('documents', function (Blueprint $table) {
             $table->text('id')->primary();
             $table->text('url');
+            $table->text('anchor')->nullable();
             $table->text('page_title')->nullable();
             $table->text('h1')->nullable();
             $table->text('entry')->nullable();

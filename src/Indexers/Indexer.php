@@ -23,6 +23,12 @@ interface Indexer
      *
      * This function should return the content of the response chopped up in
      * little pieces of text of a few sentences long.
+     *
+     * Each entry should be an array with 'text' and optionally 'anchor' keys:
+     * [
+     *     ['text' => 'Introduction text...', 'anchor' => 'intro'],
+     *     ['text' => 'Installation guide...', 'anchor' => 'installation'],
+     * ]
      */
     public function entries(): array;
 

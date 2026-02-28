@@ -52,6 +52,28 @@ All notable changes to `laravel-site-search` will be documented in this file.
 
 **Full Changelog**: https://github.com/spatie/laravel-site-search/compare/2.5.0...3.0.0
 
+## 2.7.0 - 2026-02-22
+
+- Add Laravel 13 support
+- Upgrade to Pest 4
+- Drop Laravel 10 and PHP 8.2 support
+
+## 3.0.0 - 2026-02-22
+
+- Add Laravel 13 support
+- Upgrade to Pest 4
+- Drop Laravel 10 support
+- Drop PHP 8.2 support (minimum is now PHP 8.3)
+
+## 2.6.1 - 2026-02-22
+
+Use MeiliSearch service container with health check in CI
+
+## 2.6.0 - 2026-02-22
+
+Add Laravel 13 support
+
+
 ## 2.5.0 - 2025-06-20
 
 - Add `ArrayDriver` with logging functionality for debugging the crawling and indexing process

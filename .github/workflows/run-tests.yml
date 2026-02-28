@@ -12,29 +12,35 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
 
+    services:
+      meilisearch:
+        image: getmeili/meilisearch:latest
+        env:
+          MEILI_NO_ANALYTICS: true
+        ports:
+          - 7700:7700
+        options: --health-cmd "curl -f http://localhost:7700/health" --health-interval 2s --health-timeout 5s --health-retries 15
+
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: [8.4, 8.3, 8.2]
-        laravel: ['10.*', '11.*', '12.*']
+        php: [8.4, 8.3]
+        laravel: ['11.*', '12.*', '13.*']
         stability: [prefer-stable]
         include:
-          - laravel: 10.*
-            testbench: 8.*
           - laravel: 11.*
             testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
+          - laravel: 13.*
+            testbench: 11.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: MeiliSearch setup with Docker
-        run: docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

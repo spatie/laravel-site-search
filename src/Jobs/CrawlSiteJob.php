@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Event;
+use Spatie\SiteSearch\Events\CrawlFinishedEvent;
 use Spatie\SiteSearch\Events\IndexedUrlEvent;
 use Spatie\SiteSearch\Events\IndexingEndedEvent;
 use Spatie\SiteSearch\Events\IndexingStartedEvent;
@@ -22,6 +23,8 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
     use SerializesModels;
 
     protected $numberOfUrlsIndexed = 0;
+
+    protected ?CrawlFinishedEvent $crawlFinishedEvent = null;
 
     public $timeout = 60 * 5;
 
@@ -90,6 +93,10 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
             $this->numberOfUrlsIndexed = $this->numberOfUrlsIndexed + 1;
         });
 
+        Event::listen(function (CrawlFinishedEvent $event) {
+            $this->crawlFinishedEvent = $event;
+        });
+
         $driver = $this->siteSearchConfig->getDriver();
         $profile = $this->siteSearchConfig->getProfile();
 
@@ -117,6 +124,9 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
             'index_name' => $newIndexName,
             'pending_index_name' => null,
             'number_of_urls_indexed' => $this->numberOfUrlsIndexed,
+            'urls_found' => $this->crawlFinishedEvent?->progress->urlsFound ?? 0,
+            'urls_failed' => $this->crawlFinishedEvent?->progress->urlsFailed ?? 0,
+            'finish_reason' => $this->crawlFinishedEvent?->finishReason->value ?? null,
         ]);
 
         $this->siteSearchConfig->document_count;

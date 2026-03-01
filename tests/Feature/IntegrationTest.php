@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
+use Spatie\Crawler\CrawlProgress;
+use Spatie\Crawler\Enums\FinishReason;
+use Spatie\SiteSearch\Events\CrawlFinishedEvent;
+use Spatie\SiteSearch\Events\IndexedUrlEvent;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\Search;
@@ -357,3 +362,59 @@ it('can modify indexed url', function (Closure $driverSetup) {
         'http://localhost:8181/page',
     ]);
 })->with('drivers');
+
+it('stores crawl progress and finish reason on the model', function (Closure $driverSetup) {
+    $this->siteSearchConfig->update($driverSetup());
+
+    Server::activateRoutes('chain');
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    waitForDriver($this->siteSearchConfig);
+
+    $this->siteSearchConfig->refresh();
+
+    expect($this->siteSearchConfig)
+        ->urls_found->toBeGreaterThanOrEqual(3)
+        ->urls_failed->toBe(0)
+        ->finish_reason->toBe('completed');
+})->with('drivers');
+
+it('includes CrawlProgress on IndexedUrlEvent', function () {
+    Server::activateRoutes('chain');
+
+    $events = [];
+
+    Event::listen(IndexedUrlEvent::class, function (IndexedUrlEvent $event) use (&$events) {
+        $events[] = $event;
+    });
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    expect($events)->not->toBeEmpty();
+
+    $event = $events[0];
+
+    expect($event->progress)
+        ->toBeInstanceOf(CrawlProgress::class)
+        ->urlsCrawled->toBeGreaterThanOrEqual(1)
+        ->urlsFound->toBeGreaterThanOrEqual(1);
+});
+
+it('dispatches CrawlFinishedEvent with FinishReason and CrawlProgress', function () {
+    Server::activateRoutes('homePage');
+
+    $firedEvent = null;
+
+    Event::listen(CrawlFinishedEvent::class, function (CrawlFinishedEvent $event) use (&$firedEvent) {
+        $firedEvent = $event;
+    });
+
+    dispatch(new CrawlSiteJob($this->siteSearchConfig));
+
+    expect($firedEvent)
+        ->not->toBeNull()
+        ->finishReason->toBe(FinishReason::Completed)
+        ->progress->toBeInstanceOf(CrawlProgress::class)
+        ->progress->urlsCrawled->toBeGreaterThanOrEqual(1);
+});

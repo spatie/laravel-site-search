@@ -1,13 +1,12 @@
 <?php
 
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Uri;
+use Spatie\Crawler\CrawlResponse;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
 
 it('can index a page', function () {
     $indexer = new DefaultIndexer(
-        new Uri('https://example.com'),
-        new Response(body: view('test::page'))
+        'https://example.com',
+        CrawlResponse::fake(body: view('test::page'))
     );
 
     expect($indexer)
@@ -22,8 +21,8 @@ it('can index a page', function () {
 
 it('can ignore content', function () {
     $indexer = new DefaultIndexer(
-        new Uri('https://example.com'),
-        new Response(body: view('test::noIndex'))
+        'https://example.com',
+        CrawlResponse::fake(body: view('test::noIndex'))
     );
 
     expect($indexer)
@@ -35,8 +34,8 @@ it('can ignore content', function () {
 
 it('extracts anchors from headings', function () {
     $indexer = new DefaultIndexer(
-        new Uri('https://example.com'),
-        new Response(body: view('test::withAnchors'))
+        'https://example.com',
+        CrawlResponse::fake(body: view('test::withAnchors'))
     );
 
     $entries = $indexer->entries();
@@ -59,8 +58,8 @@ it('extracts anchors from headings', function () {
 
 it('handles headings without id attributes', function () {
     $indexer = new DefaultIndexer(
-        new Uri('https://example.com'),
-        new Response(body: view('test::withAnchors'))
+        'https://example.com',
+        CrawlResponse::fake(body: view('test::withAnchors'))
     );
 
     $entries = $indexer->entries();

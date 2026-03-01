@@ -4,10 +4,13 @@ namespace Spatie\SiteSearch\Crawler;
 
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Str;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 use Spatie\Crawler\CrawlObservers\CrawlObserver;
+use Spatie\Crawler\CrawlProgress;
+use Spatie\Crawler\CrawlResponse;
+use Spatie\Crawler\Enums\FinishReason;
+use Spatie\Crawler\Enums\ResourceType;
 use Spatie\SiteSearch\Drivers\Driver;
+use Spatie\SiteSearch\Events\CrawlFinishedEvent;
 use Spatie\SiteSearch\Events\FailedToCrawlUrlEvent;
 use Spatie\SiteSearch\Events\IndexedUrlEvent;
 use Spatie\SiteSearch\Profiles\SearchProfile;
@@ -22,10 +25,9 @@ class SearchProfileCrawlObserver extends CrawlObserver
     }
 
     public function crawled(
-        UriInterface $url,
-        ResponseInterface $response,
-        ?UriInterface $foundOnUrl = null,
-        ?string $linkText = null,
+        string $url,
+        CrawlResponse $response,
+        CrawlProgress $progress,
     ): void {
         if (! $this->searchProfile->shouldIndex($url, $response)) {
             return;
@@ -48,7 +50,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
             ->map(function (array $entry) use ($extra, $dateModified, $url, $h1, $description, $pageTitle) {
                 return array_merge([
                     'pageTitle' => $pageTitle,
-                    'url' => (string)$url,
+                    'url' => $url,
                     'h1' => $h1,
                     'entry' => $entry['text'],
                     'anchor' => $entry['anchor'] ?? null,
@@ -61,15 +63,22 @@ class SearchProfileCrawlObserver extends CrawlObserver
 
         $this->driver->updateManyDocuments($this->indexName, $documents);
 
-        event(new IndexedUrlEvent($url, $response, $foundOnUrl));
+        event(new IndexedUrlEvent($url, $response, $progress, $response->foundOnUrl()));
     }
 
     public function crawlFailed(
-        UriInterface $url,
+        string $url,
         RequestException $requestException,
-        ?UriInterface $foundOnUrl = null,
+        CrawlProgress $progress,
+        ?string $foundOnUrl = null,
         ?string $linkText = null,
+        ?ResourceType $resourceType = null,
     ): void {
-        event(new FailedToCrawlUrlEvent($url, $requestException, $foundOnUrl));
+        event(new FailedToCrawlUrlEvent($url, $requestException, $progress, $foundOnUrl));
+    }
+
+    public function finishedCrawling(FinishReason $reason, CrawlProgress $progress): void
+    {
+        event(new CrawlFinishedEvent($reason, $progress));
     }
 }

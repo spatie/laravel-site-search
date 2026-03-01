@@ -3,15 +3,13 @@
 namespace Spatie\SiteSearch\Events;
 
 use Spatie\Crawler\CrawlProgress;
-use Spatie\Crawler\CrawlResponse;
+use Spatie\Crawler\Enums\FinishReason;
 
-class IndexedUrlEvent
+class CrawlFinishedEvent
 {
     public function __construct(
-        public string $url,
-        public CrawlResponse $response,
+        public FinishReason $finishReason,
         public CrawlProgress $progress,
-        public ?string $foundOnUrl = null,
     ) {
     }
 }

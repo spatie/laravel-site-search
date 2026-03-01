@@ -3,8 +3,7 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use Spatie\Crawler\CrawlResponse;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DefaultIndexer implements Indexer
@@ -14,10 +13,10 @@ class DefaultIndexer implements Indexer
     protected array $entries = [];
 
     public function __construct(
-        protected UriInterface $url,
-        protected ResponseInterface $response
+        protected string $url,
+        protected CrawlResponse $response
     ) {
-        $html = (string)$this->response->getBody();
+        $html = $this->response->body();
 
         $this->domCrawler = new Crawler($html);
     }
@@ -169,7 +168,7 @@ class DefaultIndexer implements Indexer
         return now();
     }
 
-    public function url(): UriInterface
+    public function url(): string
     {
         return $this->url;
     }

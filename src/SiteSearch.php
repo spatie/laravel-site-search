@@ -50,13 +50,13 @@ class SiteSearch
             $this->driver
         );
 
-        $crawler = Crawler::create()
-            ->setCrawlProfile($crawlProfile)
-            ->setCrawlObserver($observer);
+        $crawler = Crawler::create($baseUrl)
+            ->crawlProfile($crawlProfile)
+            ->addObserver($observer);
 
         $this->searchProfile->configureCrawler($crawler);
 
-        $crawler->startCrawling($baseUrl);
+        $crawler->start();
 
         return $this;
     }

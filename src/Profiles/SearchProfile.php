@@ -2,18 +2,17 @@
 
 namespace Spatie\SiteSearch\Profiles;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 use Spatie\Crawler\Crawler;
+use Spatie\Crawler\CrawlResponse;
 use Spatie\SiteSearch\Indexers\Indexer;
 
 interface SearchProfile
 {
-    public function shouldCrawl(UriInterface $url): bool;
+    public function shouldCrawl(string $url): bool;
 
-    public function shouldIndex(UriInterface $url, ResponseInterface $response): bool;
+    public function shouldIndex(string $url, CrawlResponse $response): bool;
 
-    public function useIndexer(UriInterface $url, ResponseInterface $response): ?Indexer;
+    public function useIndexer(string $url, CrawlResponse $response): ?Indexer;
 
     public function configureCrawler(Crawler $crawler): void;
 }

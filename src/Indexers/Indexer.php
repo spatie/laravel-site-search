@@ -3,7 +3,6 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
-use Psr\Http\Message\UriInterface;
 
 interface Indexer
 {
@@ -50,5 +49,5 @@ interface Indexer
     /*
      * This function should return the url of the page.
      */
-    public function url(): UriInterface;
+    public function url(): string;
 }

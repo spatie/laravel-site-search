@@ -1,6 +1,6 @@
 ---
 title: Requirements
-weight: 5
+weight: 3
 ---
 
 Laravel Site Search requires PHP 8.4+ and Laravel 12+.

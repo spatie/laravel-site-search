@@ -2,7 +2,6 @@
 
 namespace Spatie\SiteSearch\Crawler;
 
-use Psr\Http\Message\UriInterface;
 use Spatie\Crawler\CrawlProfiles\CrawlInternalUrls;
 use Spatie\SiteSearch\Profiles\SearchProfile;
 
@@ -15,9 +14,9 @@ class SiteSearchCrawlProfile extends CrawlInternalUrls
         parent::__construct($this->baseUrl);
     }
 
-    public function shouldCrawl(UriInterface $url): bool
+    public function shouldCrawl(string $url): bool
     {
-        if (! str_starts_with((string)$url, (string)$this->baseUrl)) {
+        if (! str_starts_with($url, $this->baseUrl)) {
             return false;
         }
 
@@ -28,10 +27,12 @@ class SiteSearchCrawlProfile extends CrawlInternalUrls
         return $this->profile->shouldCrawl($url);
     }
 
-    protected function isConfiguredNotToBeCrawled(UriInterface $url): bool
+    protected function isConfiguredNotToBeCrawled(string $url): bool
     {
+        $path = parse_url($url, PHP_URL_PATH);
+
         foreach (config('site-search.do_not_crawl_urls') as $configuredUrl) {
-            if (fnmatch($configuredUrl, $url->getPath())) {
+            if (fnmatch($configuredUrl, $path)) {
                 return true;
             }
         }

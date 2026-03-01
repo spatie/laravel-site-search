@@ -8,13 +8,13 @@ This package can crawl and index one or more sites. You can think of it as a pri
 Two search drivers are available:
 
 - SQLite (default): uses SQLite FTS5 for full-text search with no external dependencies. A great choice for most use cases.
-- Meilisearch: blazing fast search speeds, supports [synonyms](https://spatie.be/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings#modifying-index-settings) and other advanced Meilisearch features. Requires a running Meilisearch instance.
+- Meilisearch: blazing fast search speeds, supports [synonyms](/docs/laravel-site-search/v1/advanced-usage/using-the-meilisearch-driver#customizing-index-settings) and other advanced Meilisearch features. Requires a running Meilisearch instance.
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.
 
 ## How does this package differ from Laravel Scout?
 
-[Laravel Scout](https://laravel.com/docs/8.x/scout) is an excellent package to add search capabilities for Eloquent models. In most cases, this is very useful if you want to provide a structured search. For example, if you have a `Product` model, Scout can help to build up a search index to search the properties of these products.
+[Laravel Scout](https://laravel.com/docs/scout) is an excellent package to add search capabilities for Eloquent models. In most cases, this is very useful if you want to provide a structured search. For example, if you have a `Product` model, Scout can help to build up a search index to search the properties of these products.
 
 Our laravel-site-search package is not tied to Eloquent models. Like Google, it will crawl your entire site and index all content that is there.
 

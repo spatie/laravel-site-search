@@ -54,6 +54,9 @@ class ListCommand extends Command
             'Real index name',
             'Status',
             '# Indexed URLs',
+            '# URLs Found',
+            '# Failed',
+            'Crawl Status',
             '# Documents',
             'Lastest crawl ended at',
         ];
@@ -65,6 +68,9 @@ class ListCommand extends Command
                 $config->index_name,
                 $this->getStatus($config),
                 $config->number_of_urls_indexed,
+                $config->urls_found,
+                $config->urls_failed,
+                $config->finish_reason,
                 $config->index_name
                     ? $config->getDriver()->documentCount($config->index_name)
                     : '',

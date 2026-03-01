@@ -17,7 +17,7 @@ return [
      * that is selected by these CSS selectors.
      *
      * All links inside such content will still be crawled, so it's safe
-     * it's safe to add a selector for your menu structure.
+     * to add a selector for your menu structure.
      */
     'ignore_content_by_css_selector' => [
         '[data-no-index]',

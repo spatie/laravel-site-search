@@ -16,8 +16,8 @@ use Tests\TestSupport\TestClasses\SearchProfiles\ModifyUrlSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
 
 dataset('drivers', [
-    'sqlite' => [fn () => [
-        'extra' => ['sqlite' => ['storage_path' => sys_get_temp_dir().'/site-search-test-'.uniqid()]],
+    'database' => [fn () => [
+        'driver_class' => \Spatie\SiteSearch\Drivers\DatabaseDriver::class,
     ]],
     'meilisearch' => [fn () => [
         'driver_class' => \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
@@ -28,17 +28,8 @@ beforeEach(function () {
     Server::boot();
 
     $this->siteSearchConfig = SiteSearchConfig::factory()->create([
-        'driver_class' => \Spatie\SiteSearch\Drivers\SqliteDriver::class,
+        'driver_class' => \Spatie\SiteSearch\Drivers\DatabaseDriver::class,
     ]);
-});
-
-afterEach(function () {
-    $storagePath = $this->siteSearchConfig->getExtraValue('sqlite.storage_path');
-
-    if ($storagePath && is_dir($storagePath)) {
-        array_map('unlink', glob("{$storagePath}/*"));
-        rmdir($storagePath);
-    }
 });
 
 it('can crawl a site', function (Closure $driverSetup) {

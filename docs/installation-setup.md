@@ -118,11 +118,11 @@ return [
      * to a search index.
      *
      * Available drivers:
+     * - DatabaseDriver: uses your application's database with full-text search (SQLite FTS5, MySQL FULLTEXT, PostgreSQL tsvector)
      * - MeiliSearchDriver: uses Meilisearch as the search engine (requires a running Meilisearch instance)
-     * - SqliteDriver: uses a local SQLite database with FTS5 full-text search (no external dependencies)
      * - ArrayDriver: in-memory driver for testing
      */
-    'default_driver' =>  Spatie\SiteSearch\Drivers\SqliteDriver::class,
+    'default_driver' => Spatie\SiteSearch\Drivers\DatabaseDriver::class,
 
     /*
      * This job is responsible for crawling your site. To customize this job,
@@ -135,6 +135,6 @@ return [
 
 ## Search driver
 
-The default driver is SQLite, which uses SQLite FTS5 for full-text search. It requires no external services. The SQLite databases will be stored in `storage/site-search` by default. See [Using the SQLite driver](/docs/laravel-site-search/v1/advanced-usage/using-the-sqlite-driver) for more configuration options.
+The default driver is the database driver, which uses your application's database for full-text search. It supports SQLite (FTS5), MySQL (FULLTEXT), and PostgreSQL (tsvector) with no external services required. See [Using the database driver](/docs/laravel-site-search/v1/advanced-usage/using-the-database-driver) for more configuration options.
 
 If you need advanced features like synonyms and custom ranking rules, you can [use the Meilisearch driver](/docs/laravel-site-search/v1/advanced-usage/using-the-meilisearch-driver) instead.

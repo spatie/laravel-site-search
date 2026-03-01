@@ -172,13 +172,48 @@ return new class extends Migration {
 
 These columns are automatically populated after each crawl and shown in `site-search:list`.
 
+#### 6. `SqliteDriver` replaced by `DatabaseDriver`
+
+**Likelihood of impact:** 🔴 **HIGH** - Affects all users using the default driver
+
+The `SqliteDriver` has been replaced by `DatabaseDriver`, which uses your application's database for full-text search. It supports SQLite, MySQL, and PostgreSQL.
+
+If you were using the default `SqliteDriver`, update your config:
+
+**Before:**
+```php
+'default_driver' => Spatie\SiteSearch\Drivers\SqliteDriver::class,
+```
+
+**After:**
+```php
+'default_driver' => Spatie\SiteSearch\Drivers\DatabaseDriver::class,
+```
+
+The new driver stores documents in a `site_search_documents` table instead of separate `.sqlite` files. Publish and run the new migration:
+
+```bash
+php artisan vendor:publish --tag="site-search-migrations"
+php artisan migrate
+```
+
+Then re-index your sites:
+
+```bash
+php artisan site-search:crawl
+```
+
+After re-indexing, you can safely delete the old `storage/site-search` directory.
+
+If you were using a custom `database.connection` in the `extra` config, the key has changed from `sqlite.storage_path` to `database.connection`.
+
 ### New Features
 
 After upgrading, you can:
 
-1. **Use the SQLite driver** (now the default). No external dependencies required.
+1. **Use the database driver** (now the default). Supports SQLite, MySQL, and PostgreSQL with no external dependencies.
    ```php
-   'default_driver' => Spatie\SiteSearch\Drivers\SqliteDriver::class,
+   'default_driver' => Spatie\SiteSearch\Drivers\DatabaseDriver::class,
    ```
 
 2. **Deep linking**. Search results now include anchor links to specific sections. Use `$hit->urlWithAnchor()` to get URLs like `https://example.com/page#section-id`. Requires re-indexing.

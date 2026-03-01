@@ -116,7 +116,7 @@ class CrawlSiteJob implements ShouldBeUnique, ShouldQueue
     {
         $oldIndexName = $this->siteSearchConfig->index_name;
 
-        // Finalize the index (swap temp file to final for SQLite driver)
+        // Finalize the index (no-op for most drivers, used by some for post-crawl operations)
         $this->siteSearchConfig->getDriver()->finalizeIndex($newIndexName);
 
         $this->siteSearchConfig->update([

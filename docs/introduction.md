@@ -7,7 +7,7 @@ This package can crawl and index one or more sites. You can think of it as a pri
 
 Two search drivers are available:
 
-- SQLite (default): uses SQLite FTS5 for full-text search with no external dependencies. A great choice for most use cases.
+- Database (default): uses your application's database for full-text search. Supports SQLite (FTS5), MySQL (FULLTEXT), and PostgreSQL (tsvector). No external dependencies required.
 - Meilisearch: blazing fast search speeds, supports [synonyms](/docs/laravel-site-search/v1/advanced-usage/using-the-meilisearch-driver#customizing-index-settings) and other advanced Meilisearch features. Requires a running Meilisearch instance.
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.

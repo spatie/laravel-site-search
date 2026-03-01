@@ -1,36 +1,17 @@
 <?php
 
-use Illuminate\Support\Str;
-use Spatie\SiteSearch\Drivers\SqliteDriver;
+use Spatie\SiteSearch\Drivers\DatabaseDriver;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 beforeEach(function () {
-    $this->tempDir = sys_get_temp_dir().'/site-search-test-'.uniqid();
-    mkdir($this->tempDir, 0755, true);
-
-    $this->config = SiteSearchConfig::factory()->create([
-        'extra' => ['sqlite' => ['storage_path' => $this->tempDir]],
-    ]);
-
-    $this->driver = SqliteDriver::make($this->config);
-});
-
-afterEach(function () {
-    $files = glob("{$this->tempDir}/*");
-    foreach ($files as $file) {
-        if (is_file($file)) {
-            unlink($file);
-        }
-    }
-    if (is_dir($this->tempDir)) {
-        rmdir($this->tempDir);
-    }
+    $this->config = SiteSearchConfig::factory()->create();
+    $this->driver = DatabaseDriver::make($this->config);
 });
 
 it('can create an index', function () {
     $this->driver->createIndex('test-index');
 
-    expect(file_exists("{$this->tempDir}/test-index.sqlite"))->toBeTrue();
+    expect($this->driver->documentCount('test-index'))->toBe(0);
 });
 
 it('can index documents', function () {
@@ -122,35 +103,18 @@ it('returns highlighted snippets', function () {
 it('can delete an index', function () {
     $this->driver->createIndex('test-index');
 
-    expect(file_exists("{$this->tempDir}/test-index.sqlite"))->toBeTrue();
-
-    $this->driver->deleteIndex('test-index');
-
-    expect(file_exists("{$this->tempDir}/test-index.sqlite"))->toBeFalse();
-});
-
-it('handles pending index pattern for atomic swap', function () {
-    $pendingName = 'my-site-'.Str::random(16);
-
-    $this->driver->createIndex($pendingName);
-    $this->driver->updateDocument($pendingName, [
+    $this->driver->updateDocument('test-index', [
         'id' => 'doc1',
         'url' => 'https://example.com',
         'entry' => 'Test content',
         'date_modified_timestamp' => time(),
     ]);
 
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeTrue();
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeFalse();
+    expect($this->driver->documentCount('test-index'))->toBe(1);
 
-    $this->driver->finalizeIndex($pendingName);
+    $this->driver->deleteIndex('test-index');
 
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeTrue();
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeFalse();
-
-    $results = $this->driver->search($pendingName, 'content');
-
-    expect($results->hits)->toHaveCount(1);
+    expect($this->driver->documentCount('test-index'))->toBe(0);
 });
 
 it('handles extra fields', function () {
@@ -173,14 +137,26 @@ it('handles extra fields', function () {
 });
 
 it('returns processing as always false', function () {
-    $this->driver->createIndex('test-index');
-
     expect($this->driver->isProcessing('test-index'))->toBeFalse();
 });
 
 it('returns all index names', function () {
     $this->driver->createIndex('index-one');
     $this->driver->createIndex('index-two');
+
+    $this->driver->updateDocument('index-one', [
+        'id' => 'doc1',
+        'url' => 'https://example.com/1',
+        'entry' => 'Content one',
+        'date_modified_timestamp' => time(),
+    ]);
+
+    $this->driver->updateDocument('index-two', [
+        'id' => 'doc2',
+        'url' => 'https://example.com/2',
+        'entry' => 'Content two',
+        'date_modified_timestamp' => time(),
+    ]);
 
     $names = $this->driver->allIndexNames();
 
@@ -265,48 +241,36 @@ it('can replace existing document with same id', function () {
     expect($results->hits)->toHaveCount(1);
 });
 
-it('swaps temp to final after crawling workflow', function () {
-    // Simulate the CrawlSiteJob workflow
-    $baseName = 'my-site';
-    $pendingName = $baseName.'-'.Str::random(16);
+it('keeps indexes isolated from each other', function () {
+    $this->driver->createIndex('index-a');
+    $this->driver->createIndex('index-b');
 
-    // Step 1: Create the pending index (like createNewIndex in CrawlSiteJob)
-    $this->driver->createIndex($pendingName);
-
-    // Step 2: Index documents (like startCrawler in CrawlSiteJob)
-    $this->driver->updateManyDocuments($pendingName, [
-        [
-            'id' => 'doc1',
-            'url' => 'https://example.com/page1',
-            'pageTitle' => 'Page One',
-            'entry' => 'First page content',
-            'date_modified_timestamp' => time(),
-        ],
-        [
-            'id' => 'doc2',
-            'url' => 'https://example.com/page2',
-            'pageTitle' => 'Page Two',
-            'entry' => 'Second page content',
-            'date_modified_timestamp' => time(),
-        ],
+    $this->driver->updateDocument('index-a', [
+        'id' => 'doc1',
+        'url' => 'https://example.com/a',
+        'entry' => 'Content for index A',
+        'date_modified_timestamp' => time(),
     ]);
 
-    // At this point, only the temp file should exist
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeTrue('Temp file should exist after indexing');
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeFalse('Final file should not exist yet');
+    $this->driver->updateDocument('index-b', [
+        'id' => 'doc1',
+        'url' => 'https://example.com/b',
+        'entry' => 'Content for index B',
+        'date_modified_timestamp' => time(),
+    ]);
 
-    // Step 3: Finalize the index (like blessNewIndex in CrawlSiteJob)
-    $this->driver->finalizeIndex($pendingName);
+    $resultsA = $this->driver->search('index-a', 'Content');
+    $resultsB = $this->driver->search('index-b', 'Content');
 
-    // The swap should have happened
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeTrue('Final file should exist after finalizeIndex');
-    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeFalse('Temp file should be gone after swap');
+    expect($resultsA->hits)->toHaveCount(1);
+    expect($resultsA->hits->first()->url)->toBe('https://example.com/a');
 
-    // Step 4: Verify we can get document count
-    $count = $this->driver->documentCount($pendingName);
-    expect($count)->toBe(2);
+    expect($resultsB->hits)->toHaveCount(1);
+    expect($resultsB->hits->first()->url)->toBe('https://example.com/b');
+});
 
-    // Verify we can still search
-    $results = $this->driver->search($pendingName, 'First');
-    expect($results->hits)->toHaveCount(1);
+it('finalizeIndex returns self', function () {
+    $result = $this->driver->finalizeIndex('test-index');
+
+    expect($result)->toBe($this->driver);
 });

@@ -65,11 +65,11 @@ return [
      * to a search index.
      *
      * Available drivers:
+     * - DatabaseDriver: uses your application's database with full-text search (SQLite FTS5, MySQL FULLTEXT, PostgreSQL tsvector)
      * - MeiliSearchDriver: uses Meilisearch as the search engine (requires a running Meilisearch instance)
-     * - SqliteDriver: uses a local SQLite database with FTS5 full-text search (no external dependencies)
      * - ArrayDriver: in-memory driver for testing
      */
-    'default_driver' => Spatie\SiteSearch\Drivers\SqliteDriver::class,
+    'default_driver' => Spatie\SiteSearch\Drivers\DatabaseDriver::class,
 
     /*
      * This job is responsible for crawling your site. To customize this job,

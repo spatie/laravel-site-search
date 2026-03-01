@@ -46,7 +46,7 @@ jobs:
         os: [ubuntu-latest]
         php: [8.5, 8.4]
         laravel: ['12.*', '13.*']
-        stability: [prefer-stable]
+        stability: [prefer-lowest, prefer-stable]
         db: [sqlite]
         include:
           - laravel: 12.*

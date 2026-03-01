@@ -5,6 +5,7 @@ $uri = rtrim($uri, '/') ?: '/';
 
 if ($uri === '/booted') {
     echo 'app has booted';
+
     return;
 }
 
@@ -12,6 +13,7 @@ $configFile = __DIR__ . '/config.json';
 
 if (! file_exists($configFile)) {
     http_response_code(404);
+
     return;
 }
 

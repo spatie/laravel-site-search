@@ -141,7 +141,7 @@ class DatabaseDriver implements Driver
             }
 
             if (isset($document['entry']) && $document['entry'] !== '') {
-                $grouped[$url]['entry'] = trim($grouped[$url]['entry'] . "\n" . $document['entry']);
+                $grouped[$url]['entry'] = trim($grouped[$url]['entry']."\n".$document['entry']);
             }
 
             if (($grouped[$url]['anchor'] ?? null) === null && isset($document['anchor'])) {

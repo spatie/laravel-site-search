@@ -34,7 +34,8 @@ class MeiliSearchDriver implements Driver
 
     public function createIndex(string $indexName): self
     {
-        $this->meilisearch->createIndex($indexName);
+        $task = $this->meilisearch->createIndex($indexName);
+        $this->meilisearch->waitForTask($task['taskUid']);
 
         $settings = array_merge([
             'searchableAttributes' => ['entry', 'pageTitle', 'h1', 'description', 'url'],

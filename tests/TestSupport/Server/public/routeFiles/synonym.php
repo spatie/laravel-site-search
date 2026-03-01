@@ -1,3 +1,5 @@
 <?php
 
-$router->get('/', fn () => 'I am a computer');
+return [
+    '/' => ['body' => 'I am a computer'],
+];

@@ -18,10 +18,6 @@ class Server
 
     public static function boot()
     {
-        if (! file_exists(__DIR__.'/vendor')) {
-            exec('cd "'.__DIR__.'"; composer install');
-        }
-
         if (static::serverHasBooted()) {
             return;
         }

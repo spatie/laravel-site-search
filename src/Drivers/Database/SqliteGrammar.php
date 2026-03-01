@@ -23,12 +23,12 @@ class SqliteGrammar extends Grammar
             )
         ");
 
-        $connection->statement("
+        $connection->statement('
             CREATE TRIGGER IF NOT EXISTS site_search_documents_ai AFTER INSERT ON site_search_documents BEGIN
                 INSERT INTO site_search_documents_fts(rowid, document_id, index_name, url, page_title, h1, entry, description)
                 VALUES (NEW.id, NEW.document_id, NEW.index_name, NEW.url, NEW.page_title, NEW.h1, NEW.entry, NEW.description);
             END
-        ");
+        ');
 
         $connection->statement("
             CREATE TRIGGER IF NOT EXISTS site_search_documents_ad AFTER DELETE ON site_search_documents BEGIN
@@ -99,7 +99,7 @@ class SqliteGrammar extends Grammar
         }
 
         return implode(' ', array_map(
-            fn (string $word) => '"' . $word . '"*',
+            fn (string $word) => '"'.$word.'"*',
             $words
         ));
     }

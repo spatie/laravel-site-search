@@ -16,9 +16,9 @@ class PostgresGrammar extends Grammar
         if (empty($hasColumn)) {
             $connection->statement('ALTER TABLE site_search_documents ADD COLUMN search_vector tsvector');
 
-            $connection->statement("
+            $connection->statement('
                 CREATE INDEX site_search_documents_search_idx ON site_search_documents USING gin(search_vector)
-            ");
+            ');
 
             $connection->statement("
                 CREATE OR REPLACE FUNCTION site_search_documents_update_search_vector() RETURNS trigger AS $$
@@ -34,11 +34,11 @@ class PostgresGrammar extends Grammar
                 $$ LANGUAGE plpgsql
             ");
 
-            $connection->statement("
+            $connection->statement('
                 CREATE TRIGGER site_search_documents_vector_update
                 BEFORE INSERT OR UPDATE ON site_search_documents
                 FOR EACH ROW EXECUTE FUNCTION site_search_documents_update_search_vector()
-            ");
+            ');
 
             $connection->statement("
                 UPDATE site_search_documents SET search_vector =
@@ -85,5 +85,4 @@ class PostgresGrammar extends Grammar
             ->whereRaw("search_vector @@ plainto_tsquery('english', ?)", [$query])
             ->count();
     }
-
 }

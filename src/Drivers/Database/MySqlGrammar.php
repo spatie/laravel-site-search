@@ -13,10 +13,10 @@ class MySqlGrammar extends Grammar
         ");
 
         if (empty($hasIndex)) {
-            $connection->statement("
+            $connection->statement('
                 ALTER TABLE site_search_documents
                 ADD FULLTEXT INDEX site_search_documents_fulltext (entry, page_title, h1, description, url)
-            ");
+            ');
         }
     }
 
@@ -73,7 +73,7 @@ class MySqlGrammar extends Grammar
         }
 
         return implode(' ', array_map(
-            fn (string $word) => '+' . $word . '*',
+            fn (string $word) => '+'.$word.'*',
             $words
         ));
     }
@@ -86,7 +86,7 @@ class MySqlGrammar extends Grammar
             return $row;
         }
 
-        $pattern = '/\b(' . implode('|', array_map('preg_quote', $words)) . ')\w*/i';
+        $pattern = '/\b('.implode('|', array_map('preg_quote', $words)).')\w*/i';
 
         if (! empty($row['entry'])) {
             $row['entry_highlighted'] = preg_replace($pattern, '<em>$0</em>', $row['entry']);

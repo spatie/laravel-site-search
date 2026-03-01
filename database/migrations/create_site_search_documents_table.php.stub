@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->text('anchor')->nullable();
             $table->text('page_title')->nullable();
             $table->text('h1')->nullable();
-            $table->text('entry')->nullable();
+            $table->longText('entry')->nullable();
             $table->text('description')->nullable();
             $table->integer('date_modified_timestamp')->nullable();
             $table->json('extra')->nullable();

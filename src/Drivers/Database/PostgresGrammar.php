@@ -112,12 +112,19 @@ class PostgresGrammar extends Grammar
             return;
         }
 
+        $connection->statement('
+            CREATE TEXT SEARCH DICTIONARY site_search_stem (
+                TEMPLATE = snowball,
+                Language = english
+            )
+        ');
+
         $connection->statement('CREATE TEXT SEARCH CONFIGURATION site_search (COPY = simple)');
 
         $connection->statement('
             ALTER TEXT SEARCH CONFIGURATION site_search
             ALTER MAPPING FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
-            WITH english_stem
+            WITH site_search_stem
         ');
     }
 

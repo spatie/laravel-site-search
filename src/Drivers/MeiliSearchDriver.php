@@ -3,10 +3,9 @@
 namespace Spatie\SiteSearch\Drivers;
 
 use Exception;
-use MeiliSearch\Client;
-use MeiliSearch\Client as MeiliSearchClient;
-use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\ApiException;
+use Meilisearch\Client;
+use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Exceptions\ApiException;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
@@ -27,16 +26,18 @@ class MeiliSearchDriver implements Driver
     }
 
     public function __construct(
-        protected MeiliSearchClient $meilisearch,
-        protected $settings = [],
-    ) {
-    }
+        protected Client $meilisearch,
+        protected array $settings = [],
+    ) {}
 
     public function createIndex(string $indexName): self
     {
-        $this->meilisearch->createIndex($indexName);
+        $task = $this->meilisearch->createIndex($indexName);
+        $this->meilisearch->waitForTask($task['taskUid']);
 
-        $settings = array_merge($this->settings, [
+        $settings = array_merge([
+            'searchableAttributes' => ['entry', 'pageTitle', 'h1', 'description', 'url'],
+        ], $this->settings, [
             'distinctAttribute' => 'url',
         ]);
 
@@ -131,5 +132,11 @@ class MeiliSearchDriver implements Driver
         } catch (ApiException) {
             return 0;
         }
+    }
+
+    public function finalizeIndex(string $indexName): self
+    {
+        // MeiliSearch handles indexing internally, no-op here
+        return $this;
     }
 }

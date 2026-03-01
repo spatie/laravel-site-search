@@ -1,5 +1,7 @@
 <?php
 
-$router->get('/', fn () => view('chain/1'));
-$router->get('2', fn () => view('chain/2'));
-$router->get('3', fn () => view('chain/3'));
+return [
+    '/' => ['view' => 'chain/1.blade.php'],
+    '/2' => ['view' => 'chain/2.blade.php'],
+    '/3' => ['view' => 'chain/3.blade.php'],
+];

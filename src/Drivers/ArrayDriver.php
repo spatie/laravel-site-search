@@ -9,6 +9,7 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 class ArrayDriver implements Driver
 {
     protected array $indexes = [];
+
     protected array $documents = [];
 
     public static function make(SiteSearchConfig $config): self
@@ -20,8 +21,7 @@ class ArrayDriver implements Driver
 
     public function __construct(
         protected LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function createIndex(string $indexName): self
     {
@@ -109,13 +109,15 @@ class ArrayDriver implements Driver
             });
         }
 
+        $documents = $documents->unique('url')->values();
+
         $total = $documents->count();
         $results = $documents->skip($offset)->take($limit ?? 20);
 
         return new SearchResults(
             $results,
+            0,
             $total,
-            $results->count(),
             $limit ?? 20,
             $offset,
         );
@@ -144,5 +146,11 @@ class ArrayDriver implements Driver
         ]);
 
         return count($this->documents[$indexName] ?? []);
+    }
+
+    public function finalizeIndex(string $indexName): self
+    {
+        // ArrayDriver doesn't use temp files, no-op here
+        return $this;
     }
 }

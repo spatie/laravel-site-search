@@ -30,15 +30,14 @@ class SiteSearch
 
         $profile = $siteSearchConfig->getProfile();
 
-        return new static($siteSearchConfig->index_name, $driver, $profile);
+        return new self($siteSearchConfig->index_name, $driver, $profile);
     }
 
     public function __construct(
-        protected string        $indexName,
-        protected Driver        $driver,
+        protected string $indexName,
+        protected Driver $driver,
         protected SearchProfile $searchProfile,
-    ) {
-    }
+    ) {}
 
     public function crawl(string $baseUrl): self
     {
@@ -50,18 +49,18 @@ class SiteSearch
             $this->driver
         );
 
-        $crawler = Crawler::create()
-            ->setCrawlProfile($crawlProfile)
-            ->setCrawlObserver($observer);
+        $crawler = Crawler::create($baseUrl)
+            ->crawlProfile($crawlProfile)
+            ->addObserver($observer);
 
         $this->searchProfile->configureCrawler($crawler);
 
-        $crawler->startCrawling($baseUrl);
+        $crawler->start();
 
         return $this;
     }
 
-    public function search(string $query, ?int $limit = null, ?int $offset = 0, $searchParameters = []): SearchResults
+    public function search(string $query, ?int $limit = null, int $offset = 0, array $searchParameters = []): SearchResults
     {
         return $this->driver->search($this->indexName, $query, $limit, $offset, $searchParameters);
     }

@@ -2,21 +2,20 @@
 
 namespace Spatie\SiteSearch\Profiles;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 use Spatie\Crawler\Crawler;
+use Spatie\Crawler\CrawlResponse;
 use Spatie\SiteSearch\Indexers\Indexer;
 
 class DefaultSearchProfile implements SearchProfile
 {
-    public function shouldCrawl(UriInterface $url): bool
+    public function shouldCrawl(string $url): bool
     {
         return true;
     }
 
-    public function shouldIndex(UriInterface $url, ResponseInterface $response): bool
+    public function shouldIndex(string $url, CrawlResponse $response): bool
     {
-        if ($response->getStatusCode() !== 200) {
+        if ($response->status() !== 200) {
             return false;
         }
 
@@ -31,21 +30,19 @@ class DefaultSearchProfile implements SearchProfile
         return true;
     }
 
-    public function useIndexer(UriInterface $url, ResponseInterface $response): ?Indexer
+    public function useIndexer(string $url, CrawlResponse $response): ?Indexer
     {
         $defaultIndexer = config('site-search.default_indexer');
 
         return new $defaultIndexer($url, $response);
     }
 
-    public function configureCrawler(Crawler $crawler): void
-    {
-    }
+    public function configureCrawler(Crawler $crawler): void {}
 
-    protected function hasDoNotIndexHeader(ResponseInterface $response): bool
+    protected function hasDoNotIndexHeader(CrawlResponse $response): bool
     {
         foreach (config('site-search.do_not_index_content_headers') as $headerName) {
-            if ($response->hasHeader($headerName)) {
+            if ($response->toPsrResponse()->hasHeader($headerName)) {
                 return true;
             }
         }
@@ -53,10 +50,12 @@ class DefaultSearchProfile implements SearchProfile
         return false;
     }
 
-    protected function urlShouldNotBeIndexed(UriInterface $url): bool
+    protected function urlShouldNotBeIndexed(string $url): bool
     {
+        $path = parse_url($url, PHP_URL_PATH);
+
         foreach (config('site-search.ignore_content_on_urls') as $configuredUrl) {
-            if (fnmatch($configuredUrl, $url->getPath())) {
+            if (fnmatch($configuredUrl, $path)) {
                 return true;
             }
         }

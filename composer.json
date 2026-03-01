@@ -18,22 +18,23 @@
         }
     ],
     "require": {
-        "php": "^8.3",
-        "guzzlehttp/psr7": "^2.5",
-        "illuminate/contracts": "^11.0|^12.0|^13.0",
-        "illuminate/http": "^11.0|^12.0|^13.0",
-        "laravel/prompts": "^0.1.23|^0.3",
-        "spatie/crawler": "^8.0",
-        "spatie/laravel-package-tools": "^1.15"
+        "php": "^8.4",
+        "guzzlehttp/psr7": "^2.8",
+        "illuminate/contracts": "^12.0|^13.0",
+        "illuminate/http": "^12.0|^13.0",
+        "laravel/prompts": "^0.1.23|^0.3.13",
+        "spatie/crawler": "^9.0",
+        "spatie/laravel-package-tools": "^1.93"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^7.7",
-        "meilisearch/meilisearch-php": "^1.1.1",
-        "nunomaduro/collision": "^8.0",
-        "orchestra/testbench": "^9.0|^10.0|^11.0",
-        "pestphp/pest": "^3.7|^4.0",
-        "pestphp/pest-plugin-laravel": "^3.1|^4.0",
-        "spatie/laravel-ray": "^1.32.4"
+        "guzzlehttp/guzzle": "^7.10",
+        "meilisearch/meilisearch-php": "^1.16.1",
+        "nunomaduro/collision": "^8.9.1",
+        "orchestra/testbench": "^10.9|^11.0",
+        "pestphp/pest": "^4.4.1",
+        "pestphp/pest-plugin-laravel": "^4.1",
+        "larastan/larastan": "^3.0",
+        "spatie/laravel-ray": "^1.43.6"
     },
     "autoload": {
         "files": [
@@ -50,7 +51,7 @@
         }
     },
     "scripts": {
-        "psalm": "vendor/bin/psalm",
+        "analyse": "vendor/bin/phpstan analyse",
         "test": "./vendor/bin/pest --no-coverage",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
@@ -65,13 +66,13 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-sqlite": "3.0-dev"
+        },
         "laravel": {
             "providers": [
                 "Spatie\\SiteSearch\\SiteSearchServiceProvider"
-            ],
-            "aliases": {
-                "SiteSearch": "Spatie\\SiteSearch\\SiteSearchFacade"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

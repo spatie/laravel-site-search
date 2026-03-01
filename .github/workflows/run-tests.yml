@@ -21,22 +21,52 @@ jobs:
           - 7700:7700
         options: --health-cmd "curl -f http://localhost:7700/health" --health-interval 2s --health-timeout 5s --health-retries 15
 
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: site_search_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: site_search_test
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: [8.4, 8.3]
-        laravel: ['11.*', '12.*', '13.*']
-        stability: [prefer-stable]
+        php: [8.5, 8.4]
+        laravel: ['12.*', '13.*']
+        stability: [prefer-lowest, prefer-stable]
+        db: [sqlite]
         include:
-          - laravel: 11.*
-            testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
           - laravel: 13.*
             testbench: 11.*
+          - os: ubuntu-latest
+            php: '8.4'
+            laravel: '12.*'
+            testbench: '10.*'
+            stability: prefer-stable
+            db: mysql
+          - os: ubuntu-latest
+            php: '8.4'
+            laravel: '12.*'
+            testbench: '10.*'
+            stability: prefer-stable
+            db: pgsql
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.db }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -46,7 +76,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, pdo_mysql, pdo_pgsql, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: none
 
       - name: Setup problem matchers
@@ -61,3 +91,10 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest
+        env:
+          DB_DRIVER: ${{ matrix.db }}
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ matrix.db == 'mysql' && '3306' || matrix.db == 'pgsql' && '5432' || '' }}
+          DB_DATABASE: ${{ matrix.db != 'sqlite' && 'site_search_test' || '' }}
+          DB_USERNAME: ${{ matrix.db == 'mysql' && 'root' || matrix.db == 'pgsql' && 'postgres' || '' }}
+          DB_PASSWORD: ${{ matrix.db != 'sqlite' && 'password' || '' }}

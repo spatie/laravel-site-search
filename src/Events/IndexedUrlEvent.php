@@ -2,15 +2,15 @@
 
 namespace Spatie\SiteSearch\Events;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use Spatie\Crawler\CrawlProgress;
+use Spatie\Crawler\CrawlResponse;
 
 class IndexedUrlEvent
 {
     public function __construct(
-        public UriInterface $url,
-        public ResponseInterface $response,
-        public ?UriInterface $foundOnUrl = null
-    ) {
-    }
+        public string $url,
+        public CrawlResponse $response,
+        public CrawlProgress $progress,
+        public ?string $foundOnUrl = null,
+    ) {}
 }

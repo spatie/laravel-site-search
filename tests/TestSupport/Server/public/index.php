@@ -1,41 +1,43 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$uri = rtrim($uri, '/') ?: '/';
 
-putenv('APP_ENV=production');
-putenv('APP_DEBUG=true');
+if ($uri === '/booted') {
+    echo 'app has booted';
 
-$app = new Laravel\Lumen\Application(
-    realpath(__DIR__.'/../')
-);
+    return;
+}
 
-$app->configure('app');
+$configFile = __DIR__.'/config.json';
 
-$app->router->group([
-    'namespace' => 'App\Http\Controllers',
-], function ($router) use ($app) {
-    $router->get('booted', fn () => 'app has booted');
+if (! file_exists($configFile)) {
+    http_response_code(404);
 
-    $configFile = __DIR__ . "/config.json";
+    return;
+}
 
-    if (! file_exists($configFile)) {
-        return;
+$config = json_decode(file_get_contents($configFile), true);
+$routesFile = __DIR__."/routeFiles/{$config['routes']}.php";
+
+$routes = require $routesFile;
+
+if (isset($routes[$uri])) {
+    $route = $routes[$uri];
+
+    if (isset($route['headers'])) {
+        foreach ($route['headers'] as $name => $value) {
+            header("{$name}: {$value}");
+        }
     }
 
-    $config = json_decode(file_get_contents($configFile), true);
+    if (isset($route['view'])) {
+        echo file_get_contents(__DIR__.'/../resources/views/'.$route['view']);
+    } else {
+        echo $route['body'];
+    }
 
-    $routesFile = __DIR__ . "/routeFiles/{$config['routes']}.php";
-
-    require $routesFile;
-});
-
-$app->run();
-
-function getRoutesFile(): ?string
-{
-    $configFile = __DIR__ . "/config.json";
-
-    $config = json_decode(file_get_contents($configFile), true);
-
-    return __DIR__ . "/routeFiles/{$config['routes']}.php";
+    return;
 }
+
+http_response_code(404);

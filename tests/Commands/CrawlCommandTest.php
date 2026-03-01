@@ -1,13 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Bus;
-
-use function Pest\Laravel\artisan;
-
 use Spatie\SiteSearch\Commands\CrawlCommand;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Symfony\Component\Console\Command\Command;
+
+use function Pest\Laravel\artisan;
 
 beforeEach(function () {
     Bus::fake();

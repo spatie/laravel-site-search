@@ -21,7 +21,15 @@ interface Driver
 
     public function allIndexNames(): array;
 
-    public function documentCount(string $indexName);
+    public function documentCount(string $indexName): int;
 
     public function isProcessing(string $indexName): bool;
+
+    /**
+     * Finalize a pending index after crawling is complete.
+     * For drivers that support atomic index swapping (like SQLite),
+     * this swaps the temp index to the final location.
+     * For other drivers, this is a no-op.
+     */
+    public function finalizeIndex(string $indexName): self;
 }

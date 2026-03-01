@@ -5,7 +5,7 @@ if (! function_exists('attempt')) {
     {
         try {
             return $closure();
-        } catch (Exception) {
+        } catch (\Exception) {
             return $default;
         }
     }

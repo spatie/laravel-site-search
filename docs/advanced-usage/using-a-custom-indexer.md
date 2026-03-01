@@ -7,7 +7,7 @@ When a site gets crawled, each of the pages is fed to a [search profile](/docs/l
 
 By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer` is used. This indexer makes the best effort in determining the page title, description, and content of your page.
 
-The implementation of `entries()` of the `DefaultIndexer` will chop up your content in pieces of a few sentences long. We do this to keep the record size within [the limits of Meilisearch](https://docs.meilisearch.com/reference/features/known_limitations.html#design-limitations).
+The implementation of `entries()` of the `DefaultIndexer` will chop up your content in pieces of a few sentences long. This keeps individual records small, which improves search relevance and performance.
 
 If the results yielded by `DefaultIndexer` are not good enough for your content, you can create a custom indexer. An indexer is any class that implements `Spatie\SiteSearch\Indexers\Indexer`. Here's how that interface looks like.
 

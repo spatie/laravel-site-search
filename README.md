@@ -13,7 +13,7 @@
     
 </div>
 
-This package can crawl and index your entire site. You can think of it as private Google search. What gets crawled and indexed can be highly customized. Under the hood Meilisearch is used to provide blazing fast search speeds.
+This package can crawl and index your entire site. You can think of it as a private Google search. What gets crawled and indexed can be highly customized. By default, a local SQLite database with FTS5 is used, so no external dependencies are needed. Optionally, you can use Meilisearch for more advanced search features.
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.
 
@@ -31,11 +31,11 @@ You will find full documentation on [the dedicated documentions site](https://sp
 
 ## Testing
 
-Before running the test, make sure you are running Meilisearch locally.
-
 ```bash
 composer test
 ```
+
+Some tests require a local Meilisearch instance running on port 7700.
 
 ## Changelog
 

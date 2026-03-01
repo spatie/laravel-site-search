@@ -9,21 +9,23 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 class Search
 {
     protected ?string $query = null;
+
     protected ?int $limit = null;
+
     protected int $offset = 0;
+
     protected array $searchParameters = [];
 
-    public static function onIndex(string $indexName)
+    public static function onIndex(string $indexName): self
     {
         $searchIndex = SiteSearch::index($indexName);
 
-        return new static($searchIndex);
+        return new self($searchIndex);
     }
 
     public function __construct(
         protected SiteSearch $siteSearch
-    ) {
-    }
+    ) {}
 
     public function query(string $query): self
     {

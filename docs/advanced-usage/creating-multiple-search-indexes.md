@@ -16,9 +16,8 @@ These are the attributes you should manually update in the table:
 - `crawl_url`: the url to be crawled to populate this index
 - `driver_class`: the search driver to use. If this value is `null`, `config('site-search.default_driver')` will be used when indexing the site
 - `profile_class`: the search profile to use. If this value is `null`, `config('site-search.default_profile')` will be used when indexing the site 
-- `index_base_name`: the name that it used by the underlying search engine (eg. Meilisearch) to determine its index name
-- `extra`: used to [customize various settings](/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings)
-- 
+- `index_base_name`: the name that is used by the underlying search engine to determine its index name
+- `extra`: used to customize driver-specific settings (see [Meilisearch driver](/docs/laravel-site-search/v1/advanced-usage/using-the-meilisearch-driver) or [SQLite driver](/docs/laravel-site-search/v1/advanced-usage/using-the-sqlite-driver))
 
 These attributes are set by the package, you should not manually set or update them.
 
@@ -26,4 +25,4 @@ These attributes are set by the package, you should not manually set or update t
 - `number_of_urls_indexed`: the number of URLs that were crawled to created the index in `index_name`
 - `pending_index_name`: will be used to hold the temporary index name that is used while indexing
 - `crawling_started_at`: holds the date of when the crawling started when building up this index
-- `crawling_ended_at`: holds the date of when the crawling started when building up this index
+- `crawling_ended_at`: holds the date of when the crawling ended when building up this index

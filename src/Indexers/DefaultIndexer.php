@@ -3,19 +3,24 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use DOMElement;
+use DOMNodeList;
+use Spatie\Crawler\CrawlResponse;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DefaultIndexer implements Indexer
 {
     protected Crawler $domCrawler;
 
+    protected ?string $currentAnchor = null;
+
+    protected array $entries = [];
+
     public function __construct(
-        protected UriInterface $url,
-        protected ResponseInterface $response
+        protected string $url,
+        protected CrawlResponse $response
     ) {
-        $html = (string)$this->response->getBody();
+        $html = $this->response->body();
 
         $this->domCrawler = new Crawler($html);
     }
@@ -34,49 +39,110 @@ class DefaultIndexer implements Indexer
     {
         $description = attempt(fn () => $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content'));
 
+        if ($description === null) {
+            return null;
+        }
+
         return preg_replace('/\s+/', ' ', $description);
     }
 
     public function entries(): array
     {
+        $this->entries = [];
+        $this->currentAnchor = null;
+
         $content = $this->getHtmlToIndex();
 
         if (is_null($content)) {
             return [];
         }
 
-        $content = strip_tags($content);
+        // Create a new crawler with the cleaned body HTML
+        $crawler = new Crawler($content);
+        $body = $crawler->filter('body');
 
-        $entries = array_map('trim', explode(PHP_EOL, $content));
+        if ($body->count() > 0) {
+            $bodyNode = $body->getNode(0);
+            if ($bodyNode && $bodyNode->hasChildNodes()) {
+                $this->walkNodes($bodyNode->childNodes);
+            }
+        }
 
-        $entries = array_filter($entries);
+        return $this->filterEntries($this->entries);
+    }
 
-        $entries = array_filter($entries, function (string $entry) {
-            if (str_starts_with($entry, '{"')) {
+    /**
+     * Recursively walk through DOM nodes and extract text with anchors
+     */
+    protected function walkNodes(DOMNodeList $nodes): void
+    {
+        foreach ($nodes as $node) {
+            if (! $node instanceof DOMElement) {
+                if ($node->nodeType === XML_TEXT_NODE) {
+                    $text = trim($node->nodeValue);
+                    if (! empty($text)) {
+                        $this->addTextEntry($text);
+                    }
+                }
+
+                continue;
+            }
+
+            $tagName = strtolower($node->nodeName);
+
+            if (in_array($tagName, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
+                $id = $node->getAttribute('id');
+                $this->currentAnchor = ! empty($id) ? $id : null;
+            }
+
+            if ($node->hasChildNodes()) {
+                $this->walkNodes($node->childNodes);
+            }
+        }
+    }
+
+    /**
+     * Add text entry, splitting by newlines
+     */
+    protected function addTextEntry(string $text): void
+    {
+        $lines = array_map('trim', explode(PHP_EOL, $text));
+
+        foreach ($lines as $line) {
+            if (! empty($line)) {
+                $this->entries[] = [
+                    'text' => $line,
+                    'anchor' => $this->currentAnchor,
+                ];
+            }
+        }
+    }
+
+    /**
+     * Filter out unwanted entries
+     */
+    protected function filterEntries(array $entries): array
+    {
+        $filtered = array_filter($entries, function (array $entry) {
+            $text = $entry['text'];
+
+            if (str_starts_with($text, '{"')) {
                 return false;
             }
 
-            if (str_starts_with($entry, '/')) {
+            if (preg_match('#^[./][\w./\\\\-]#', $text)) {
                 return false;
             }
 
-            if (str_starts_with($entry, '.')) {
-                return false;
-            }
-
-            return strlen($entry) > 3;
+            return strlen($text) > 3;
         });
 
-        $entries = array_filter($entries);
-
-        return array_values($entries);
+        return array_values($filtered);
     }
 
     public function extra(): array
     {
-        return [
-
-        ];
+        return [];
     }
 
     protected function getHtmlToIndex(): ?string
@@ -84,7 +150,7 @@ class DefaultIndexer implements Indexer
         return attempt(function () {
             $this->removeIgnoredContent($this->domCrawler);
 
-            return $this->domCrawler->filter("body")->html();
+            return $this->domCrawler->filter('body')->html();
         });
     }
 
@@ -108,7 +174,7 @@ class DefaultIndexer implements Indexer
         return now();
     }
 
-    public function url(): UriInterface
+    public function url(): string
     {
         return $this->url;
     }

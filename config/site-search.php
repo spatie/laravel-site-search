@@ -17,7 +17,7 @@ return [
      * that is selected by these CSS selectors.
      *
      * All links inside such content will still be crawled, so it's safe
-     * it's safe to add a selector for your menu structure.
+     * to add a selector for your menu structure.
      */
     'ignore_content_by_css_selector' => [
         '[data-no-index]',
@@ -64,9 +64,12 @@ return [
      * A driver is responsible for writing all scraped content
      * to a search index.
      *
-     * Available drivers are MeiliSearchDriver and ArrayDriver (with logging for testing).
+     * Available drivers:
+     * - DatabaseDriver: uses your application's database with full-text search (SQLite FTS5, MySQL FULLTEXT, PostgreSQL tsvector)
+     * - MeiliSearchDriver: uses Meilisearch as the search engine (requires a running Meilisearch instance)
+     * - ArrayDriver: in-memory driver for testing
      */
-    'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
+    'default_driver' => Spatie\SiteSearch\Drivers\DatabaseDriver::class,
 
     /*
      * This job is responsible for crawling your site. To customize this job,

@@ -10,8 +10,14 @@ uses(TestCase::class)
     ->beforeEach(fn () => ray()->clearScreen())
     ->in(__DIR__);
 
-function waitForMeilisearch(SiteSearchConfig $siteSearchConfig): void
+function waitForDriver(SiteSearchConfig $siteSearchConfig): void
 {
+    $driverClass = $siteSearchConfig->driver_class ?? config('site-search.default_driver');
+
+    if ($driverClass !== \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class) {
+        return;
+    }
+
     $indexName = $siteSearchConfig->refresh()->index_name;
 
     $client = new MeiliSearch\Client('http://127.0.0.1:7700');

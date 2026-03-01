@@ -55,7 +55,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
                     'entry' => $entry['text'],
                     'anchor' => $entry['anchor'] ?? null,
                     'description' => $description,
-                    'date_modified_timestamp' => $dateModified->getTimestamp(),
+                    'date_modified_timestamp' => $dateModified?->getTimestamp(),
                     'id' => (string)Str::uuid(),
                 ], $extra);
             })

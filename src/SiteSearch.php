@@ -30,7 +30,7 @@ class SiteSearch
 
         $profile = $siteSearchConfig->getProfile();
 
-        return new static($siteSearchConfig->index_name, $driver, $profile);
+        return new self($siteSearchConfig->index_name, $driver, $profile);
     }
 
     public function __construct(
@@ -61,7 +61,7 @@ class SiteSearch
         return $this;
     }
 
-    public function search(string $query, ?int $limit = null, ?int $offset = 0, $searchParameters = []): SearchResults
+    public function search(string $query, ?int $limit = null, int $offset = 0, array $searchParameters = []): SearchResults
     {
         return $this->driver->search($this->indexName, $query, $limit, $offset, $searchParameters);
     }

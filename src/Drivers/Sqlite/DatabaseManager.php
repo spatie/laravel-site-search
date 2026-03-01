@@ -29,10 +29,6 @@ class DatabaseManager
 
     public function connect(string $indexName, bool $useTemp = false): Connection
     {
-        if (! $useTemp) {
-            $this->swapTempIfExists($indexName);
-        }
-
         $path = $useTemp ? $this->getTempPath($indexName) : $this->getPath($indexName);
         $cacheKey = $path;
 
@@ -119,13 +115,6 @@ class DatabaseManager
             fn (string $file) => pathinfo($file, PATHINFO_FILENAME),
             $files
         );
-    }
-
-    protected function swapTempIfExists(string $indexName): void
-    {
-        if ($this->tempExists($indexName)) {
-            $this->atomicSwap($indexName);
-        }
     }
 
     protected function sanitizeIndexName(string $indexName): string

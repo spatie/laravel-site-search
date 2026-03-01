@@ -22,7 +22,7 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
     use InteractsWithQueue;
     use SerializesModels;
 
-    protected $numberOfUrlsIndexed = 0;
+    protected int $numberOfUrlsIndexed = 0;
 
     protected ?CrawlFinishedEvent $crawlFinishedEvent = null;
 
@@ -40,7 +40,7 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
         return $this->siteSearchConfig->getKey();
     }
 
-    public function handle()
+    public function handle(): void
     {
         event(new IndexingStartedEvent($this->siteSearchConfig));
 
@@ -128,8 +128,6 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
             'urls_failed' => $this->crawlFinishedEvent?->progress->urlsFailed ?? 0,
             'finish_reason' => $this->crawlFinishedEvent?->finishReason->value ?? null,
         ]);
-
-        $this->siteSearchConfig->document_count;
 
         return $oldIndexName;
     }

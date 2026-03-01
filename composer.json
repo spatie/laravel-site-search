@@ -72,10 +72,7 @@
         "laravel": {
             "providers": [
                 "Spatie\\SiteSearch\\SiteSearchServiceProvider"
-            ],
-            "aliases": {
-                "SiteSearch": "Spatie\\SiteSearch\\SiteSearchFacade"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

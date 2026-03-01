@@ -9,7 +9,7 @@ class SiteSearchCrawlProfile extends CrawlInternalUrls
 {
     public function __construct(
         protected SearchProfile $profile,
-        protected mixed $baseUrl,
+        protected string $baseUrl,
     ) {
         parent::__construct($this->baseUrl);
     }

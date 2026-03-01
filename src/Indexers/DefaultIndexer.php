@@ -3,6 +3,8 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
+use DOMElement;
+use DOMNodeList;
 use Spatie\Crawler\CrawlResponse;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -35,6 +37,10 @@ class DefaultIndexer implements Indexer
     {
         $description = attempt(fn () => $this->domCrawler->filterXPath("//meta[@name='description']")->attr('content'));
 
+        if ($description === null) {
+            return null;
+        }
+
         return preg_replace('/\s+/', ' ', $description);
     }
 
@@ -66,27 +72,29 @@ class DefaultIndexer implements Indexer
     /**
      * Recursively walk through DOM nodes and extract text with anchors
      */
-    protected function walkNodes(\DOMNodeList $nodes): void
+    protected function walkNodes(DOMNodeList $nodes): void
     {
         foreach ($nodes as $node) {
-            if ($node->nodeType === XML_ELEMENT_NODE) {
-                $tagName = strtolower($node->nodeName);
-
-                if (in_array($tagName, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
-                    $id = $node->getAttribute('id');
-                    $this->currentAnchor = ! empty($id) ? $id : null;
+            if (! $node instanceof DOMElement) {
+                if ($node->nodeType === XML_TEXT_NODE) {
+                    $text = trim($node->nodeValue);
+                    if (! empty($text)) {
+                        $this->addTextEntry($text);
+                    }
                 }
 
-                // Recurse into child nodes
-                if ($node->hasChildNodes()) {
-                    $this->walkNodes($node->childNodes);
-                }
-            } elseif ($node->nodeType === XML_TEXT_NODE) {
-                // Extract text from text nodes
-                $text = trim($node->nodeValue);
-                if (! empty($text)) {
-                    $this->addTextEntry($text);
-                }
+                continue;
+            }
+
+            $tagName = strtolower($node->nodeName);
+
+            if (in_array($tagName, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) {
+                $id = $node->getAttribute('id');
+                $this->currentAnchor = ! empty($id) ? $id : null;
+            }
+
+            if ($node->hasChildNodes()) {
+                $this->walkNodes($node->childNodes);
             }
         }
     }
@@ -120,11 +128,7 @@ class DefaultIndexer implements Indexer
                 return false;
             }
 
-            if (str_starts_with($text, '/')) {
-                return false;
-            }
-
-            if (str_starts_with($text, '.')) {
+            if (preg_match('#^[./][\w./\\\\-]#', $text)) {
                 return false;
             }
 

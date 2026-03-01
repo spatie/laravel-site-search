@@ -13,11 +13,11 @@ class Search
     protected int $offset = 0;
     protected array $searchParameters = [];
 
-    public static function onIndex(string $indexName)
+    public static function onIndex(string $indexName): self
     {
         $searchIndex = SiteSearch::index($indexName);
 
-        return new static($searchIndex);
+        return new self($searchIndex);
     }
 
     public function __construct(

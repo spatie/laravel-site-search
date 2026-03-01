@@ -116,8 +116,8 @@ class ArrayDriver implements Driver
 
         return new SearchResults(
             $results,
+            0,
             $total,
-            $results->count(),
             $limit ?? 20,
             $offset,
         );

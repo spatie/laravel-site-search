@@ -2,15 +2,15 @@
 
 namespace Spatie\SiteSearch\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
-use MeiliSearch\Exceptions\ApiException;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 class ListCommand extends Command
 {
     protected $signature = 'site-search:list';
 
-    public function handle()
+    public function handle(): void
     {
         [$headers, $rows] = $this->getHeadersAndRows();
 
@@ -38,7 +38,7 @@ class ListCommand extends Command
             if ($searchConfig->getDriver()->isProcessing($searchConfig->index_name)) {
                 return "⚠️ Processing...";
             }
-        } catch (ApiException) {
+        } catch (Exception) {
             return "🚨 Did not find index";
         }
 
@@ -58,7 +58,7 @@ class ListCommand extends Command
             '# Failed',
             'Crawl Status',
             '# Documents',
-            'Lastest crawl ended at',
+            'Latest crawl ended at',
         ];
 
         $rows = SiteSearchConfig::all()->map(function (SiteSearchConfig $config) {

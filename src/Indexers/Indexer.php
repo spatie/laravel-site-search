@@ -38,6 +38,11 @@ interface Indexer
     public function dateModified(): ?CarbonInterface;
 
     /*
+     * The meta description that should be put in the search index.
+     */
+    public function description(): ?string;
+
+    /*
      * Any keys and values this function returns will also
      * be put in the search index. This is useful for adding
      * custom attributes.

@@ -3,10 +3,9 @@
 namespace Spatie\SiteSearch\Drivers;
 
 use Exception;
-use MeiliSearch\Client;
-use MeiliSearch\Client as MeiliSearchClient;
-use MeiliSearch\Endpoints\Indexes;
-use MeiliSearch\Exceptions\ApiException;
+use Meilisearch\Client;
+use Meilisearch\Endpoints\Indexes;
+use Meilisearch\Exceptions\ApiException;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
@@ -27,8 +26,8 @@ class MeiliSearchDriver implements Driver
     }
 
     public function __construct(
-        protected MeiliSearchClient $meilisearch,
-        protected $settings = [],
+        protected Client $meilisearch,
+        protected array $settings = [],
     ) {
     }
 

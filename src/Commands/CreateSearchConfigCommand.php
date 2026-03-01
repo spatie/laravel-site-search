@@ -14,7 +14,7 @@ class CreateSearchConfigCommand extends Command
 {
     protected $signature = 'site-search:create-index';
 
-    public function handle()
+    public function handle(): void
     {
         [, $name, $url] = form()->intro("Let's create your index!")
             ->text(

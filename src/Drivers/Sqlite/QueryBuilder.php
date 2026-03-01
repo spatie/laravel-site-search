@@ -29,6 +29,8 @@ class QueryBuilder
             ->join('documents as d', 'documents_fts.id', '=', 'd.id')
             ->whereRaw('documents_fts MATCH ?', [$ftsQuery])
             ->orderBy('rank')
+            ->limit($limit)
+            ->offset($offset)
             ->get();
 
         return $results->map(fn ($row) => (array) $row)->all();

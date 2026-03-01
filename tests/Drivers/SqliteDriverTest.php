@@ -141,11 +141,15 @@ it('handles pending index pattern for atomic swap', function () {
     ]);
 
     expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeTrue();
+    expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeFalse();
 
-    $results = $this->driver->search($pendingName, 'content');
+    $this->driver->finalizeIndex($pendingName);
 
     expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite"))->toBeTrue();
     expect(file_exists("{$this->tempDir}/{$pendingName}.sqlite.tmp"))->toBeFalse();
+
+    $results = $this->driver->search($pendingName, 'content');
+
     expect($results->hits)->toHaveCount(1);
 });
 

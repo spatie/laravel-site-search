@@ -4,6 +4,15 @@ namespace Spatie\SiteSearch\SearchResults;
 
 use Carbon\Carbon;
 
+/**
+ * @property mixed $dateModifiedTimestamp
+ * @property string|null $pageTitle
+ * @property string|null $h1
+ * @property string|null $url
+ * @property string|null $entry
+ * @property string|null $description
+ * @property array|null $_formatted
+ */
 class Hit
 {
     public function __construct(protected array $properties)
@@ -73,8 +82,8 @@ class Hit
             'description' => $this->description,
             'h1' => $this->h1,
         ])
-            ->filter(fn (?string $value) => strlen($value) > 0)
-            ->sortBy(fn (?string $value) => strlen($value))
+            ->filter(fn (?string $value) => strlen((string) $value) > 0)
+            ->sortBy(fn (?string $value) => strlen((string) $value))
             ->reverse()
             ->keys()
             ->first();

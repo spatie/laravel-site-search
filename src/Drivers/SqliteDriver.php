@@ -87,7 +87,7 @@ class SqliteDriver implements Driver
     ): SearchResults {
         $startTime = microtime(true);
 
-        if (! $this->databaseManager->exists($indexName) && ! $this->databaseManager->tempExists($indexName)) {
+        if (! $this->databaseManager->exists($indexName)) {
             return new SearchResults(
                 collect([]),
                 0,
@@ -97,26 +97,19 @@ class SqliteDriver implements Driver
             );
         }
 
+        $effectiveLimit = $limit ?? 20;
         $connection = $this->databaseManager->connect($indexName);
 
-        $results = $this->queryBuilder->search($connection, $query, null, 0, $searchParameters);
+        $results = $this->queryBuilder->search($connection, $query, $effectiveLimit, $offset, $searchParameters);
         $totalCount = $this->queryBuilder->getTotalCount($connection, $query);
 
         $processingTimeMs = (int) ((microtime(true) - $startTime) * 1000);
 
-        $effectiveLimit = $limit ?? 20;
-
         $hits = collect($results)
-            ->unique('url')
-            ->values()
-            ->map(function (array $row) {
-                return new Hit($this->buildHitProperties($row));
-            });
-
-        $totalCount = $hits->count();
+            ->map(fn (array $row) => new Hit($this->buildHitProperties($row)));
 
         return new SearchResults(
-            $hits->slice($offset, $effectiveLimit)->values(),
+            $hits,
             $processingTimeMs,
             $totalCount,
             $effectiveLimit,

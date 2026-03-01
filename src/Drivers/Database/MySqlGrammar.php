@@ -73,7 +73,7 @@ class MySqlGrammar extends Grammar
         }
 
         return implode(' ', array_map(
-            fn (string $word) => '+'.$word.'*',
+            fn (string $word) => $word.'*',
             $words
         ));
     }

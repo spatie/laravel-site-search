@@ -12,8 +12,14 @@ beforeEach(function () {
     $this->grammar = new PostgresGrammar;
 });
 
-it('creates tsvector column and GIN index', function () {
+it('creates text search config, tsvector column and GIN index', function () {
     $this->grammar->ensureFtsSetup($this->connection);
+
+    $config = $this->connection->select("
+        SELECT 1 FROM pg_ts_config WHERE cfgname = 'site_search'
+    ");
+
+    expect($config)->toHaveCount(1);
 
     $columns = $this->connection->select("
         SELECT column_name FROM information_schema.columns
@@ -97,6 +103,36 @@ it('returns all documents for empty query', function () {
     $results = $this->grammar->search($this->connection, 'test', '', 10, 0);
 
     expect($results)->toHaveCount(2);
+});
+
+it('supports prefix matching', function () {
+    $this->grammar->ensureFtsSetup($this->connection);
+
+    $this->connection->table('site_search_documents')->insert([
+        'index_name' => 'test',
+        'document_id' => 'doc1',
+        'url' => 'https://example.com',
+        'entry' => 'Authentication and authorization',
+    ]);
+
+    $results = $this->grammar->search($this->connection, 'test', 'auth', 10, 0);
+
+    expect($results)->toHaveCount(1);
+});
+
+it('indexes common words without stop word filtering', function () {
+    $this->grammar->ensureFtsSetup($this->connection);
+
+    $this->connection->table('site_search_documents')->insert([
+        'index_name' => 'test',
+        'document_id' => 'doc1',
+        'url' => 'https://example.com',
+        'entry' => 'Here is the content of page one',
+    ]);
+
+    $results = $this->grammar->search($this->connection, 'test', 'here', 10, 0);
+
+    expect($results)->toHaveCount(1);
 });
 
 it('correctly counts total results', function () {

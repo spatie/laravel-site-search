@@ -6,8 +6,12 @@ use Illuminate\Database\Connection;
 
 class PostgresGrammar extends Grammar
 {
+    protected const TEXT_SEARCH_CONFIG = 'site_search';
+
     public function ensureFtsSetup(Connection $connection): void
     {
+        $this->ensureTextSearchConfig($connection);
+
         $hasColumn = $connection->select("
             SELECT column_name FROM information_schema.columns
             WHERE table_name = 'site_search_documents' AND column_name = 'search_vector'
@@ -21,17 +25,17 @@ class PostgresGrammar extends Grammar
             ');
 
             $connection->statement("
-                CREATE OR REPLACE FUNCTION site_search_documents_update_search_vector() RETURNS trigger AS $$
+                CREATE OR REPLACE FUNCTION site_search_documents_update_search_vector() RETURNS trigger AS \$\$
                 BEGIN
                     NEW.search_vector :=
-                        setweight(to_tsvector('english', COALESCE(NEW.entry, '')), 'A') ||
-                        setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||
-                        setweight(to_tsvector('english', COALESCE(NEW.page_title, '')), 'C') ||
-                        setweight(to_tsvector('english', COALESCE(NEW.h1, '')), 'C') ||
-                        setweight(to_tsvector('english', COALESCE(NEW.url, '')), 'D');
+                        setweight(to_tsvector('site_search', COALESCE(NEW.entry, '')), 'A') ||
+                        setweight(to_tsvector('site_search', COALESCE(NEW.description, '')), 'B') ||
+                        setweight(to_tsvector('site_search', COALESCE(NEW.page_title, '')), 'C') ||
+                        setweight(to_tsvector('site_search', COALESCE(NEW.h1, '')), 'C') ||
+                        setweight(to_tsvector('site_search', COALESCE(NEW.url, '')), 'D');
                     RETURN NEW;
                 END;
-                $$ LANGUAGE plpgsql
+                \$\$ LANGUAGE plpgsql
             ");
 
             $connection->statement('
@@ -42,11 +46,11 @@ class PostgresGrammar extends Grammar
 
             $connection->statement("
                 UPDATE site_search_documents SET search_vector =
-                    setweight(to_tsvector('english', COALESCE(entry, '')), 'A') ||
-                    setweight(to_tsvector('english', COALESCE(description, '')), 'B') ||
-                    setweight(to_tsvector('english', COALESCE(page_title, '')), 'C') ||
-                    setweight(to_tsvector('english', COALESCE(h1, '')), 'C') ||
-                    setweight(to_tsvector('english', COALESCE(url, '')), 'D')
+                    setweight(to_tsvector('site_search', COALESCE(entry, '')), 'A') ||
+                    setweight(to_tsvector('site_search', COALESCE(description, '')), 'B') ||
+                    setweight(to_tsvector('site_search', COALESCE(page_title, '')), 'C') ||
+                    setweight(to_tsvector('site_search', COALESCE(h1, '')), 'C') ||
+                    setweight(to_tsvector('site_search', COALESCE(url, '')), 'D')
             ");
         }
     }
@@ -57,13 +61,19 @@ class PostgresGrammar extends Grammar
             return $this->getAllDocuments($connection, $indexName, $limit, $offset);
         }
 
+        $tsQuery = $this->prepareTsQuery($query);
+
+        if (empty($tsQuery)) {
+            return [];
+        }
+
         return $connection->table('site_search_documents')
             ->select('*')
-            ->selectRaw("ts_rank(search_vector, plainto_tsquery('english', ?)) as relevance", [$query])
-            ->selectRaw("ts_headline('english', COALESCE(entry, ''), plainto_tsquery('english', ?), 'StartSel=<em>,StopSel=</em>,MaxFragments=1,MaxWords=50,MinWords=20') as entry_highlighted", [$query])
-            ->selectRaw("ts_headline('english', COALESCE(description, ''), plainto_tsquery('english', ?), 'StartSel=<em>,StopSel=</em>,MaxFragments=1,MaxWords=50,MinWords=20') as description_highlighted", [$query])
+            ->selectRaw("ts_rank(search_vector, to_tsquery('site_search', ?)) as relevance", [$tsQuery])
+            ->selectRaw("ts_headline('site_search', COALESCE(entry, ''), to_tsquery('site_search', ?), 'StartSel=<em>,StopSel=</em>,MaxFragments=1,MaxWords=50,MinWords=20') as entry_highlighted", [$tsQuery])
+            ->selectRaw("ts_headline('site_search', COALESCE(description, ''), to_tsquery('site_search', ?), 'StartSel=<em>,StopSel=</em>,MaxFragments=1,MaxWords=50,MinWords=20') as description_highlighted", [$tsQuery])
             ->where('index_name', $indexName)
-            ->whereRaw("search_vector @@ plainto_tsquery('english', ?)", [$query])
+            ->whereRaw("search_vector @@ to_tsquery('site_search', ?)", [$tsQuery])
             ->orderByDesc('relevance')
             ->limit($limit)
             ->offset($offset)
@@ -80,9 +90,58 @@ class PostgresGrammar extends Grammar
                 ->count();
         }
 
+        $tsQuery = $this->prepareTsQuery($query);
+
+        if (empty($tsQuery)) {
+            return 0;
+        }
+
         return $connection->table('site_search_documents')
             ->where('index_name', $indexName)
-            ->whereRaw("search_vector @@ plainto_tsquery('english', ?)", [$query])
+            ->whereRaw("search_vector @@ to_tsquery('site_search', ?)", [$tsQuery])
             ->count();
+    }
+
+    protected function ensureTextSearchConfig(Connection $connection): void
+    {
+        $exists = $connection->select("
+            SELECT 1 FROM pg_ts_config WHERE cfgname = 'site_search'
+        ");
+
+        if (! empty($exists)) {
+            return;
+        }
+
+        $connection->statement("CREATE TEXT SEARCH CONFIGURATION site_search (COPY = simple)");
+
+        $connection->statement("
+            ALTER TEXT SEARCH CONFIGURATION site_search
+            ALTER MAPPING FOR asciiword, asciihword, hword_asciipart, word, hword, hword_part
+            WITH english_stem
+        ");
+    }
+
+    protected function prepareTsQuery(string $query): string
+    {
+        $escaped = $this->escapeSearchTerm($query);
+
+        $words = preg_split('/\s+/', $escaped, -1, PREG_SPLIT_NO_EMPTY);
+
+        if (empty($words)) {
+            return '';
+        }
+
+        $parts = array_map(
+            fn (string $word) => preg_replace('/[^a-zA-Z0-9]/', '', $word).':*',
+            $words
+        );
+
+        $parts = array_filter($parts, fn (string $part) => $part !== ':*');
+
+        if (empty($parts)) {
+            return '';
+        }
+
+        return implode(' & ', $parts);
     }
 }

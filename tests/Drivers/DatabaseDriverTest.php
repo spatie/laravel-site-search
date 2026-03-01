@@ -57,6 +57,54 @@ it('can index many documents', function () {
     expect($this->driver->documentCount('test-index'))->toBe(2);
 });
 
+it('consolidates multiple documents for the same URL into a single row', function () {
+    $this->driver->createIndex('test-index');
+
+    $documents = [
+        [
+            'id' => 'doc1',
+            'url' => 'https://example.com/page',
+            'pageTitle' => 'My Page',
+            'h1' => 'Welcome',
+            'entry' => 'First paragraph',
+            'description' => 'A description',
+            'anchor' => null,
+            'date_modified_timestamp' => time(),
+        ],
+        [
+            'id' => 'doc2',
+            'url' => 'https://example.com/page',
+            'pageTitle' => 'My Page',
+            'h1' => 'Welcome',
+            'entry' => 'Second paragraph',
+            'description' => 'A description',
+            'anchor' => 'section-two',
+            'date_modified_timestamp' => time(),
+        ],
+        [
+            'id' => 'doc3',
+            'url' => 'https://example.com/page',
+            'pageTitle' => 'My Page',
+            'h1' => 'Welcome',
+            'entry' => 'Third paragraph',
+            'description' => 'A description',
+            'anchor' => 'section-three',
+            'date_modified_timestamp' => time(),
+        ],
+    ];
+
+    $this->driver->updateManyDocuments('test-index', $documents);
+
+    expect($this->driver->documentCount('test-index'))->toBe(1);
+
+    $results = $this->driver->search('test-index', 'paragraph');
+    expect($results->hits)->toHaveCount(1);
+    expect($results->hits->first()->url)->toBe('https://example.com/page');
+    expect($results->hits->first()->entry)->toContain('First paragraph');
+    expect($results->hits->first()->entry)->toContain('Second paragraph');
+    expect($results->hits->first()->entry)->toContain('Third paragraph');
+});
+
 it('can search documents', function () {
     $this->driver->createIndex('test-index');
 

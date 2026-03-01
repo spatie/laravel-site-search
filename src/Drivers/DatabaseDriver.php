@@ -52,8 +52,10 @@ class DatabaseDriver implements Driver
 
     public function updateManyDocuments(string $indexName, array $documents): self
     {
-        $this->connection->transaction(function () use ($indexName, $documents) {
-            foreach ($documents as $document) {
+        $consolidated = $this->consolidateDocuments($documents);
+
+        $this->connection->transaction(function () use ($indexName, $consolidated) {
+            foreach ($consolidated as $document) {
                 $this->upsertDocument($indexName, $document);
             }
         });
@@ -123,6 +125,31 @@ class DatabaseDriver implements Driver
     public function finalizeIndex(string $indexName): self
     {
         return $this;
+    }
+
+    protected function consolidateDocuments(array $documents): array
+    {
+        $grouped = [];
+
+        foreach ($documents as $document) {
+            $url = $document['url'] ?? '';
+
+            if (! isset($grouped[$url])) {
+                $grouped[$url] = $document;
+
+                continue;
+            }
+
+            if (isset($document['entry']) && $document['entry'] !== '') {
+                $grouped[$url]['entry'] = trim($grouped[$url]['entry'] . "\n" . $document['entry']);
+            }
+
+            if (($grouped[$url]['anchor'] ?? null) === null && isset($document['anchor'])) {
+                $grouped[$url]['anchor'] = $document['anchor'];
+            }
+        }
+
+        return array_values($grouped);
     }
 
     protected function upsertDocument(string $indexName, array $documentProperties): void

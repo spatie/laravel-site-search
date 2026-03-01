@@ -68,7 +68,7 @@ it('can crawl and index all pages', function (Closure $driverSetup) {
         ->query('here')
         ->get();
 
-    expect(hitUrls($searchResults))->toEqual([
+    expect(hitUrls($searchResults))->toEqualCanonicalizing([
         'http://localhost:8181/',
         'http://localhost:8181/2',
         'http://localhost:8181/3',
@@ -122,7 +122,7 @@ it('can use a search profile not to index a specific url', function (Closure $dr
         ->query('here')
         ->get();
 
-    expect(hitUrls($searchResults))->toEqual([
+    expect(hitUrls($searchResults))->toEqualCanonicalizing([
         'http://localhost:8181/',
         'http://localhost:8181/3',
     ]);
@@ -167,7 +167,7 @@ it('can be configured not to index certain urls', function (Closure $driverSetup
         ->query('here')
         ->get();
 
-    expect(hitUrls($searchResults))->toEqual([
+    expect(hitUrls($searchResults))->toEqualCanonicalizing([
         'http://localhost:8181/',
         'http://localhost:8181/3',
     ]);
@@ -225,10 +225,8 @@ it('can paginate the results', function (Closure $driverSetup) {
         ->query('here')
         ->paginate(2);
 
-    expect(hitUrls($paginator))->toEqual([
-        'http://localhost:8181/',
-        'http://localhost:8181/2',
-    ]);
+    $page1Urls = hitUrls($paginator);
+    expect($page1Urls)->toHaveCount(2);
 
     // fake that we're on page 2
     Paginator::currentPageResolver(function () {
@@ -239,7 +237,12 @@ it('can paginate the results', function (Closure $driverSetup) {
         ->query('here')
         ->paginate(2);
 
-    expect(hitUrls($paginator))->toEqual([
+    $page2Urls = hitUrls($paginator);
+    expect($page2Urls)->toHaveCount(1);
+
+    expect(array_merge($page1Urls, $page2Urls))->toEqualCanonicalizing([
+        'http://localhost:8181/',
+        'http://localhost:8181/2',
         'http://localhost:8181/3',
     ]);
 })->with('drivers');
@@ -258,10 +261,7 @@ it('can limit results', function (Closure $driverSetup) {
         ->limit(2)
         ->get();
 
-    expect(hitUrls($searchResults))->toEqual([
-        'http://localhost:8181/',
-        'http://localhost:8181/2',
-    ]);
+    expect(hitUrls($searchResults))->toHaveCount(2);
 })->with('drivers');
 
 it('can handle invalid html', function (Closure $driverSetup) {

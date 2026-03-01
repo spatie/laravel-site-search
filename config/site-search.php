@@ -69,7 +69,7 @@ return [
      * - SqliteDriver: uses a local SQLite database with FTS5 full-text search (no external dependencies)
      * - ArrayDriver: in-memory driver for testing
      */
-    'default_driver' =>  Spatie\SiteSearch\Drivers\SqliteDriver::class,
+    'default_driver' => Spatie\SiteSearch\Drivers\SqliteDriver::class,
 
     /*
      * This job is responsible for crawling your site. To customize this job,

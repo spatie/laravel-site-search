@@ -66,7 +66,7 @@ class QueryBuilder
         }
 
         $terms = array_map(
-            fn (string $word) => '"' . $word . '"*',
+            fn (string $word) => '"'.$word.'"*',
             $words
         );
 

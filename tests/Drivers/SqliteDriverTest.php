@@ -5,7 +5,7 @@ use Spatie\SiteSearch\Drivers\SqliteDriver;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 beforeEach(function () {
-    $this->tempDir = sys_get_temp_dir() . '/site-search-test-' . uniqid();
+    $this->tempDir = sys_get_temp_dir().'/site-search-test-'.uniqid();
     mkdir($this->tempDir, 0755, true);
 
     $this->config = SiteSearchConfig::factory()->create([
@@ -130,7 +130,7 @@ it('can delete an index', function () {
 });
 
 it('handles pending index pattern for atomic swap', function () {
-    $pendingName = 'my-site-' . Str::random(16);
+    $pendingName = 'my-site-'.Str::random(16);
 
     $this->driver->createIndex($pendingName);
     $this->driver->updateDocument($pendingName, [
@@ -268,7 +268,7 @@ it('can replace existing document with same id', function () {
 it('swaps temp to final after crawling workflow', function () {
     // Simulate the CrawlSiteJob workflow
     $baseName = 'my-site';
-    $pendingName = $baseName . '-' . Str::random(16);
+    $pendingName = $baseName.'-'.Str::random(16);
 
     // Step 1: Create the pending index (like createNewIndex in CrawlSiteJob)
     $this->driver->createIndex($pendingName);

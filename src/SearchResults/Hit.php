@@ -15,9 +15,7 @@ use Carbon\Carbon;
  */
 class Hit
 {
-    public function __construct(protected array $properties)
-    {
-    }
+    public function __construct(protected array $properties) {}
 
     public function __get(string $name): mixed
     {
@@ -72,7 +70,7 @@ class Hit
             return $this->url;
         }
 
-        return strtok($this->url, '#') . '#' . $anchor;
+        return strtok($this->url, '#').'#'.$anchor;
     }
 
     protected function getSnippetProperty(): string

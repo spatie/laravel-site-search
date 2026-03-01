@@ -37,9 +37,7 @@ class DefaultSearchProfile implements SearchProfile
         return new $defaultIndexer($url, $response);
     }
 
-    public function configureCrawler(Crawler $crawler): void
-    {
-    }
+    public function configureCrawler(Crawler $crawler): void {}
 
     protected function hasDoNotIndexHeader(CrawlResponse $response): bool
     {

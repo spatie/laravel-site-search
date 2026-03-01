@@ -9,6 +9,7 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 class ArrayDriver implements Driver
 {
     protected array $indexes = [];
+
     protected array $documents = [];
 
     public static function make(SiteSearchConfig $config): self
@@ -20,8 +21,7 @@ class ArrayDriver implements Driver
 
     public function __construct(
         protected LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function createIndex(string $indexName): self
     {

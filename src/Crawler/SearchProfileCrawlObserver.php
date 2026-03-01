@@ -21,8 +21,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
         protected string $indexName,
         protected SearchProfile $searchProfile,
         protected Driver $driver
-    ) {
-    }
+    ) {}
 
     public function crawled(
         string $url,
@@ -56,7 +55,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
                     'anchor' => $entry['anchor'] ?? null,
                     'description' => $description,
                     'date_modified_timestamp' => $dateModified?->getTimestamp(),
-                    'id' => (string)Str::uuid(),
+                    'id' => (string) Str::uuid(),
                 ], $extra);
             })
             ->toArray();

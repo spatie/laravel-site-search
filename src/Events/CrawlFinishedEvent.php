@@ -10,6 +10,5 @@ class CrawlFinishedEvent
     public function __construct(
         public FinishReason $finishReason,
         public CrawlProgress $progress,
-    ) {
-    }
+    ) {}
 }

@@ -16,8 +16,7 @@ class SqliteDriver implements Driver
         protected DatabaseManager $databaseManager,
         protected SchemaManager $schemaManager,
         protected QueryBuilder $queryBuilder
-    ) {
-    }
+    ) {}
 
     public static function make(SiteSearchConfig $config): self
     {
@@ -27,8 +26,8 @@ class SqliteDriver implements Driver
         );
 
         $databaseManager = new DatabaseManager($storagePath);
-        $schemaManager = new SchemaManager();
-        $queryBuilder = new QueryBuilder();
+        $schemaManager = new SchemaManager;
+        $queryBuilder = new QueryBuilder;
 
         return new self($databaseManager, $schemaManager, $queryBuilder);
     }

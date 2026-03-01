@@ -9,8 +9,11 @@ use Spatie\SiteSearch\SearchResults\SearchResults;
 class Search
 {
     protected ?string $query = null;
+
     protected ?int $limit = null;
+
     protected int $offset = 0;
+
     protected array $searchParameters = [];
 
     public static function onIndex(string $indexName): self
@@ -22,8 +25,7 @@ class Search
 
     public function __construct(
         protected SiteSearch $siteSearch
-    ) {
-    }
+    ) {}
 
     public function query(string $query): self
     {

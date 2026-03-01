@@ -12,8 +12,7 @@ class DatabaseManager
 
     public function __construct(
         protected string $storagePath
-    ) {
-    }
+    ) {}
 
     public function getPath(string $indexName): string
     {
@@ -24,7 +23,7 @@ class DatabaseManager
 
     public function getTempPath(string $indexName): string
     {
-        return $this->getPath($indexName) . '.tmp';
+        return $this->getPath($indexName).'.tmp';
     }
 
     public function connect(string $indexName, bool $useTemp = false): Connection
@@ -40,7 +39,7 @@ class DatabaseManager
             $this->ensureDirectoryExists();
             $this->ensureDatabaseFileExists($path);
 
-            $connectionName = 'site_search_' . md5($cacheKey);
+            $connectionName = 'site_search_'.md5($cacheKey);
 
             // Ensure any existing connection with this name is purged first
             DB::purge($connectionName);
@@ -135,7 +134,7 @@ class DatabaseManager
 
     protected function closeConnection(string $path): void
     {
-        $connectionName = 'site_search_' . md5($path);
+        $connectionName = 'site_search_'.md5($path);
         DB::purge($connectionName);
         unset($this->connections[$path]);
     }
@@ -143,7 +142,7 @@ class DatabaseManager
     protected function flushPendingWrites(string $path): void
     {
         if (file_exists($path)) {
-            $connectionName = 'site_search_checkpoint_' . md5($path);
+            $connectionName = 'site_search_checkpoint_'.md5($path);
 
             DB::connectUsing($connectionName, [
                 'driver' => 'sqlite',

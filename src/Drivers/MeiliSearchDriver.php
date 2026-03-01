@@ -29,8 +29,7 @@ class MeiliSearchDriver implements Driver
     public function __construct(
         protected MeiliSearchClient $meilisearch,
         protected $settings = [],
-    ) {
-    }
+    ) {}
 
     public function createIndex(string $indexName): self
     {

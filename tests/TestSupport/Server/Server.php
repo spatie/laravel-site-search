@@ -9,11 +9,11 @@ class Server
 {
     protected Client $client;
 
-    public function __construct(Client $client = null)
+    public function __construct(?Client $client = null)
     {
         static::boot();
 
-        $this->client = $client ?? new Client();
+        $this->client = $client ?? new Client;
     }
 
     public static function boot()
@@ -57,6 +57,6 @@ class Server
 
     public static function activateRoutes(string $routeConfiguration)
     {
-        file_put_contents(__DIR__ ."/public/config.json", json_encode(['routes' => $routeConfiguration]));
+        file_put_contents(__DIR__.'/public/config.json', json_encode(['routes' => $routeConfiguration]));
     }
 }

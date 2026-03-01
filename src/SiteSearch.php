@@ -34,11 +34,10 @@ class SiteSearch
     }
 
     public function __construct(
-        protected string        $indexName,
-        protected Driver        $driver,
+        protected string $indexName,
+        protected Driver $driver,
         protected SearchProfile $searchProfile,
-    ) {
-    }
+    ) {}
 
     public function crawl(string $baseUrl): self
     {

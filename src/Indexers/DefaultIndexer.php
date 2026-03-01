@@ -9,7 +9,9 @@ use Symfony\Component\DomCrawler\Crawler;
 class DefaultIndexer implements Indexer
 {
     protected Crawler $domCrawler;
+
     protected ?string $currentAnchor = null;
+
     protected array $entries = [];
 
     public function __construct(
@@ -144,7 +146,7 @@ class DefaultIndexer implements Indexer
         return attempt(function () {
             $this->removeIgnoredContent($this->domCrawler);
 
-            return $this->domCrawler->filter("body")->html();
+            return $this->domCrawler->filter('body')->html();
         });
     }
 

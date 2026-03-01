@@ -6,7 +6,5 @@ use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 class IndexingEndedEvent
 {
-    public function __construct(public SiteSearchConfig $siteSearchConfig)
-    {
-    }
+    public function __construct(public SiteSearchConfig $siteSearchConfig) {}
 }

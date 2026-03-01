@@ -16,7 +16,7 @@ use Spatie\SiteSearch\Events\NewIndexCreatedEvent;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SiteSearch;
 
-class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
+class CrawlSiteJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -32,8 +32,7 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
 
     public function __construct(
         public SiteSearchConfig $siteSearchConfig
-    ) {
-    }
+    ) {}
 
     public function uniqueId(): string
     {
@@ -64,7 +63,7 @@ class CrawlSiteJob implements ShouldQueue, ShouldBeUnique
         $driver = $this->siteSearchConfig->getDriver();
 
         collect($driver->allIndexNames())
-            ->filter(fn (string $indexName) => str_starts_with($indexName, $this->siteSearchConfig->index_base_name . '-'))
+            ->filter(fn (string $indexName) => str_starts_with($indexName, $this->siteSearchConfig->index_base_name.'-'))
             ->reject(function (string $indexName) {
                 return in_array($indexName, [
                     $this->siteSearchConfig->index_name,

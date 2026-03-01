@@ -17,7 +17,7 @@ use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
 
 dataset('drivers', [
     'sqlite' => [fn () => [
-        'extra' => ['sqlite' => ['storage_path' => sys_get_temp_dir() . '/site-search-test-' . uniqid()]],
+        'extra' => ['sqlite' => ['storage_path' => sys_get_temp_dir().'/site-search-test-'.uniqid()]],
     ]],
     'meilisearch' => [fn () => [
         'driver_class' => \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
@@ -96,7 +96,6 @@ it('can determine the number of indexed urls', function (Closure $driverSetup) {
     expect($this->siteSearchConfig->refresh()->number_of_urls_indexed)->toEqual(3);
 })->with('drivers');
 
-
 it('can use a search profile to not to crawl a specific url', function (Closure $driverSetup) {
     $this->siteSearchConfig->update(array_merge($driverSetup(), [
         'profile_class' => DoNotCrawlSecondLinkSearchProfile::class,
@@ -144,7 +143,7 @@ it('can be configured not to crawl certain urls', function (Closure $driverSetup
     Server::activateRoutes('chain');
 
     config()->set('site-search.do_not_crawl_urls', [
-         '/2',
+        '/2',
     ]);
 
     dispatch(new CrawlSiteJob($this->siteSearchConfig));

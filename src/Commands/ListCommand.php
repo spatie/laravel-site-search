@@ -15,7 +15,7 @@ class ListCommand extends Command
         [$headers, $rows] = $this->getHeadersAndRows();
 
         if (count($rows) === 0) {
-            $this->warn("You need to run php artisan site-search:create first");
+            $this->warn('You need to run php artisan site-search:create first');
         }
 
         $this->info('Site search configs');
@@ -27,23 +27,22 @@ class ListCommand extends Command
     public function getStatus(SiteSearchConfig $searchConfig): string
     {
         if (! $searchConfig->index_name) {
-            return "⚠️ Waiting on first crawl";
+            return '⚠️ Waiting on first crawl';
         }
 
         if ($searchConfig->pending_index_name) {
-            return "🕷 Crawling...";
+            return '🕷 Crawling...';
         }
 
         try {
             if ($searchConfig->getDriver()->isProcessing($searchConfig->index_name)) {
-                return "⚠️ Processing...";
+                return '⚠️ Processing...';
             }
         } catch (ApiException) {
-            return "🚨 Did not find index";
+            return '🚨 Did not find index';
         }
 
-
-        return "✅ OK";
+        return '✅ OK';
     }
 
     protected function getHeadersAndRows(): array

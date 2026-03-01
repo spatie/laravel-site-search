@@ -31,7 +31,7 @@ class SiteSearchConfig extends Model
 
     public function generateAndUpdatePendingIndexName(): string
     {
-        $pendingIndexName = $this->index_base_name . '-' . Str::random();
+        $pendingIndexName = $this->index_base_name.'-'.Str::random();
 
         $this->update(['pending_index_name' => $pendingIndexName]);
 

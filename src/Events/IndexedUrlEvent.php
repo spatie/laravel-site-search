@@ -12,6 +12,5 @@ class IndexedUrlEvent
         public CrawlResponse $response,
         public CrawlProgress $progress,
         public ?string $foundOnUrl = null,
-    ) {
-    }
+    ) {}
 }

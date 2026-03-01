@@ -12,6 +12,5 @@ class FailedToCrawlUrlEvent
         public RequestException $requestException,
         public CrawlProgress $progress,
         public ?string $foundOnUrl = null,
-    ) {
-    }
+    ) {}
 }

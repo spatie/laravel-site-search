@@ -5,7 +5,7 @@ weight: 1
 
 This package will crawl your entire site and will put the content in a search index. This way, the entire content of your site is searchable. Think of it as a private Google search index.
 
-The package supports two search drivers: **Meilisearch** and **SQLite**. The search and indexing API is the same regardless of which driver you use.
+The package supports two search drivers: SQLite (default) and Meilisearch. The search and indexing API is the same regardless of which driver you use.
 
 The configuration for each site that needs to be crawled is saved in the `site_search_configs` table. You can manually create a row in that table or run this artisan command: [`site-search:create-index`](https://spatie.be/docs/laravel-site-search/v1/basic-usage/indexing-your-first-site).
 

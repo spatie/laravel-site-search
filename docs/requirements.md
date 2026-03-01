@@ -3,7 +3,7 @@ title: Requirements
 weight: 5
 ---
 
-Laravel Site Search requires **PHP 8.0+** and **Laravel 8**.
+Laravel Site Search requires PHP 8.4+ and Laravel 12+.
 
-When using the Meilisearch driver, a running **Meilisearch** instance is also required. The SQLite driver has no additional dependencies.
+The default SQLite driver has no additional dependencies. When using the Meilisearch driver, a running Meilisearch instance is also required.
 

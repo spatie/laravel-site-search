@@ -3,17 +3,7 @@ title: Using the SQLite driver
 weight: 5
 ---
 
-The SQLite driver uses SQLite's FTS5 (Full-Text Search 5) engine to provide full-text search with no external dependencies. It's a great choice when you don't want to run a separate Meilisearch instance.
-
-## Setting up the SQLite driver
-
-Update your `config/site-search.php` to use the SQLite driver:
-
-```php
-'default_driver' => Spatie\SiteSearch\Drivers\SqliteDriver::class,
-```
-
-Or set the `driver_class` on a specific `SiteSearchConfig` model to use SQLite for individual indexes.
+The SQLite driver is the default driver. It uses SQLite's FTS5 (Full-Text Search 5) engine to provide full-text search with no external dependencies.
 
 ## Customizing the storage path
 
@@ -37,11 +27,11 @@ When a crawl is in progress, the new index is built in a temporary `.sqlite.tmp`
 
 ### Search features
 
-- **Full-text search** with porter stemming (e.g. "running" matches "run")
-- **Prefix matching** (e.g. "auth" matches "authentication")
-- **BM25 ranking** with field-specific weights — matches in headings are ranked higher than matches in body content
-- **Highlighted snippets** with matching terms wrapped in `<em>` tags
-- **Deep linking** — search results include anchor links to specific sections (e.g., `https://example.com/page#installation`)
+- Full-text search with porter stemming (e.g. "running" matches "run")
+- Prefix matching (e.g. "auth" matches "authentication")
+- BM25 ranking with field-specific weights, matches in headings are ranked higher than matches in body content
+- Highlighted snippets with matching terms wrapped in `<em>` tags
+- Deep linking, search results include anchor links to specific sections (e.g., `https://example.com/page#installation`)
 
 ## Deep linking to sections
 

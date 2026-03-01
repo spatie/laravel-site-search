@@ -127,7 +127,7 @@ return [
      * - SqliteDriver: uses a local SQLite database with FTS5 full-text search (no external dependencies)
      * - ArrayDriver: in-memory driver for testing
      */
-    'default_driver' =>  Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
+    'default_driver' =>  Spatie\SiteSearch\Drivers\SqliteDriver::class,
 
     /*
      * This job is responsible for crawling your site. To customize this job,
@@ -138,23 +138,15 @@ return [
 ];
 ```
 
-## Choose a search driver
+## Search driver
 
-This package supports two search drivers. You only need to set up the one you plan to use.
+The default driver is SQLite, which uses SQLite FTS5 for full-text search. It requires no external services. The SQLite databases will be stored in `storage/site-search` by default. See [Using the SQLite driver](/docs/laravel-site-search/v1/advanced-usage/using-the-sqlite-driver) for more configuration options.
 
-### Option A: SQLite driver (no external dependencies)
-
-The SQLite driver uses SQLite FTS5 for full-text search and requires no external services. To use it, update your config file:
+If you need advanced features like synonyms and custom ranking rules, you can use the Meilisearch driver instead. Update your config file:
 
 ```php
-'default_driver' => Spatie\SiteSearch\Drivers\SqliteDriver::class,
+'default_driver' => Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
 ```
-
-That's it! The SQLite databases will be stored in `storage/site-search` by default. See [Using the SQLite driver](/docs/laravel-site-search/v1/advanced-usage/using-the-sqlite-driver) for more configuration options.
-
-### Option B: Meilisearch driver
-
-The Meilisearch driver provides blazing fast search with advanced features like synonyms and custom ranking rules. It requires a running Meilisearch instance.
 
 First, require the Meilisearch PHP client:
 
@@ -190,8 +182,8 @@ Finally, you can run the binary and make sure it keeps running. In the Forge Das
 - Directory: leave blank
 - Processes: `1`
 
-These instructions were take from [this gist](https://gist.github.com/josecanhelp/126d627ef125538943f33253d16fc882) by Jose Soto.
+These instructions were taken from [this gist](https://gist.github.com/josecanhelp/126d627ef125538943f33253d16fc882) by Jose Soto.
 
-#### Authenticating requests to Meilisearch
+### Authenticating requests to Meilisearch
 
-To avoid unauthorized persons making request to Meilisearch, either block Meilisearch's default port (7700) in your firewall, or make sure all requests [use authentication](/docs/laravel-site-search/v1/basic-usage/authenticating-requests).
+To avoid unauthorized persons making requests to Meilisearch, either block Meilisearch's default port (7700) in your firewall, or make sure all requests [use authentication](/docs/laravel-site-search/v1/basic-usage/authenticating-requests).

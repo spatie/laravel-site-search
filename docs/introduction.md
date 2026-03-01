@@ -7,8 +7,8 @@ This package can crawl and index one or more sites. You can think of it as a pri
 
 Two search drivers are available:
 
-- **Meilisearch** — blazing fast search speeds, supports [synonyms](https://spatie.be/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings#modifying-index-settings) and other advanced Meilisearch features. Requires a running Meilisearch instance.
-- **SQLite** — uses SQLite FTS5 for full-text search with no external dependencies. A great choice when you want to keep things simple.
+- SQLite (default): uses SQLite FTS5 for full-text search with no external dependencies. A great choice for most use cases.
+- Meilisearch: blazing fast search speeds, supports [synonyms](https://spatie.be/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings#modifying-index-settings) and other advanced Meilisearch features. Requires a running Meilisearch instance.
 
 When crawling your site, multiple concurrent connections are used to speed up the crawling process.
 

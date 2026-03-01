@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Laravel Site Search is a Spatie package that crawls and indexes websites to provide full-text search functionality. It uses Meilisearch as the search engine and Spatie Crawler for site crawling.
+Laravel Site Search is a Spatie package that crawls and indexes websites to provide full-text search functionality. It uses SQLite FTS5 as the default search engine (with optional Meilisearch support) and Spatie Crawler for site crawling.
 
 ## Common Commands
 
 ```bash
-# Run tests (requires Meilisearch running locally on port 7700)
+# Run tests
 composer test
 
 # Run a single test
@@ -18,7 +18,7 @@ composer test
 # Run tests in a specific file
 ./vendor/bin/pest tests/Feature/IntegrationTest.php
 
-# Start Meilisearch via Docker (required for tests)
+# Start Meilisearch via Docker (required for Meilisearch-specific tests)
 docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analytics=true
 ```
 
@@ -26,7 +26,7 @@ docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analyt
 
 ### Core Components
 
-**Driver** (`src/Drivers/Driver.php`) - Interface for search engine backends. `MeiliSearchDriver` is the production implementation, `ArrayDriver` is for testing.
+**Driver** (`src/Drivers/Driver.php`) - Interface for search engine backends. `SqliteDriver` is the default implementation, `MeiliSearchDriver` is available for advanced use cases, and `ArrayDriver` is for testing.
 
 **SearchProfile** (`src/Profiles/SearchProfile.php`) - Controls crawling behavior: which URLs to crawl, which to index, which indexer to use, and crawler configuration.
 
@@ -57,4 +57,4 @@ docker run -d -p 7700:7700 getmeili/meilisearch:latest ./meilisearch --no-analyt
 
 ## Testing
 
-Tests use a local test server (`tests/TestSupport/Server/`) with route files that return specific HTML responses. Integration tests require Meilisearch running locally and use `waitForMeilisearch()` to ensure indexing completes.
+Tests use a local test server (`tests/TestSupport/Server/`) with route files that return specific HTML responses. Integration tests run against both SQLite and Meilisearch drivers. Meilisearch tests require a local Meilisearch instance and use `waitForDriver()` to ensure indexing completes.

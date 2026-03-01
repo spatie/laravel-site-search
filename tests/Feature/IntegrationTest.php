@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Pagination\Paginator;
-use Spatie\SiteSearch\Drivers\SqliteDriver;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\Search;
@@ -12,17 +11,20 @@ use Tests\TestSupport\TestClasses\SearchProfiles\ModifyUrlSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
 
 dataset('drivers', [
-    'meilisearch' => [fn () => []],
     'sqlite' => [fn () => [
-        'driver_class' => SqliteDriver::class,
         'extra' => ['sqlite' => ['storage_path' => sys_get_temp_dir() . '/site-search-test-' . uniqid()]],
+    ]],
+    'meilisearch' => [fn () => [
+        'driver_class' => \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
     ]],
 ]);
 
 beforeEach(function () {
     Server::boot();
 
-    $this->siteSearchConfig = SiteSearchConfig::factory()->create();
+    $this->siteSearchConfig = SiteSearchConfig::factory()->create([
+        'driver_class' => \Spatie\SiteSearch\Drivers\SqliteDriver::class,
+    ]);
 });
 
 afterEach(function () {
@@ -305,7 +307,10 @@ it('can add extra properties', function (Closure $driverSetup) {
 })->with('drivers');
 
 it('synonyms can be specified by customizing the index settings', function () {
-    $this->siteSearchConfig->update(['profile_class' => SearchProfileWithCustomIndexer::class]);
+    $this->siteSearchConfig->update([
+        'profile_class' => SearchProfileWithCustomIndexer::class,
+        'driver_class' => \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
+    ]);
 
     $extraValue = [
         'meilisearch' => [

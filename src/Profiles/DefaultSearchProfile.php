@@ -41,8 +41,10 @@ class DefaultSearchProfile implements SearchProfile
 
     protected function hasDoNotIndexHeader(CrawlResponse $response): bool
     {
+        $responseHeaders = array_change_key_case($response->headers());
+
         foreach (config('site-search.do_not_index_content_headers') as $headerName) {
-            if ($response->toPsrResponse()->hasHeader($headerName)) {
+            if (array_key_exists(strtolower($headerName), $responseHeaders)) {
                 return true;
             }
         }

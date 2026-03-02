@@ -19,7 +19,6 @@
     ],
     "require": {
         "php": "^8.4",
-        "guzzlehttp/psr7": "^2.8",
         "illuminate/contracts": "^12.0|^13.0",
         "illuminate/http": "^12.0|^13.0",
         "laravel/prompts": "^0.1.23|^0.3.13",

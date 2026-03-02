@@ -9,6 +9,7 @@ use Spatie\Crawler\CrawlProgress;
 use Spatie\Crawler\CrawlResponse;
 use Spatie\Crawler\Enums\FinishReason;
 use Spatie\Crawler\Enums\ResourceType;
+use Spatie\Crawler\TransferStatistics;
 use Spatie\SiteSearch\Drivers\Driver;
 use Spatie\SiteSearch\Events\CrawlFinishedEvent;
 use Spatie\SiteSearch\Events\FailedToCrawlUrlEvent;
@@ -72,6 +73,7 @@ class SearchProfileCrawlObserver extends CrawlObserver
         ?string $foundOnUrl = null,
         ?string $linkText = null,
         ?ResourceType $resourceType = null,
+        ?TransferStatistics $transferStats = null,
     ): void {
         event(new FailedToCrawlUrlEvent($url, $requestException, $progress, $foundOnUrl));
     }

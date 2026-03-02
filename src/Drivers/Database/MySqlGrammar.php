@@ -89,13 +89,40 @@ class MySqlGrammar extends Grammar
         $pattern = '/\b('.implode('|', array_map('preg_quote', $words)).')\w*/i';
 
         if (! empty($row['entry'])) {
-            $row['entry_highlighted'] = preg_replace($pattern, '<em>$0</em>', $row['entry']);
+            $row['entry_highlighted'] = $this->extractSnippet($row['entry'], $pattern);
         }
 
         if (! empty($row['description'])) {
-            $row['description_highlighted'] = preg_replace($pattern, '<em>$0</em>', $row['description']);
+            $row['description_highlighted'] = $this->extractSnippet($row['description'], $pattern);
         }
 
         return $row;
+    }
+
+    protected function extractSnippet(string $text, string $pattern, int $contextChars = 200): string
+    {
+        if (! preg_match($pattern, $text, $match, PREG_OFFSET_CAPTURE)) {
+            return mb_substr($text, 0, $contextChars * 2);
+        }
+
+        $matchPos = $match[0][1];
+        $start = max(0, $matchPos - $contextChars);
+        $length = $contextChars * 2;
+
+        $snippet = mb_substr($text, $start, $length);
+
+        if ($start > 0) {
+            $snippet = '…'.ltrim(substr($snippet, (int) strpos($snippet, ' ') + 1));
+        }
+
+        if ($start + $length < strlen($text)) {
+            $lastSpace = strrpos($snippet, ' ');
+            if ($lastSpace !== false) {
+                $snippet = substr($snippet, 0, $lastSpace);
+            }
+            $snippet .= '…';
+        }
+
+        return preg_replace($pattern, '<em>$0</em>', $snippet);
     }
 }

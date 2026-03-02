@@ -121,6 +121,27 @@ it('returns highlighted entry and description', function () {
     expect($results[0]['description_highlighted'])->toContain('<em>Laravel</em>');
 });
 
+it('returns short snippets for long entries', function () {
+    $this->grammar->ensureFtsSetup($this->connection);
+
+    $longEntry = str_repeat('Lorem ipsum dolor sit amet. ', 100)
+        .'Laravel is a great framework. '
+        .str_repeat('Consectetur adipiscing elit. ', 100);
+
+    $this->connection->table('site_search_documents')->insert([
+        'index_name' => 'test',
+        'document_id' => 'doc1',
+        'url' => 'https://example.com',
+        'entry' => $longEntry,
+    ]);
+
+    $results = $this->grammar->search($this->connection, 'test', 'Laravel', 10, 0);
+
+    expect($results[0]['entry_highlighted'])
+        ->toContain('<em>Laravel</em>')
+        ->and(strlen($results[0]['entry_highlighted']))->toBeLessThan(strlen($longEntry));
+});
+
 it('supports prefix matching', function () {
     $this->grammar->ensureFtsSetup($this->connection);
 

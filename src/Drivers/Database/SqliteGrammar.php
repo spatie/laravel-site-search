@@ -57,8 +57,8 @@ class SqliteGrammar extends Grammar
 
         return $connection->table('site_search_documents_fts')
             ->select('d.*')
-            ->selectRaw("highlight(site_search_documents_fts, 5, '<em>', '</em>') as entry_highlighted")
-            ->selectRaw("highlight(site_search_documents_fts, 6, '<em>', '</em>') as description_highlighted")
+            ->selectRaw("snippet(site_search_documents_fts, 5, '<em>', '</em>', '…', 30) as entry_highlighted")
+            ->selectRaw("snippet(site_search_documents_fts, 6, '<em>', '</em>', '…', 30) as description_highlighted")
             ->selectRaw('bm25(site_search_documents_fts, 0, 0, 1.0, 2.0, 1.0, 5.0, 3.0) as rank')
             ->join('site_search_documents as d', 'site_search_documents_fts.rowid', '=', 'd.id')
             ->whereRaw('site_search_documents_fts MATCH ?', [$ftsQuery])

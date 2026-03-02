@@ -148,6 +148,28 @@ it('returns highlighted snippets', function () {
     expect($hit->highlightedSnippet())->toContain('<em>brown</em>');
 });
 
+it('returns short highlighted snippets for long consolidated entries', function () {
+    $this->driver->createIndex('test-index');
+
+    $longEntry = str_repeat('Some filler text here. ', 200)
+        .'Laravel is an amazing PHP framework. '
+        .str_repeat('More filler text here. ', 200);
+
+    $this->driver->updateDocument('test-index', [
+        'id' => 'doc1',
+        'url' => 'https://example.com/test',
+        'entry' => $longEntry,
+        'date_modified_timestamp' => time(),
+    ]);
+
+    $results = $this->driver->search('test-index', 'Laravel');
+    $hit = $results->hits->first();
+
+    expect($hit->highlightedSnippet())
+        ->toContain('<em>Laravel</em>')
+        ->and(strlen($hit->highlightedSnippet()))->toBeLessThan(strlen($longEntry));
+});
+
 it('can delete an index', function () {
     $this->driver->createIndex('test-index');
 

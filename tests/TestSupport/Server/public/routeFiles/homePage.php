@@ -1,3 +1,5 @@
 <?php
 
-$router->get('/', fn () => view('minimalPage'));
+return [
+    '/' => ['view' => 'minimalPage.blade.php'],
+];

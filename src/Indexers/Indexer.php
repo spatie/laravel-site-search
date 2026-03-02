@@ -3,7 +3,6 @@
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
-use Psr\Http\Message\UriInterface;
 
 interface Indexer
 {
@@ -23,6 +22,12 @@ interface Indexer
      *
      * This function should return the content of the response chopped up in
      * little pieces of text of a few sentences long.
+     *
+     * Each entry should be an array with 'text' and optionally 'anchor' keys:
+     * [
+     *     ['text' => 'Introduction text...', 'anchor' => 'intro'],
+     *     ['text' => 'Installation guide...', 'anchor' => 'installation'],
+     * ]
      */
     public function entries(): array;
 
@@ -31,6 +36,11 @@ interface Indexer
      * was modified for the last time.
      */
     public function dateModified(): ?CarbonInterface;
+
+    /*
+     * The meta description that should be put in the search index.
+     */
+    public function description(): ?string;
 
     /*
      * Any keys and values this function returns will also
@@ -44,5 +54,5 @@ interface Indexer
     /*
      * This function should return the url of the page.
      */
-    public function url(): UriInterface;
+    public function url(): string;
 }

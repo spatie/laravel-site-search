@@ -2,13 +2,12 @@
 
 namespace Tests\TestSupport\TestClasses\Indexers;
 
-use Psr\Http\Message\UriInterface;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
 
 class IndexerWithModifiedUrl extends DefaultIndexer
 {
-    public function url(): UriInterface
+    public function url(): string
     {
-        return $this->url->withQuery('');
+        return strtok($this->url, '?');
     }
 }

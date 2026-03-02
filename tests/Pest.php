@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Pagination\Paginator;
-use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
@@ -11,12 +10,25 @@ uses(TestCase::class)
     ->beforeEach(fn () => ray()->clearScreen())
     ->in(__DIR__);
 
-function waitForMeilisearch(SiteSearchConfig $siteSearchConfig): void
+function waitForDriver(SiteSearchConfig $siteSearchConfig): void
 {
+    $driverClass = $siteSearchConfig->driver_class ?? config('site-search.default_driver');
+
+    if ($driverClass !== \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class) {
+        return;
+    }
+
     $indexName = $siteSearchConfig->refresh()->index_name;
 
-    while (MeiliSearchDriver::make($siteSearchConfig)->isProcessing($indexName)) {
-        sleep(1);
+    $client = new MeiliSearch\Client('http://127.0.0.1:7700');
+
+    $tasks = $client->getTasks(new MeiliSearch\Contracts\TasksQuery([
+        'indexUids' => [$indexName],
+        'statuses' => ['enqueued', 'processing'],
+    ]));
+
+    foreach ($tasks->getResults() as $task) {
+        $client->waitForTask($task['uid'], 10000);
     }
 }
 

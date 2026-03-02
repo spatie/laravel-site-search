@@ -7,7 +7,7 @@ On this page, you'll learn how to create an index, populate it by crawling your 
 
 First, you can run this command to define a site that needs to be indexed.
 
-```php
+```bash
 php artisan site-search:create-index
 ```
 
@@ -15,7 +15,7 @@ This command will ask for a name for your index, and the URL of your site that s
 
 After that you should run this command to start a queued job that crawls your site, and puts the content in a search index:
 
-```php
+```bash
 php artisan site-search:crawl
 ```
 

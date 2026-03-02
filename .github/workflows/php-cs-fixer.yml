@@ -3,19 +3,24 @@ name: Check & fix styling
 on: [push]
 
 jobs:
-  php-cs-fixer:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Run PHP CS Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          args: --config=.php_cs.dist.php --allow-risky=yes
+          php-version: '8.5'
+
+      - name: Run Pint
+        run: |
+          composer global require laravel/pint
+          pint
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4

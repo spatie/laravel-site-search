@@ -4,17 +4,16 @@ namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
+use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 use function Laravel\Prompts\form;
 use function Laravel\Prompts\outro;
-
-use Spatie\SiteSearch\Models\SiteSearchConfig;
 
 class CreateSearchConfigCommand extends Command
 {
     protected $signature = 'site-search:create-index';
 
-    public function handle()
+    public function handle(): void
     {
         [, $name, $url] = form()->intro("Let's create your index!")
             ->text(
@@ -43,6 +42,6 @@ class CreateSearchConfigCommand extends Command
             'enabled' => 1,
         ]);
 
-        outro('Your index has been created.' . PHP_EOL . 'You should now run `php artisan site-search:crawl` to fill your index');
+        outro('Your index has been created.'.PHP_EOL.'You should now run `php artisan site-search:crawl` to fill your index');
     }
 }

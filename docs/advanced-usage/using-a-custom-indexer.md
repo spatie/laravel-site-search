@@ -7,7 +7,7 @@ When a site gets crawled, each of the pages is fed to a [search profile](/docs/l
 
 By default, the `Spatie\SiteSearch\Indexers\DefaultIndexer` is used. This indexer makes the best effort in determining the page title, description, and content of your page.
 
-The implementation of `entries()` of the `DefaultIndexer` will chop up your content in pieces of a few sentences long. We do this to keep the record size within [the limits of Meilisearch](https://docs.meilisearch.com/reference/features/known_limitations.html#design-limitations).
+The implementation of `entries()` of the `DefaultIndexer` will extract text content from your page. The database driver consolidates all entries for a URL into a single row, so each page results in one search record.
 
 If the results yielded by `DefaultIndexer` are not good enough for your content, you can create a custom indexer. An indexer is any class that implements `Spatie\SiteSearch\Indexers\Indexer`. Here's how that interface looks like.
 
@@ -15,7 +15,6 @@ If the results yielded by `DefaultIndexer` are not good enough for your content,
 namespace Spatie\SiteSearch\Indexers;
 
 use Carbon\CarbonInterface;
-use Psr\Http\Message\UriInterface;
 
 interface Indexer
 {
@@ -30,11 +29,17 @@ interface Indexer
     public function h1(): ?string;
 
     /*
-     * We can index all html of the page directly, as most search engines have
-     * a small limit on how long a search entry should be.
+     * This function should return the content of the response chopped up in
+     * little pieces of text.
      *
-     * This function should return an array the content of the response chopped up in
-     * little pieces of text of a few sentences long.
+     * Each entry should be an array with 'text' and optionally 'anchor' keys:
+     * [
+     *     ['text' => 'Introduction text...', 'anchor' => 'intro'],
+     *     ['text' => 'More content...', 'anchor' => null],
+     * ]
+     *
+     * The database driver will consolidate all entries for a URL into
+     * a single row with concatenated text.
      */
     public function entries(): array;
 
@@ -45,18 +50,23 @@ interface Indexer
     public function dateModified(): ?CarbonInterface;
 
     /*
+     * The meta description that should be put in the search index.
+     */
+    public function description(): ?string;
+
+    /*
      * Any keys and values this function returns will also
      * be put in the search index. This is useful for adding
      * custom attributes.
-     * 
+     *
      * More info: https://spatie.be/docs/laravel-site-search/v1/advanced-usage/indexing-extra-properties
      */
     public function extra(): array;
-    
+
     /*
      * This function should return the url of the page.
      */
-     public function url(): UriInterface;
+    public function url(): string;
 }
 ```
 
@@ -98,14 +108,15 @@ Here's an example of a custom indexer to strip away the query parameters from th
 
 namespace App\Services\Search;
 
-use Psr\Http\Message\UriInterface;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
 
 class Indexer extends DefaultIndexer
 {
-    public function url(): UriInterface
+    public function url(): string
     {
-        return $this->url->withQuery('');
+        $parsed = parse_url($this->url);
+
+        return ($parsed['scheme'] ?? 'https') . '://' . ($parsed['host'] ?? '') . ($parsed['path'] ?? '/');
     }
 }
 ```
@@ -116,21 +127,19 @@ Here's an example of a custom indexer to use the canonical url (if applicable) a
 
 namespace App\Services\Search;
 
-use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\UriInterface;
 use Spatie\SiteSearch\Indexers\DefaultIndexer;
 
 class Indexer extends DefaultIndexer
 {
-    public function url(): UriInterface
+    public function url(): string
     {
         $canonical = attempt(fn () => $this->domCrawler->filter('link[rel="canonical"]')->first()->attr('href'));
-        
+
         if (! $canonical) {
             return parent::url();
         }
-        
-        return new Uri($canonical);
+
+        return $canonical;
     }
 }
 ```

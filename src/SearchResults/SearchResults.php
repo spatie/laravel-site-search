@@ -12,6 +12,5 @@ class SearchResults
         public int $totalCount,
         public int $limit,
         public int $offset,
-    ) {
-    }
+    ) {}
 }

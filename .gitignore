@@ -14,3 +14,4 @@ node_modules
 .php-cs-fixer.cache
 data.ms
 /tests/TestSupport/Server/public/config*
+.claude/

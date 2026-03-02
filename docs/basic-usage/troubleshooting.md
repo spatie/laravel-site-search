@@ -15,7 +15,7 @@ To use the ArrayDriver for debugging, update your `config/site-search.php` confi
 'default_driver' => Spatie\SiteSearch\Drivers\ArrayDriver::class,
 ```
 
-Or update the `driver_class` property in your `SiteSearchIndex` model.
+Or update the `driver_class` property on your `SiteSearchConfig` model.
 
 The ArrayDriver will log all operations to the Laravel log file, allowing you to see exactly what is happening during the crawl and index process.
 

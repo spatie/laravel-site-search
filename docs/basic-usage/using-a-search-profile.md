@@ -3,7 +3,7 @@ title: Using a search profile
 weight: 5
 ---
 
-A search profile determines which pages get crawled and what content gets indexed. In the `site-search` config file, you'll in the `default_profile` key that the `Spatie\SiteSearch\Profiles\DefaultSearchProfile::class` is being use by default.
+A search profile determines which pages get crawled and what content gets indexed. In the `site-search` config file, you'll find in the `default_profile` key that the `Spatie\SiteSearch\Profiles\DefaultSearchProfile::class` is being used by default.
 
 This default profile will instruct the indexing process:
 - to crawl each page of your site
@@ -21,15 +21,15 @@ If you want to customize the crawling and indexing behavior, you could opt to ex
 ```php
 namespace Spatie\SiteSearch\Profiles;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use Spatie\Crawler\Crawler;
+use Spatie\Crawler\CrawlResponse;
 use Spatie\SiteSearch\Indexers\Indexer;
 
 interface SearchProfile
 {
-    public function shouldCrawl(UriInterface $url, ResponseInterface $response): bool;
-    public function shouldIndex(UriInterface $url, ResponseInterface $response): bool;
-    public function useIndexer(UriInterface $url, ResponseInterface $response): ?Indexer;
+    public function shouldCrawl(string $url): bool;
+    public function shouldIndex(string $url, CrawlResponse $response): bool;
+    public function useIndexer(string $url, CrawlResponse $response): ?Indexer;
     public function configureCrawler(Crawler $crawler): void;
 }
 ```

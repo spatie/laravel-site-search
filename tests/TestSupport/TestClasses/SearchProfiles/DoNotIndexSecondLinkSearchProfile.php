@@ -2,16 +2,15 @@
 
 namespace Tests\TestSupport\TestClasses\SearchProfiles;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use Spatie\Crawler\CrawlResponse;
 use Spatie\SiteSearch\Profiles\DefaultSearchProfile;
 
 class DoNotIndexSecondLinkSearchProfile extends DefaultSearchProfile
 {
-    public function shouldIndex(UriInterface $url, ResponseInterface $response): bool
+    public function shouldIndex(string $url, CrawlResponse $response): bool
     {
         ray('indexing...');
 
-        return ! str_ends_with($url->getPath(), 2);
+        return ! str_ends_with(parse_url($url, PHP_URL_PATH), '2');
     }
 }

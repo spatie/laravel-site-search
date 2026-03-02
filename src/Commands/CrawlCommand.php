@@ -9,7 +9,7 @@ class CrawlCommand extends Command
 {
     public $signature = 'site-search:crawl {--sync}';
 
-    public function handle()
+    public function handle(): void
     {
         $sync = $this->option('sync');
         $crawlSiteJob = config('site-search.crawl_site_job');
@@ -18,11 +18,9 @@ class CrawlCommand extends Command
             ->each(function (SiteSearchConfig $siteSearchConfig) use ($sync, $crawlSiteJob) {
                 $this->comment("Dispatching job to crawl `{$siteSearchConfig->crawl_url}`");
 
-                if ($sync) {
-                    dispatch_sync(new $crawlSiteJob($siteSearchConfig));
-                } else {
-                    dispatch(new $crawlSiteJob($siteSearchConfig));
-                }
+                $dispatchFunction = $sync ? dispatch_sync(...) : dispatch(...);
+
+                $dispatchFunction(new $crawlSiteJob($siteSearchConfig));
             });
 
         $this->info('All done');

@@ -9,6 +9,5 @@ class NewIndexCreatedEvent
     public function __construct(
         public string $newIndexName,
         public SiteSearchConfig $siteSearchConfig,
-    ) {
-    }
+    ) {}
 }

@@ -16,7 +16,7 @@ class SiteSearchConfigFactory extends Factory
             'crawl_url' => 'http://localhost:8181',
             'index_base_name' => $this->faker->word,
             'enabled' => true,
-            'number_of_urls_indexed' => 'integer',
+            'number_of_urls_indexed' => 0,
         ];
     }
 }

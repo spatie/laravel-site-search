@@ -2,13 +2,12 @@
 
 namespace Tests\TestSupport\TestClasses\SearchProfiles;
 
-use Psr\Http\Message\UriInterface;
 use Spatie\SiteSearch\Profiles\DefaultSearchProfile;
 
 class DoNotCrawlSecondLinkSearchProfile extends DefaultSearchProfile
 {
-    public function shouldCrawl(UriInterface $url): bool
+    public function shouldCrawl(string $url): bool
     {
-        return ! str_ends_with($url->getPath(), 2);
+        return ! str_ends_with(parse_url($url, PHP_URL_PATH), '2');
     }
 }

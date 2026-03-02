@@ -8,6 +8,6 @@ class NoQuerySet extends Exception
 {
     public static function make(): self
     {
-        return new static('No query has been set');
+        return new self('No query has been set');
     }
 }

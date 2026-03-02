@@ -27,11 +27,11 @@ class YourIndexer extends Spatie\SiteSearch\Indexers\DefaultIndexer
 The extra properties will be available on a search result hit.
 
 ```php
-$searchResults = SearchIndexQuery::onIndex('my-index')->search('your query')->get(); 
+$searchResults = Search::onIndex('my-index')->query('your query')->get();
 
 $firstHit = $searchResults->hits->first();
 
 $firstHit->authorName; // returns the author name
 ```
 
-All extra properties are searchable by default. If you don't want any of your extra attributes to be searchable, you must [customize the search index settings](/docs/laravel-site-search/v1/advanced-usage/customizing-meilisearch-settings).
+All extra properties are searchable by default. When using the Meilisearch driver, you can [customize the index settings](/docs/laravel-site-search/v1/advanced-usage/using-the-meilisearch-driver#customizing-index-settings) to control which attributes are searchable.

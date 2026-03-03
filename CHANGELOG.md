@@ -1,10 +1,19 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 3.0.1 - 2026-03-03
+
+### What's Changed
+
+- Make CrawlCommand implement Isolatable to prevent overlapping runs (#57, fixes #56)
+
+This prevents multiple concurrent crawl processes from running simultaneously, which could overload the server being crawled.
+
 ## 3.0.0 - 2025-02-27
 
 ### New Features
 
 - **SQLite Driver**: New driver that uses SQLite FTS5 for full-text search with no external dependencies
+  
   - File-based storage in `storage/site-search/` (configurable)
   - FTS5 full-text search with porter stemming and unicode61 tokenization
   - BM25 ranking algorithm for relevance scoring
@@ -12,28 +21,34 @@ All notable changes to `laravel-site-search` will be documented in this file.
   - WAL mode for better concurrency
   - Prefix matching support
   - Highlighted search results with `<em>` tags
-
+  
 - **Deep Linking & Anchor Support**: Search results now include anchor links to specific page sections
+  
   - `Hit::urlWithAnchor()` method returns URLs with anchor fragments (e.g., `https://example.com/page#installation`)
   - Automatically extracts heading IDs (`<h1>` through `<h6>` with `id` attributes)
   - Works with all drivers (SQLite, MeiliSearch, ArrayDriver)
   - All drivers deduplicate search results by URL, returning the best match per page
+  
 
 ### Breaking Changes
 
 - **Indexer Interface Change**: `Indexer::entries()` now returns an array of arrays with `text` and optional `anchor` keys instead of an array of strings:
+  
   ```php
   // Before: ['text content', 'more text']
   // After: [['text' => 'text content', 'anchor' => 'heading-id'], ['text' => 'more text', 'anchor' => null]]
+  
   ```
-
 - **Driver Interface Change**: Added required `finalizeIndex(string $indexName): self` method to `Driver` interface
+  
   - Called after crawling completes to perform driver-specific finalization
   - SQLite driver uses this for atomic index swapping
   - Other drivers implement as no-op
-
+  
 - **Database Schema Change** (SQLite only): Added `anchor` column to `documents` table
+  
   - Existing SQLite databases will need to be re-indexed to populate anchor data
+  
 
 ### Improvements
 
@@ -72,7 +87,6 @@ Use MeiliSearch service container with health check in CI
 ## 2.6.0 - 2026-02-22
 
 Add Laravel 13 support
-
 
 ## 2.5.0 - 2025-06-20
 

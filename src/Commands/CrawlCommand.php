@@ -3,9 +3,10 @@
 namespace Spatie\SiteSearch\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\Isolatable;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 
-class CrawlCommand extends Command
+class CrawlCommand extends Command implements Isolatable
 {
     public $signature = 'site-search:crawl {--sync}';
 

@@ -15,6 +15,8 @@ class DefaultSearchProfile implements SearchProfile
 
     public function shouldIndex(string $url, CrawlResponse $response): bool
     {
+        $url = $this->normalizeUrl($url);
+
         if ($response->status() !== 200) {
             return false;
         }
@@ -32,6 +34,8 @@ class DefaultSearchProfile implements SearchProfile
 
     public function useIndexer(string $url, CrawlResponse $response): ?Indexer
     {
+        $url = $this->normalizeUrl($url);
+
         $defaultIndexer = config('site-search.default_indexer');
 
         return new $defaultIndexer($url, $response);
@@ -63,5 +67,10 @@ class DefaultSearchProfile implements SearchProfile
         }
 
         return false;
+    }
+
+    protected function normalizeUrl(string $url): string
+    {
+        return strtok($url, '?');
     }
 }

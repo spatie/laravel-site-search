@@ -176,6 +176,19 @@ class DefaultIndexer implements Indexer
 
     public function url(): string
     {
-        return $this->url;
+        return $this->stripQueryString($this->url);
+    }
+
+    protected function stripQueryString(string $url): string
+    {
+        $parsed = parse_url($url);
+
+        $scheme = isset($parsed['scheme']) ? $parsed['scheme'] . '://' : '';
+        $host = $parsed['host'] ?? '';
+        $port = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+        $path = $parsed['path'] ?? '';
+        $fragment = isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '';
+
+        return $scheme . $host . $port . $path . $fragment;
     }
 }

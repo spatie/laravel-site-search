@@ -41,6 +41,14 @@ In the `ignore_content_on_urls` key of the `site-search` config file, you may sp
 
 If your site's response contains a header whose name is in the `do_not_index_content_headers` of the `site-search` config file, then that page will not be indexed.
 
+## Query string handling
+
+By default, query strings are stripped from URLs during indexing. This means that `example.com/post` and `example.com/post?utm_source=newsletter` will be treated as the same page, preventing duplicate entries in your search index.
+
+This normalization happens both when deciding whether to index a URL and when storing the URL in the index. URLs with query strings will still be crawled (links are still followed), but the indexed URL will always be the clean version without any query parameters.
+
+If you need to preserve query strings for certain URLs, you can create a custom search profile that overrides the `normalizeUrl` method.
+
 ## Using a search profile
 
 A search profile is a class that determines what pages get crawled and what content gets indexed. Learn more about search profiles [here](/docs/laravel-site-search/v1/basic-usage/using-a-search-profile).

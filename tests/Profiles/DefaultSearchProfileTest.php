@@ -22,14 +22,14 @@ it('passes the normalized url to the indexer', function () {
     expect($indexer->url())->toEqual('https://example.com/post');
 });
 
-it('preserves fragments when normalizing urls', function () {
+it('strips query strings and everything after them', function () {
     $profile = new DefaultSearchProfile;
 
     $response = CrawlResponse::fake(status: 200, body: '<html><body>test</body></html>');
 
     $indexer = $profile->useIndexer('https://example.com/post?utm_source=newsletter#section', $response);
 
-    expect($indexer->url())->toEqual('https://example.com/post#section');
+    expect($indexer->url())->toEqual('https://example.com/post');
 });
 
 it('leaves urls without query strings unchanged', function () {
@@ -40,4 +40,14 @@ it('leaves urls without query strings unchanged', function () {
     $indexer = $profile->useIndexer('https://example.com/post', $response);
 
     expect($indexer->url())->toEqual('https://example.com/post');
+});
+
+it('leaves fragment-only urls unchanged', function () {
+    $profile = new DefaultSearchProfile;
+
+    $response = CrawlResponse::fake(status: 200, body: '<html><body>test</body></html>');
+
+    $indexer = $profile->useIndexer('https://example.com/post#section', $response);
+
+    expect($indexer->url())->toEqual('https://example.com/post#section');
 });

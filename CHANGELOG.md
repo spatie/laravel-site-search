@@ -1,5 +1,13 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 3.0.2 - 2026-03-04
+
+### What's Changed
+
+- Strip query strings from URLs during indexing to prevent duplicate documents (#58)
+
+URLs with query parameters (e.g. `?utm_source=newsletter`) are now automatically normalized before indexing. This prevents the same page from appearing multiple times in search results.
+
 ## 3.0.1 - 2026-03-03
 
 ### What's Changed
@@ -37,6 +45,7 @@ This prevents multiple concurrent crawl processes from running simultaneously, w
   ```php
   // Before: ['text content', 'more text']
   // After: [['text' => 'text content', 'anchor' => 'heading-id'], ['text' => 'more text', 'anchor' => null]]
+  
   
   ```
 - **Driver Interface Change**: Added required `finalizeIndex(string $indexName): self` method to `Driver` interface

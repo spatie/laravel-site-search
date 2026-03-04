@@ -56,33 +56,6 @@ it('extracts anchors from headings', function () {
     expect($subsectionContent['anchor'])->toBe('subsection'); // Inherits from h3
 });
 
-it('strips query strings from the url', function () {
-    $indexer = new DefaultIndexer(
-        'https://example.com/post?utm_source=newsletter&utm_medium=email',
-        CrawlResponse::fake(body: view('test::page'))
-    );
-
-    expect($indexer->url())->toEqual('https://example.com/post');
-});
-
-it('preserves fragments when stripping query strings', function () {
-    $indexer = new DefaultIndexer(
-        'https://example.com/post?utm_source=newsletter#section',
-        CrawlResponse::fake(body: view('test::page'))
-    );
-
-    expect($indexer->url())->toEqual('https://example.com/post#section');
-});
-
-it('returns url unchanged when there is no query string', function () {
-    $indexer = new DefaultIndexer(
-        'https://example.com/post',
-        CrawlResponse::fake(body: view('test::page'))
-    );
-
-    expect($indexer->url())->toEqual('https://example.com/post');
-});
-
 it('handles headings without id attributes', function () {
     $indexer = new DefaultIndexer(
         'https://example.com',

@@ -73,12 +73,12 @@ class DefaultSearchProfile implements SearchProfile
     {
         $parsed = parse_url($url);
 
-        $scheme = isset($parsed['scheme']) ? $parsed['scheme'] . '://' : '';
+        $scheme = isset($parsed['scheme']) ? $parsed['scheme'].'://' : '';
         $host = $parsed['host'] ?? '';
-        $port = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+        $port = isset($parsed['port']) ? ':'.$parsed['port'] : '';
         $path = $parsed['path'] ?? '';
-        $fragment = isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '';
+        $fragment = isset($parsed['fragment']) ? '#'.$parsed['fragment'] : '';
 
-        return $scheme . $host . $port . $path . $fragment;
+        return $scheme.$host.$port.$path.$fragment;
     }
 }

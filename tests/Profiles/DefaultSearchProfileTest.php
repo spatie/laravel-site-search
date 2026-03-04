@@ -4,7 +4,7 @@ use Spatie\Crawler\CrawlResponse;
 use Spatie\SiteSearch\Profiles\DefaultSearchProfile;
 
 it('normalizes urls with query strings in shouldIndex', function () {
-    $profile = new DefaultSearchProfile();
+    $profile = new DefaultSearchProfile;
 
     $response = CrawlResponse::fake(status: 200, body: '<html><body>test</body></html>');
 
@@ -13,7 +13,7 @@ it('normalizes urls with query strings in shouldIndex', function () {
 });
 
 it('passes the normalized url to the indexer', function () {
-    $profile = new DefaultSearchProfile();
+    $profile = new DefaultSearchProfile;
 
     $response = CrawlResponse::fake(status: 200, body: '<html><body>test</body></html>');
 

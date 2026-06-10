@@ -1,5 +1,13 @@
 All notable changes to `laravel-site-search` will be documented in this file.
 
+## 3.0.3 - 2026-06-10
+
+### What's Changed
+
+- Strip MySQL fulltext boolean mode operators from search terms (#59)
+
+Search terms containing MySQL boolean mode operators (`@ + - ~ < >`) could trigger a `1064` syntax error instead of being treated as plain text. For example, searching for a string like `icu4c@78` (the `@` is MySQL's proximity operator) crashed the query. These operators are now replaced with a space so the surrounding text becomes regular searchable tokens.
+
 ## 3.0.2 - 2026-03-04
 
 ### What's Changed
@@ -45,6 +53,7 @@ This prevents multiple concurrent crawl processes from running simultaneously, w
   ```php
   // Before: ['text content', 'more text']
   // After: [['text' => 'text content', 'anchor' => 'heading-id'], ['text' => 'more text', 'anchor' => null]]
+  
   
   
   ```

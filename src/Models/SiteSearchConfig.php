@@ -63,7 +63,7 @@ class SiteSearchConfig extends Model
 
     public function getDriver(): Driver
     {
-        /** @var \Spatie\SiteSearch\Drivers\Driver $driverClass */
+        /** @var Driver $driverClass */
         $driverClass = $this->driver_class ?? config('site-search.default_driver');
 
         return $driverClass::make($this);

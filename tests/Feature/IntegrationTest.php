@@ -4,11 +4,14 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Spatie\Crawler\CrawlProgress;
 use Spatie\Crawler\Enums\FinishReason;
+use Spatie\SiteSearch\Drivers\DatabaseDriver;
+use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
 use Spatie\SiteSearch\Events\CrawlFinishedEvent;
 use Spatie\SiteSearch\Events\IndexedUrlEvent;
 use Spatie\SiteSearch\Jobs\CrawlSiteJob;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\Search;
+use Spatie\SiteSearch\SearchResults\Hit;
 use Tests\TestSupport\Server\Server;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotCrawlSecondLinkSearchProfile;
 use Tests\TestSupport\TestClasses\SearchProfiles\DoNotIndexSecondLinkSearchProfile;
@@ -17,10 +20,10 @@ use Tests\TestSupport\TestClasses\SearchProfiles\SearchProfileWithCustomIndexer;
 
 dataset('drivers', [
     'database' => [fn () => [
-        'driver_class' => \Spatie\SiteSearch\Drivers\DatabaseDriver::class,
+        'driver_class' => DatabaseDriver::class,
     ]],
     'meilisearch' => [fn () => [
-        'driver_class' => \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
+        'driver_class' => MeiliSearchDriver::class,
     ]],
 ]);
 
@@ -28,7 +31,7 @@ beforeEach(function () {
     Server::boot();
 
     $this->siteSearchConfig = SiteSearchConfig::factory()->create([
-        'driver_class' => \Spatie\SiteSearch\Drivers\DatabaseDriver::class,
+        'driver_class' => DatabaseDriver::class,
     ]);
 });
 
@@ -47,7 +50,7 @@ it('can crawl a site', function (Closure $driverSetup) {
 
     expect($searchResults->hits)->toHaveCount(1);
 
-    /** @var \Spatie\SiteSearch\SearchResults\Hit $hit */
+    /** @var Hit $hit */
     $hit = $searchResults->hits[0];
 
     expect($hit)
@@ -304,7 +307,7 @@ it('can add extra properties', function (Closure $driverSetup) {
 it('synonyms can be specified by customizing the index settings', function () {
     $this->siteSearchConfig->update([
         'profile_class' => SearchProfileWithCustomIndexer::class,
-        'driver_class' => \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class,
+        'driver_class' => MeiliSearchDriver::class,
     ]);
 
     $extraValue = [

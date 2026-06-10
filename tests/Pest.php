@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Pagination\Paginator;
+use MeiliSearch\Client;
+use MeiliSearch\Contracts\TasksQuery;
+use Spatie\SiteSearch\Drivers\MeiliSearchDriver;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Spatie\SiteSearch\SearchResults\Hit;
 use Spatie\SiteSearch\SearchResults\SearchResults;
@@ -14,15 +17,15 @@ function waitForDriver(SiteSearchConfig $siteSearchConfig): void
 {
     $driverClass = $siteSearchConfig->driver_class ?? config('site-search.default_driver');
 
-    if ($driverClass !== \Spatie\SiteSearch\Drivers\MeiliSearchDriver::class) {
+    if ($driverClass !== MeiliSearchDriver::class) {
         return;
     }
 
     $indexName = $siteSearchConfig->refresh()->index_name;
 
-    $client = new MeiliSearch\Client('http://127.0.0.1:7700');
+    $client = new Client('http://127.0.0.1:7700');
 
-    $tasks = $client->getTasks(new MeiliSearch\Contracts\TasksQuery([
+    $tasks = $client->getTasks(new TasksQuery([
         'indexUids' => [$indexName],
         'statuses' => ['enqueued', 'processing'],
     ]));

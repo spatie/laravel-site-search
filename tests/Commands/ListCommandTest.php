@@ -3,6 +3,7 @@
 namespace Tests\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Spatie\SiteSearch\Models\SiteSearchConfig;
 use Symfony\Component\Console\Command\ListCommand;
 
@@ -19,8 +20,8 @@ it('displays crawl progress columns', function () {
         'finish_reason' => 'completed',
     ]);
 
-    \Illuminate\Support\Facades\Artisan::call('site-search:list');
-    $output = \Illuminate\Support\Facades\Artisan::output();
+    Artisan::call('site-search:list');
+    $output = Artisan::output();
 
     expect($output)
         ->toContain('URLs Found')

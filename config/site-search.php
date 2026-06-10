@@ -1,5 +1,10 @@
 <?php
 
+use Spatie\SiteSearch\Drivers\DatabaseDriver;
+use Spatie\SiteSearch\Indexers\DefaultIndexer;
+use Spatie\SiteSearch\Jobs\CrawlSiteJob;
+use Spatie\SiteSearch\Profiles\DefaultSearchProfile;
+
 return [
     /*
      * When crawling your site, we will ignore content that is on these URLs.
@@ -49,7 +54,7 @@ return [
      * This profile will be used when none is specified in the `profile_class` attribute
      * of a `SiteSearchIndex` model.
      */
-    'default_profile' => Spatie\SiteSearch\Profiles\DefaultSearchProfile::class,
+    'default_profile' => DefaultSearchProfile::class,
 
     /*
      * An indexer is a class that is responsible for converting the content of a page
@@ -58,7 +63,7 @@ return [
      * This indexer will be used when none is specified in the `profile_class` attribute
      * of a `SiteSearchIndex` model.
      */
-    'default_indexer' => Spatie\SiteSearch\Indexers\DefaultIndexer::class,
+    'default_indexer' => DefaultIndexer::class,
 
     /*
      * A driver is responsible for writing all scraped content
@@ -69,12 +74,12 @@ return [
      * - MeiliSearchDriver: uses Meilisearch as the search engine (requires a running Meilisearch instance)
      * - ArrayDriver: in-memory driver for testing
      */
-    'default_driver' => Spatie\SiteSearch\Drivers\DatabaseDriver::class,
+    'default_driver' => DatabaseDriver::class,
 
     /*
      * This job is responsible for crawling your site. To customize this job,
      * you can extend the default one, and specify the class name of
      * your customized job here.
      */
-    'crawl_site_job' => Spatie\SiteSearch\Jobs\CrawlSiteJob::class,
+    'crawl_site_job' => CrawlSiteJob::class,
 ];

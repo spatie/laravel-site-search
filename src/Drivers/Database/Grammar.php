@@ -14,11 +14,9 @@ abstract class Grammar
 
     public function escapeSearchTerm(string $query): string
     {
-        $escaped = str_replace(
-            ['"', '*', '(', ')', ':'],
-            ['', '', '', '', ''],
-            $query
-        );
+        $booleanModeOperators = ['"', '*', '(', ')', ':', '@', '+', '-', '~', '<', '>'];
+
+        $escaped = str_replace($booleanModeOperators, ' ', $query);
 
         $escaped = preg_replace('/\b(OR|AND|NOT)\b/i', '', $escaped);
 

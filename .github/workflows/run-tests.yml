@@ -44,10 +44,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: [8.5, 8.4]
+        php: ['8.6', '8.5', '8.4']
         laravel: ['12.*', '13.*']
         stability: [prefer-lowest, prefer-stable]
         db: [sqlite]
+        exclude:
+          # PHP 8.6 needs Pest 5 / PHPUnit 13, which Laravel 12's Testbench does not support.
+          - php: '8.6'
+            laravel: '12.*'
         include:
           - laravel: 12.*
             testbench: 10.*
